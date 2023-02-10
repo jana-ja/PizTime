@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.janaja.piztime.feature_piz_recipes.domain.use_case.PizRecipeUseCases
+import de.janaja.piztime.feature_piz_recipes.domain.util.PizAmountState
 import de.janaja.piztime.feature_piz_recipes.domain.util.PizRecipeDetailState
-import de.janaja.piztime.feature_piz_recipes.domain.util.PizRecipesState
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,15 +19,17 @@ class PizRecipeDetailViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel(){
 
-    private val _state = mutableStateOf(PizRecipeDetailState())
-    val state : State<PizRecipeDetailState> = _state
+    private val _pizRecipeState = mutableStateOf(PizRecipeDetailState())
+    val pizRecipeState : State<PizRecipeDetailState> = _pizRecipeState
 
-
+    private val _pizAmountState = mutableStateOf(PizAmountState())
+    val pizAmountState : State<PizAmountState> = _pizAmountState
+    
     init {
         savedStateHandle.get<Long>("pizRecipeId")?.let { id ->
             viewModelScope.launch {
                 pizRecipesUseCases.getPizRecipeUseCase.invoke(id)?.also {
-                    _state.value = _state.value.copy(pizRecipe =  it)
+                    _pizRecipeState.value = _pizRecipeState.value.copy(pizRecipe =  it.first, pizIngredients = it.second)
                 }
             }
         }
@@ -37,11 +39,21 @@ class PizRecipeDetailViewModel @Inject constructor(
     fun onEvent(event: PizRecipeDetailEvent){
         when(event){
             is PizRecipeDetailEvent.SetAmount -> {
-                _state.value = _state.value.copy(
+                _pizAmountState.value = _pizAmountState.value.copy(
                     amount = event.amount
                 )
             }
         }
+    }
+
+    fun increaseAmount(){
+        _pizAmountState.value = _pizAmountState.value.copy(amount = _pizAmountState.value.amount + 1)
+    }
+
+    fun decreaseAmount(){
+        if (_pizAmountState.value.amount < 1)
+            return
+        _pizAmountState.value = _pizAmountState.value.copy(amount = _pizAmountState.value.amount - 1)
     }
 
 

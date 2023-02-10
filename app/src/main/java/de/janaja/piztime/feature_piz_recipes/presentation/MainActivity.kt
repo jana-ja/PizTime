@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
                                 })
                         ) {
                             // TODO how to handle non optional arguments
-                            it.arguments?.let { it1 -> PizRecipeDetailScreen(navController = navController, pizRecipeId = it1.getLong("piz_recipe_id")) }
+                            it.arguments?.let { it1 -> PizRecipeDetailScreen() }
                         }
                     }
                 }
