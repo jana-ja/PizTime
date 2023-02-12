@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,14 +18,19 @@ import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.PizR
 fun DescriptionView(
     description: String
 ) {
-    Column(Modifier.padding(16.dp)) {
+    LazyColumn(Modifier.padding(16.dp)) {
         Log.i("DescriptionView", "I got recomposed!")
-        Text("Rezept:",
-        style = MaterialTheme.typography.bodyLarge)
-        Text(
-            description,
-            Modifier.padding(PaddingValues(start = 16.dp, top = 16.dp)),
-            style = MaterialTheme.typography.bodyMedium
-        )
+        item {
+            Text("Rezept:",
+                style = MaterialTheme.typography.bodyLarge)
+        }
+        val lines = description.split("\n")
+        items(lines.size){
+            Text(
+                "${it+1}:\t\t${lines[it]}",
+                Modifier.padding(PaddingValues(start = 16.dp, top = 16.dp)),
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
     }
 }
