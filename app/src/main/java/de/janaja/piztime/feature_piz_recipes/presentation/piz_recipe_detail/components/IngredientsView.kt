@@ -46,7 +46,7 @@ fun IngredientsView(
             items(ingredients) { ingredient ->
                 Row(Modifier.fillMaxWidth()) {
                     TableCell(
-                        text = (ingredient.baseAmount * amount).toString(),
+                        text = "%.${2}f".format(ingredient.baseAmount * amount),
                         weight = column1Weight
                     )
                     TableCell(text = ingredient.ingredient, weight = column2Weight)
