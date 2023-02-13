@@ -37,7 +37,7 @@ fun PizCard(
 
     // animation stuff
     val animDuration = 900
-    val animDelay: Long = 300
+    val animDelay: Long = 400
 
     // card animation stuff
     var cardVisible by remember {
@@ -87,9 +87,8 @@ fun PizCard(
     Card(
         onClick = {
             coroutineScope.launch {
-                delay((index * animDelay))
                 cardVisible = false
-                delay(animDuration.toLong())
+                delay((animDuration / 2).toLong())
                 pizVisible = PizVisibility.EXIT
                 delay(animDuration.toLong())
                 onClick.invoke()
@@ -105,7 +104,7 @@ fun PizCard(
                 coroutineScope.launch {
                     delay((index * animDelay))
                     pizVisible = PizVisibility.VISIBLE
-                    delay(animDuration.toLong())
+                    delay((animDuration / 2).toLong())
                     cardVisible = true
                 }
             }
