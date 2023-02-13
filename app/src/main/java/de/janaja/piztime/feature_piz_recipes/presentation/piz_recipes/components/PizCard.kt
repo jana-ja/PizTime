@@ -23,12 +23,16 @@ import de.janaja.piztime.ui.theme.PizTimeTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+enum class PizVisibility {
+    ENTER, VISIBLE, EXIT
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PizCard(
     pizRecipe: PizRecipe,
     onClick: () -> Unit,
-    index: Int = 0
+    index: Int
 ) {
 
     // animation stuff
@@ -41,9 +45,9 @@ fun PizCard(
     }
     val transition2 = updateTransition(targetState = cardVisible, null)
     val alpha by transition2.animateFloat(
-        transitionSpec = {tween(animDuration)},
+        transitionSpec = { tween(animDuration) },
         label = ""
-    ){
+    ) {
         if (it) 1f else 0f
     }
     val mtColor = MaterialTheme.colorScheme.surfaceVariant
@@ -51,37 +55,59 @@ fun PizCard(
 
 
     // piz animation stuff
-    var pizVisible by remember {
-        mutableStateOf(false)
+
+    var pizVisible: PizVisibility by remember {
+        mutableStateOf(PizVisibility.ENTER)
     }
     val transition = updateTransition(targetState = pizVisible, null)
     val pizRotation by transition.animateFloat(
-        transitionSpec = {tween(animDuration)},
+        transitionSpec = { tween(animDuration) },
         label = ""
-    ){
-        if (it) 360f else 0f
+    ) {
+        when (it) {
+            PizVisibility.ENTER -> -360f
+            PizVisibility.VISIBLE -> 0f
+            PizVisibility.EXIT -> 360f
+        }
     }
     val pizOffset by transition.animateFloat(
-        transitionSpec = {tween(animDuration)},
+        transitionSpec = { tween(animDuration) },
         label = ""
-    ){
-        if (it) 0f else -300f
+    ) {
+        when (it) {
+            PizVisibility.ENTER -> -300f
+            PizVisibility.VISIBLE -> 0f
+            PizVisibility.EXIT -> 300f
+        }
     }
 
+    val coroutineScope = rememberCoroutineScope()
+
     // content
-    Card(onClick = onClick,
+    Card(
+        onClick = {
+            coroutineScope.launch {
+                delay((index * animDelay))
+                cardVisible = false
+                delay(animDuration.toLong())
+                pizVisible = PizVisibility.EXIT
+                delay(animDuration.toLong())
+                onClick.invoke()
+            }
+        },
         colors = CardDefaults.cardColors(
-            containerColor =  cardColor
+            containerColor = cardColor
         ),
     ) {
 
-        val coroutineScope = rememberCoroutineScope()
         SideEffect {
-            coroutineScope.launch() {
-                delay((index * animDelay))
-                pizVisible = true
-                delay(animDuration.toLong())
-                cardVisible = true
+            if (pizVisible == PizVisibility.ENTER) {
+                coroutineScope.launch {
+                    delay((index * animDelay))
+                    pizVisible = PizVisibility.VISIBLE
+                    delay(animDuration.toLong())
+                    cardVisible = true
+                }
             }
         }
 
@@ -93,11 +119,17 @@ fun PizCard(
 
 
 //            AnimatedVisibility(visible = isVisible) {
-                Text(text = pizRecipe.title, style = MaterialTheme.typography.titleMedium, modifier = Modifier.alpha(alpha))
+            Text(
+                text = pizRecipe.title,
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.alpha(alpha)
+            )
 //            }
-            Box(modifier = Modifier
-                .offset(pizOffset.dp)
-                .align(Alignment.CenterHorizontally)) {
+            Box(
+                modifier = Modifier
+                    .offset(pizOffset.dp)
+                    .align(Alignment.CenterHorizontally)
+            ) {
                 Image(
                     painter = painterResource(id = pizRecipe.imageResourceId),
                     contentDescription = "Image of ${pizRecipe.title}",//stringResource(id = ),
@@ -111,17 +143,17 @@ fun PizCard(
             }
 
 //            AnimatedVisibility(visible = isVisible) {
-                Text(
-                    text = pizRecipe.feature,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontStyle = FontStyle.Italic,
-                    modifier = Modifier.align(Alignment.End).alpha(alpha)
-                )
+            Text(
+                text = pizRecipe.feature,
+                style = MaterialTheme.typography.bodyMedium,
+                fontStyle = FontStyle.Italic,
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .alpha(alpha)
+            )
 //            }
 
 
-
-            
         }
 
     }
@@ -131,6 +163,6 @@ fun PizCard(
 @Composable
 fun PizCardPreview() {
     PizTimeTheme {
-        PizCard(PizRecipe("Beste Piz", "Einfach nice", "Backen!", R.drawable.bsp_piz), { })
+        PizCard(PizRecipe("Beste Piz", "Einfach nice", "Backen!", R.drawable.bsp_piz), { }, 0)
     }
 }
