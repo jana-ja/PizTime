@@ -1,6 +1,5 @@
 package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipes
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
@@ -19,7 +18,6 @@ fun PizRecipesScreen(
 ){
     val state = viewModel.state.value
 
-    val scope = rememberCoroutineScope()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -34,9 +32,7 @@ fun PizRecipesScreen(
                     onClick = {
                         navController.navigate(Screen.PizRecipeDetailScreen.route + "pizRecipeId=${pizRecipe.id}")
                     },
-                    index = index,
-                    modifier = Modifier.offset(x = 200.dp))
-
+                    index = index)
         }
     }
 }

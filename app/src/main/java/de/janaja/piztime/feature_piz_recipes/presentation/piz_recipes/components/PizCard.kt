@@ -9,12 +9,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import de.janaja.piztime.R
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipe
@@ -27,11 +28,63 @@ import kotlinx.coroutines.launch
 fun PizCard(
     pizRecipe: PizRecipe,
     onClick: () -> Unit,
-    index: Int = 0,
-    modifier: Modifier = Modifier,
-    cornerRadius: Dp = 10.dp
+    index: Int = 0
 ) {
-    Card(onClick = onClick) {
+
+    // animation stuff
+    val animDuration = 900
+    val animDelay: Long = 300
+
+    // card animation stuff
+    var cardVisible by remember {
+        mutableStateOf(false)
+    }
+    val transition2 = updateTransition(targetState = cardVisible, null)
+    val alpha by transition2.animateFloat(
+        transitionSpec = {tween(animDuration)},
+        label = ""
+    ){
+        if (it) 1f else 0f
+    }
+    val mtColor = MaterialTheme.colorScheme.surfaceVariant
+    val cardColor = Color(mtColor.red, mtColor.green, mtColor.blue, alpha)
+
+
+    // piz animation stuff
+    var pizVisible by remember {
+        mutableStateOf(false)
+    }
+    val transition = updateTransition(targetState = pizVisible, null)
+    val pizRotation by transition.animateFloat(
+        transitionSpec = {tween(animDuration)},
+        label = ""
+    ){
+        if (it) 360f else 0f
+    }
+    val pizOffset by transition.animateFloat(
+        transitionSpec = {tween(animDuration)},
+        label = ""
+    ){
+        if (it) 0f else -300f
+    }
+
+    // content
+    Card(onClick = onClick,
+        colors = CardDefaults.cardColors(
+            containerColor =  cardColor
+        ),
+    ) {
+
+        val coroutineScope = rememberCoroutineScope()
+        SideEffect {
+            coroutineScope.launch() {
+                delay((index * animDelay))
+                pizVisible = true
+                delay(animDuration.toLong())
+                cardVisible = true
+            }
+        }
+
         Column(
             modifier = Modifier
                 .padding(12.dp)
@@ -39,29 +92,12 @@ fun PizCard(
         ) {
 
 
-            var isVisible by remember {
-                mutableStateOf(false)
-            }
-
-            val transition = updateTransition(targetState = isVisible, null)
-
-            val pizRotation by transition.animateFloat(
-                transitionSpec = {tween(1000)},
-                label = ""
-            ){
-                if (it) 360f else 0f
-            }
-            val pizOffset by transition.animateFloat(
-                transitionSpec = {tween(1000)},
-                label = ""
-            ){
-                if (it) 0f else -300f
-            }
-
 //            AnimatedVisibility(visible = isVisible) {
-                Text(text = pizRecipe.title, style = MaterialTheme.typography.titleMedium)
+                Text(text = pizRecipe.title, style = MaterialTheme.typography.titleMedium, modifier = Modifier.alpha(alpha))
 //            }
-            Box(modifier = Modifier.offset(pizOffset.dp).align(Alignment.CenterHorizontally)) {
+            Box(modifier = Modifier
+                .offset(pizOffset.dp)
+                .align(Alignment.CenterHorizontally)) {
                 Image(
                     painter = painterResource(id = pizRecipe.imageResourceId),
                     contentDescription = "Image of ${pizRecipe.title}",//stringResource(id = ),
@@ -79,18 +115,12 @@ fun PizCard(
                     text = pizRecipe.feature,
                     style = MaterialTheme.typography.bodyMedium,
                     fontStyle = FontStyle.Italic,
-                    modifier = Modifier.align(Alignment.End)
+                    modifier = Modifier.align(Alignment.End).alpha(alpha)
                 )
 //            }
 
-            val coroutineScope = rememberCoroutineScope()
 
-            SideEffect {
-                coroutineScope.launch() {
-                    delay((index * 300).toLong())
-                    isVisible = true
-                }
-            }
+
             
         }
 
