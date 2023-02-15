@@ -19,7 +19,6 @@ class RepositoryImpl(
     }
 
     override suspend fun findPizRecipeWithIngredientsById(id: Long): Pair<PizRecipe, List<PizIngredient>>? {
-        // TODO test piz recipe without ingredients
 
         pizRecipeDao.findPizRecipeWithIngredientsById(id)?.also {
             if (it.isEmpty()) {
