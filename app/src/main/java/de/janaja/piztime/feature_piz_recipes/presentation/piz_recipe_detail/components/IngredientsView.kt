@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
 import de.janaja.piztime.feature_piz_recipes.presentation.util.PreviewDummies
@@ -16,7 +17,10 @@ import de.janaja.piztime.feature_piz_recipes.presentation.util.PreviewDummies
 @Composable
 fun IngredientsView(
     ingredients: List<PizIngredient>,
-    amount: Int
+    amount: Int,
+    increaseAmount: () -> Unit,
+    decreaseAmount: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Log.i("IngredientsView", "I got recomposed!")
 
@@ -26,13 +30,25 @@ fun IngredientsView(
     val column2Weight = .7f // 70%
     // The LazyColumn will be our table. Notice the use of the weights below
     Column(
-        Modifier.padding(16.dp)
+        modifier = modifier
     )
     {
-        Text(
-            "Zutaten:",
-            style = MaterialTheme.typography.bodyLarge
-        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                "Zutaten für",
+                style = MaterialTheme.typography.titleMedium
+            )
+            AmountSelector(
+                amount,
+                { increaseAmount() },
+                { decreaseAmount() }
+            )
+            Text(
+                "Pizzen:",
+                style = MaterialTheme.typography.titleMedium
+            )
+        }
+
         LazyColumn(
             Modifier
                 .padding(PaddingValues(start = 16.dp, top = 16.dp))
@@ -77,5 +93,5 @@ fun RowScope.TableCell(
 @Preview
 @Composable
 fun IngredientsViewPreview() {
-    IngredientsView(ingredients = PreviewDummies.DummyIngredients, amount = 4)
+    IngredientsView(ingredients = PreviewDummies.DummyIngredients, amount = 4, {}, {})
 }
