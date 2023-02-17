@@ -26,8 +26,7 @@ class RepositoryImpl(
                 pizRecipeDao.findPizRecipeById(id).also { recipe ->
                     recipe?.let { return Pair(recipe, listOf()) }
                 }
-            } else
-            {
+            } else {
                 val pizRecipe = it.keys.first()
                 val ingredients: List<PizIngredient> = it.flatMap { entry -> entry.value }
 //            it.forEach { entry ->
@@ -66,7 +65,17 @@ class RepositoryImpl(
                 PizIngredient("Trockenhefe", 0.0875)
             )
         ),
-        Pair(PizRecipe("Pizza Rom", "Dünner Boden", "njin", R.drawable.bsp_piz), listOf()),
+        Pair(
+            PizRecipe("Pizza Rom", "Dünner Boden", "Poolish: 27 27 pro Piz", R.drawable.bsp_piz),
+            listOf(
+                PizIngredient("Mehl", 120.0),
+                PizIngredient("Wasser", 75.0),
+                PizIngredient("Salz", 2.5),
+                PizIngredient("Zucker", 1.5),
+                PizIngredient("Öl", 1.5),
+                PizIngredient("Trockenhefe", 0.5)
+            )
+        ),
         Pair(PizRecipe("Pizza New York", "Fett sein", "back die piz", R.drawable.bsp_piz), listOf())
     )
 
@@ -78,7 +87,6 @@ class RepositoryImpl(
                     ingredient.recipeId = newId
                     pizIngredientDao.addPizIngredient(ingredient)
                 }
-
             }
         }
     }
