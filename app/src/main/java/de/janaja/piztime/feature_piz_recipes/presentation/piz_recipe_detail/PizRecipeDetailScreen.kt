@@ -35,12 +35,13 @@ fun PizRecipeDetailScreen(
         mutableStateOf(false)
     }
     val transition = updateTransition(targetState = screenVisible, null)
-    val offset by transition.animateFloat(
-        transitionSpec = { tween(animDuration, easing = LinearOutSlowInEasing) },
-        label = ""
-    ) {
-        if (it) 0f else 200f
-    }
+//    val offset by transition.animateFloat(
+//        transitionSpec = { tween(animDuration, easing = LinearOutSlowInEasing) },
+//        label = ""
+//    ) {
+//        if (it) 0f else 200f
+//    }
+
     val pizOffset by transition.animateFloat(
         transitionSpec = { tween(animDuration, easing = LinearOutSlowInEasing) },
         label = ""
@@ -58,7 +59,7 @@ fun PizRecipeDetailScreen(
     }
 
     PizRecipeDetailView(
-        modifier = Modifier.offset(x = offset.dp),
+        modifier = Modifier,//.offset(x = offset.dp),
         recipeState.pizRecipe,
         recipeState.pizIngredients,
         amountState.amount,
