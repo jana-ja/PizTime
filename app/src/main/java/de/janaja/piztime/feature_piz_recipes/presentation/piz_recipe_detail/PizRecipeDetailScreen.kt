@@ -117,7 +117,7 @@ fun PizRecipeDetailView(
 
             IngredientsView(pizIngredients, amount, increaseAmount, decreaseAmount, Modifier.padding(top = 16.dp))
 
-            DescriptionView(pizStepsWithIngredients, Modifier.padding(top = 16.dp))
+            DescriptionView(pizStepsWithIngredients, amount, Modifier.padding(top = 16.dp))
         }
 
         // pizza image

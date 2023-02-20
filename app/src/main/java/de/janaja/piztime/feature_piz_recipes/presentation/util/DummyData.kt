@@ -8,7 +8,7 @@ import de.janaja.piztime.feature_piz_recipes.domain.model.PizStepIngredient
 
 object DummyData {
     // preview
-    val DummyPizRecipe = PizRecipe("Pizza Neapel", "Fluffiger Rand", R.drawable.bsp_piz, id = 1,)
+    val DummyPizRecipe = PizRecipe("Pizza Neapel", "Fluffiger Rand", R.drawable.bsp_piz, id = 1)
     val DummyIngredients = listOf(
         PizIngredient("Mehl", 149.0),
         PizIngredient("Water", 97.0),
@@ -16,11 +16,26 @@ object DummyData {
         PizIngredient("Trockenhefe", 0.5),
         PizIngredient("Honig", 0.5)
     )
-    val DummySteps = listOf(Pair(PizStep("dummy step"), listOf(
-        PizStepIngredient("TestIngr1", 24.0),
-        PizStepIngredient("TestIngr2", 74.0),
-        PizStepIngredient("TestIngr3", 4.0)
-    )))
+    val DummySteps = listOf(
+        Pair(
+            PizStep("Erstmal den Poolish machen mit gleichen Teilen Mehl und Wasser."), listOf(
+                PizStepIngredient("Mehl", 35.0),
+                PizStepIngredient("Wasser", 35.0)
+            )
+        ),
+        Pair(
+            PizStep("Hier ist jetzt ein erfundener Schritt mit einem längeren Text und vielen Zutaten." +
+                    "Die werden alle verwendet um ne gute Piz zumachen."), listOf(
+                PizStepIngredient("Zutat 1", 24.0),
+                PizStepIngredient("Zutat 2", 24.0),
+                PizStepIngredient("Zutat 3", 24.0),
+                PizStepIngredient("Zutat mit einem langen Namen der ist so lang dass der Hoffentlich nicht in eine Reihe passt und abgeschnitten wird.", 24.0),
+                PizStepIngredient("Zutat 1", 24.0),
+                PizStepIngredient("TestIngr2", 74.0),
+                PizStepIngredient("TestIngr3", 4.0)
+            )
+        )
+    )
 
     // db init
     val DummyRecipeData = listOf(
@@ -47,26 +62,32 @@ object DummyData {
         )
     )
 
-    val DummyStepData = mapOf<Long, List<PizStep>>(
+    val DummyStepData = mapOf<Long, List<Pair<PizStep, List<PizStepIngredient>>>>(
         Pair(
             1,
             listOf(
-                PizStep("35 35 Poolish"),
-                PizStep("Let it pool for 4 hours room temperature"),
-                PizStep("Then let it pool for 12-17 hours cool."),
-                PizStep("Put at room tempi 3 hours before processing"),
+                Pair(PizStep("Poolish machen"), listOf(
+                    PizStepIngredient("Mehl", 35.0),
+                    PizStepIngredient("Wasser", 35.0)
+                )),
+                Pair(PizStep("Let it pool for 4 hours room temperature"), listOf()),
+                Pair(PizStep("Then let it pool for 12-17 hours cool."), listOf()),
+                Pair(PizStep("Put at room tempi 3 hours before processing"), listOf())
             )
         ),
         Pair(
             2,
             listOf(
-                PizStep("Poolish: 27 27 pro Piz")
+                Pair(PizStep("Poolish machen"), listOf(
+                    PizStepIngredient("Mehl", 27.0),
+                    PizStepIngredient("Wasser", 27.0)
+                ))
             )
         ),
         Pair(
             3,
             listOf(
-                PizStep("back die piz")
+                Pair(PizStep("back die piz"), listOf())
             )
         )
     )

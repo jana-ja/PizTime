@@ -86,17 +86,13 @@ class RepositoryImpl(
 
             DummyData.DummyStepData.forEach {
                 val recipeId = it.key
-                it.value.forEach { step ->
+                it.value.forEach { stepWithIngredients ->
+                    val step = stepWithIngredients.first
                     step.recipeId = recipeId
                     val newId = pizStepDao.addPizStep(step)
-                    if (recipeId == 1.toLong()) {
-                        pizStepIngredientDao.addPizStepIngredient(
-                            PizStepIngredient(
-                                "Mehl",
-                                2.0,
-                                newId
-                            )
-                        )
+                    stepWithIngredients.second.forEach { ingredient ->
+                        ingredient.stepId = newId
+                        pizStepIngredientDao.addPizStepIngredient(ingredient)
                     }
                 }
             }
