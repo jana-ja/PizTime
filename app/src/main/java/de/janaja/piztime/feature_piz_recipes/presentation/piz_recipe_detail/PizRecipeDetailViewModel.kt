@@ -6,54 +6,118 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.janaja.piztime.feature_piz_recipes.domain.use_case.PizRecipeUseCases
-import de.janaja.piztime.feature_piz_recipes.domain.util.PizAmountState
-import de.janaja.piztime.feature_piz_recipes.domain.util.PizRecipeDetailState
-import kotlinx.coroutines.launch
+import de.janaja.piztime.feature_piz_recipes.domain.model.PizStep
+import de.janaja.piztime.feature_piz_recipes.domain.model.PizStepIngredient
+import de.janaja.piztime.feature_piz_recipes.domain.use_case.AllPizRecipeUseCases
+import de.janaja.piztime.feature_piz_recipes.domain.util.DetailAmountState
+import de.janaja.piztime.feature_piz_recipes.domain.util.DetailPizIngredientsState
+import de.janaja.piztime.feature_piz_recipes.domain.util.DetailPizRecipeState
+import de.janaja.piztime.feature_piz_recipes.domain.util.DetailPizStepsWithIngredientsState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 // in clean architecture viewmodel calls use cases or changes things in state (that ui observes)
 @HiltViewModel
 class PizRecipeDetailViewModel @Inject constructor(
-    private val pizRecipesUseCases: PizRecipeUseCases,
+    private val allPizRecipesUseCases: AllPizRecipeUseCases,
     savedStateHandle: SavedStateHandle
-) : ViewModel(){
+) : ViewModel() {
 
-    private val _pizRecipeState = mutableStateOf(PizRecipeDetailState())
-    val pizRecipeState : State<PizRecipeDetailState> = _pizRecipeState
+    private val _detailAmountState = mutableStateOf(DetailAmountState())
+    val detailAmountState: State<DetailAmountState> = _detailAmountState
 
-    private val _pizAmountState = mutableStateOf(PizAmountState())
-    val pizAmountState : State<PizAmountState> = _pizAmountState
-    
+    private val _pizRecipeState = mutableStateOf(DetailPizRecipeState())
+    val pizRecipeState: State<DetailPizRecipeState> = _pizRecipeState
+
+    private val _pizIngredientsState = mutableStateOf(DetailPizIngredientsState())
+    val pizIngredientsState: State<DetailPizIngredientsState> = _pizIngredientsState
+
+    private val _pizStepsWithIngredientsState = mutableStateOf(DetailPizStepsWithIngredientsState())
+    val pizStepsWithIngredientsState: State<DetailPizStepsWithIngredientsState> =
+        _pizStepsWithIngredientsState
+
+    private var getPizRecipeJob: Job? = null
+    private var getPizIngredientsJob: Job? = null
+    private var getPizStepsWithIngredientsJob: Job? = null
+
     init {
         savedStateHandle.get<Long>("pizRecipeId")?.let { id ->
-            viewModelScope.launch {
-                pizRecipesUseCases.getPizRecipeUseCase.invoke(id)?.also {
-                    _pizRecipeState.value = _pizRecipeState.value.copy(pizRecipe =  it.first, pizIngredients = it.second)
-                }
-            }
+            getPizRecipe(id)
+            getPizIngredients(id)
+            getPizStepsWithIngredients(id)
         }
     }
 
+    fun getPizRecipe(id: Long) {
+        getPizRecipeJob?.cancel()
+        getPizRecipeJob = allPizRecipesUseCases.getPizRecipeUseCase(id)
+            .onEach {
+                it?.let {
+                    _pizRecipeState.value = _pizRecipeState.value.copy(
+                        pizRecipe = it
+                    )
+                }
+
+            }
+            .launchIn(viewModelScope)
+    }
+
+    fun getPizIngredients(id: Long) {
+        getPizIngredientsJob?.cancel()
+        getPizIngredientsJob = allPizRecipesUseCases.getIngredientsUseCase(id)
+            .onEach {
+                _pizIngredientsState.value = _pizIngredientsState.value.copy(
+                    pizIngredients = it
+                )
+            }
+            .launchIn(viewModelScope)
+    }
+
+    fun getPizStepsWithIngredients(id: Long) {
+        getPizStepsWithIngredientsJob?.cancel()
+        getPizStepsWithIngredientsJob = allPizRecipesUseCases.getStepsWithIngredientsUseCase(id)
+            .onEach {
+                // convert map to list here
+                val stepWithIngredientList =
+                    mutableListOf<Pair<PizStep, List<PizStepIngredient>>>()
+                for (key in it.keys) {
+                    val value = it[key]
+                    if (value != null) {
+                        stepWithIngredientList.add(Pair(key, value))
+                    } else {
+                        stepWithIngredientList.add(Pair(key, listOf()))
+                    }
+                }
+                _pizStepsWithIngredientsState.value = _pizStepsWithIngredientsState.value.copy(
+                    pizStepsWithIngredients = stepWithIngredientList
+                )
+            }
+            .launchIn(viewModelScope)
+    }
+
     // 1:41 er sagt mit textfields ist alles in einem state nicht gut weil dann alle views recomposed werden wenn man buchstabe eintippt.
-    fun onEvent(event: PizRecipeDetailEvent){
-        when(event){
+    fun onEvent(event: PizRecipeDetailEvent) {
+        when (event) {
             is PizRecipeDetailEvent.SetAmount -> {
-                _pizAmountState.value = _pizAmountState.value.copy(
+                _detailAmountState.value = _detailAmountState.value.copy(
                     amount = event.amount
                 )
             }
         }
     }
 
-    fun increaseAmount(){
-        _pizAmountState.value = _pizAmountState.value.copy(amount = _pizAmountState.value.amount + 1)
+    fun increaseAmount() {
+        _detailAmountState.value =
+            _detailAmountState.value.copy(amount = _detailAmountState.value.amount + 1)
     }
 
-    fun decreaseAmount(){
-        if (_pizAmountState.value.amount < 1)
+    fun decreaseAmount() {
+        if (_detailAmountState.value.amount < 1)
             return
-        _pizAmountState.value = _pizAmountState.value.copy(amount = _pizAmountState.value.amount - 1)
+        _detailAmountState.value =
+            _detailAmountState.value.copy(amount = _detailAmountState.value.amount - 1)
     }
 
 

@@ -17,8 +17,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import de.janaja.piztime.R
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipe
+import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 import de.janaja.piztime.ui.theme.PizTimeTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -162,6 +162,6 @@ fun PizCard(
 @Composable
 fun PizCardPreview() {
     PizTimeTheme {
-        PizCard(PizRecipe("Beste Piz", "Einfach nice", "Backen!", R.drawable.bsp_piz), { }, 0)
+        PizCard(DummyData.DummyPizRecipe, {}, 0)
     }
 }

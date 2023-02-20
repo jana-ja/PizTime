@@ -29,17 +29,21 @@ object AppModule {
     @Provides
     @Singleton
     fun providePizRecipeRepository(db: PizRecipeDatabase): Repository {
-        return RepositoryImpl(db.pizRecipeDao, db.pizIngredientDao)
+        return RepositoryImpl(db.pizRecipeDao, db.pizIngredientDao, db.pizStepDao, db.pizStepIngredientDao)
     }
 
     @Provides
     @Singleton
-    fun providePizrecipeUseCase(repository: Repository): PizRecipeUseCases{
-        return PizRecipeUseCases(
+    fun providePizrecipeUseCase(repository: Repository): AllPizRecipeUseCases{
+        return AllPizRecipeUseCases(
+            initDbIfEmptyUseCase = InitDbIfEmptyUseCase(repository),
             getAllPizRecipesUseCase = GetAllPizRecipesUseCase(repository),
             getPizRecipeUseCase = GetPizRecipeUseCase(repository),
             updatePizRecipeUseCase = UpdatePizRecipeUseCase(repository),
-            initDbIfEmptyUseCase = InitDbIfEmptyUseCase(repository)
+            getIngredientsUseCase = GetIngredientsUseCase(repository),
+            updateIngredientsUseCase = UpdateIngredientsUseCase(repository),
+            getStepsWithIngredientsUseCase = GetStepsWithIngredientsUseCase(repository),
+            updateStepsWithIngredientsUseCase = UpdateStepsWithIngredientsUseCase(repository)
         )
     }
 }

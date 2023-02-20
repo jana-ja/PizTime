@@ -12,7 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
-import de.janaja.piztime.feature_piz_recipes.presentation.util.PreviewDummies
+import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 
 @Composable
 fun IngredientsView(
@@ -93,5 +93,5 @@ fun RowScope.TableCell(
 @Preview
 @Composable
 fun IngredientsViewPreview() {
-    IngredientsView(ingredients = PreviewDummies.DummyIngredients, amount = 4, {}, {})
+    IngredientsView(ingredients = DummyData.DummyIngredients, amount = 4, {}, {})
 }
