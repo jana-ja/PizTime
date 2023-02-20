@@ -14,7 +14,7 @@ interface PizIngredientDao {
 //    @Insert(onConflict = OnConflictStrategy.REPLACE)
 //    suspend fun addAllPizIngredients(pizIngredients: List<PizIngredient>)
 
-    @Query("SELECT * FROM PizIngredient WHERE recipeId = :pizRecipeId")
+    @Query("SELECT * FROM PizIngredient WHERE recipeIdMap = :pizRecipeId")
     fun findPizIngredientsByPizRecipeId(pizRecipeId: Long): Flow<List<PizIngredient>> // TODO does flow work on this kind of query???
 
     @Update

@@ -15,8 +15,8 @@ interface PizStepDao {
     // returns empty List for those PizStep entries
     @Query(
         "SELECT * FROM PizStep " +
-                "LEFT JOIN PizStepIngredient ON PizStep.id = PizStepIngredient.stepId " +
-                "WHERE PizStep.recipeId = :id"
+                "LEFT JOIN PizStepIngredient ON PizStep.stepid = PizStepIngredient.stepIdMap " +
+                "WHERE PizStep.recipeIdMap = :id"
     )
     fun findPizStepsWithPizStepIngredientsByPizRecipeId(id: Long): Flow<Map<PizStep, List<PizStepIngredient>>>
 

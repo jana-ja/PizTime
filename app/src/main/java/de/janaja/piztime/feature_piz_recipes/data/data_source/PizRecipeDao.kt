@@ -10,7 +10,7 @@ interface PizRecipeDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addAllPizRecipes(pizRecipes: List<PizRecipe>)
 
-    @Query("SELECT * FROM PizRecipe WHERE id = :id")
+    @Query("SELECT * FROM PizRecipe WHERE recipeId = :id")
     fun findPizRecipeById(id: Long): Flow<PizRecipe?>
 
 //    @Query("SELECT * FROM PizRecipe " +
