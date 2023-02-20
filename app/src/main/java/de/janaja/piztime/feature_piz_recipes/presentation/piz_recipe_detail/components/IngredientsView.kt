@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
+import de.janaja.piztime.feature_piz_recipes.presentation.util.cut
 
 @Composable
 fun IngredientsView(
@@ -62,7 +63,7 @@ fun IngredientsView(
             items(ingredients) { ingredient ->
                 Row(Modifier.fillMaxWidth()) {
                     TableCell(
-                        text = "%.${2}f".format(ingredient.baseAmount * amount),
+                        text = (ingredient.baseAmount * amount).cut(),
                         weight = column1Weight
                     )
                     TableCell(text = ingredient.ingredient, weight = column2Weight)

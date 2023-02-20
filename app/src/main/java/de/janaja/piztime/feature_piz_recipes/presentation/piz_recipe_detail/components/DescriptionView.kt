@@ -18,6 +18,7 @@ import de.janaja.piztime.feature_piz_recipes.domain.model.PizStep
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizStepIngredient
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 import de.janaja.piztime.feature_piz_recipes.presentation.util.SimpleFlowRow
+import de.janaja.piztime.feature_piz_recipes.presentation.util.cut
 
 @Composable
 fun DescriptionView(
@@ -52,7 +53,7 @@ fun DescriptionView(
             ) {
                 for (ingredient in stepsWithIngredients[it].second) {
                     Text(
-                        text = "${ingredient.ingredient}: ${ingredient.baseStepAmount * amount}",
+                        text = "${ingredient.ingredient}: ${(ingredient.baseStepAmount * amount).cut()}",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier
@@ -64,6 +65,7 @@ fun DescriptionView(
         }
     }
 }
+
 
 @Preview
 @Composable
