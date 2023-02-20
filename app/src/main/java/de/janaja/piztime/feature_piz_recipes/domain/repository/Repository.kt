@@ -1,18 +1,27 @@
 package de.janaja.piztime.feature_piz_recipes.domain.repository
 
-import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
-import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipe
+import de.janaja.piztime.feature_piz_recipes.domain.model.*
 import kotlinx.coroutines.flow.Flow
 
 interface Repository {
 
-    suspend fun addPizRecipe(pizRecipe: PizRecipe)
+    //fun findPizRecipeWithIngredientsById(id: Long): Flow<Pair<PizRecipe, List<PizIngredient>>?>
 
-    suspend fun findPizRecipeWithIngredientsById(id: Long): Pair<PizRecipe, List<PizIngredient>>?
+    fun findPizRecipebyId(id: Long): Flow<PizRecipe?>
+
+    fun findPizIngredientsByPizRecipeId(pizRecipeId: Long): Flow<List<PizIngredient>>
+
+    fun findPizStepsWithIngredientsByPizRecipeId(pizRecipeId: Long): Flow<Map<PizStep, List<PizStepIngredient>>>
 
     fun getAllPizRecipes(): Flow<List<PizRecipe>>
 
     suspend fun updatePizRecipe(pizRecipe: PizRecipe)
+    
+    suspend fun updatePizIngredients(pizIngredients: List<PizIngredient>)
+    
+    suspend fun updatePizStep(pizStep: PizStep)
+
+    suspend fun updatePizStepIngredients(pizStepIngredients: List<PizStepIngredient>)
 
     suspend fun initDbIfEmpty()
 }

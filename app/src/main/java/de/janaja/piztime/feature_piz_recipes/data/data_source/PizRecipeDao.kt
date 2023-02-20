@@ -1,7 +1,6 @@
 package de.janaja.piztime.feature_piz_recipes.data.data_source
 
 import androidx.room.*
-import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipe
 import kotlinx.coroutines.flow.Flow
 
@@ -9,15 +8,15 @@ import kotlinx.coroutines.flow.Flow
 interface PizRecipeDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addPizRecipe(pizRecipe: PizRecipe): Long
+    suspend fun addAllPizRecipes(pizRecipes: List<PizRecipe>)
 
     @Query("SELECT * FROM PizRecipe WHERE id = :id")
-    suspend fun findPizRecipeById(id: Long): PizRecipe?
+    fun findPizRecipeById(id: Long): Flow<PizRecipe?>
 
-    @Query("SELECT * FROM PizRecipe " +
-            "JOIN PizIngredient ON PizRecipe.id = PizIngredient.recipeId " +
-            "WHERE PizRecipe.id = :id")
-    suspend fun findPizRecipeWithIngredientsById(id: Long): Map<PizRecipe, List<PizIngredient>>?
+//    @Query("SELECT * FROM PizRecipe " +
+//            "JOIN PizIngredient ON PizRecipe.id = PizIngredient.recipeId " +
+//            "WHERE PizRecipe.id = :id")
+//    suspend fun findPizRecipeWithIngredientsById(id: Long): Map<PizRecipe, List<PizIngredient>>?
 
     @Query("SELECT * FROM PizRecipe")
     fun getAllPizRecipes(): Flow<List<PizRecipe>>

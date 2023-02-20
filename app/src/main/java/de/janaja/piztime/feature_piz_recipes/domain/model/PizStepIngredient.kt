@@ -4,10 +4,12 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class PizRecipe(
-    var title: String,
-    var feature: String,
-    var imageResourceId: Int,
+class PizStepIngredient(
+    var ingredient: String,
+    var baseStepAmount: Double,
+    var stepId: Long = 0,
+
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
-)
+) {
+}

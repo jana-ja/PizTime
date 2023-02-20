@@ -8,6 +8,5 @@ class UpdatePizRecipeUseCase (
     ){
         suspend operator fun invoke(pizRecipe: PizRecipe) {
             repository.updatePizRecipe(pizRecipe)
-            // TODO maybe change to id
         }
     }

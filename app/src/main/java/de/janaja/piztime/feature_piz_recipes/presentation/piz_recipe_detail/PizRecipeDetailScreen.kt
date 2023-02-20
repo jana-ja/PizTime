@@ -13,11 +13,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
-import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipe
+import de.janaja.piztime.feature_piz_recipes.domain.model.*
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components.DescriptionView
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components.IngredientsView
-import de.janaja.piztime.feature_piz_recipes.presentation.util.PreviewDummies
+import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 import kotlinx.coroutines.launch
 
 @Composable
@@ -26,8 +25,12 @@ fun PizRecipeDetailScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
 
+    val amountState = viewModel.detailAmountState.value
     val recipeState = viewModel.pizRecipeState.value
-    val amountState = viewModel.pizAmountState.value
+    val ingredientsState = viewModel.pizIngredientsState.value
+    val stepsWithIngredientsState = viewModel.pizStepsWithIngredientsState.value
+
+    //  TODO extra states for edit
 
     // animation stuff
     val animDuration = 1100
@@ -61,7 +64,8 @@ fun PizRecipeDetailScreen(
     PizRecipeDetailView(
         modifier = Modifier,//.offset(x = offset.dp),
         recipeState.pizRecipe,
-        recipeState.pizIngredients,
+        ingredientsState.pizIngredients,
+        stepsWithIngredientsState.pizStepsWithIngredients,
         amountState.amount,
         { viewModel.increaseAmount() },
         { viewModel.decreaseAmount() },
@@ -84,6 +88,7 @@ fun PizRecipeDetailView(
     modifier: Modifier,
     pizRecipe: PizRecipe,
     pizIngredients: List<PizIngredient>,
+    pizStepsWithIngredients: List<Pair<PizStep, List<PizStepIngredient>>>,
     amount: Int,
     increaseAmount: () -> Unit,
     decreaseAmount: () -> Unit,
@@ -112,7 +117,7 @@ fun PizRecipeDetailView(
 
             IngredientsView(pizIngredients, amount, increaseAmount, decreaseAmount, Modifier.padding(top = 16.dp))
 
-            DescriptionView(pizRecipe.description, Modifier.padding(top = 16.dp))
+            DescriptionView(pizStepsWithIngredients, Modifier.padding(top = 16.dp))
         }
 
         // pizza image
@@ -142,8 +147,9 @@ fun PizRecipeDetailView(
 fun PizRecipeDetailViewPreview() {
     PizRecipeDetailView(
         Modifier,
-        PreviewDummies.DummyPizRecipe,
-        PreviewDummies.DummyIngredients,
+        DummyData.DummyPizRecipe,
+        DummyData.DummyIngredients,
+        DummyData.DummySteps,
         4,
         { },
         { },
