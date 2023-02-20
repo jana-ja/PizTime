@@ -13,11 +13,6 @@ interface PizRecipeDao {
     @Query("SELECT * FROM PizRecipe WHERE recipeId = :id")
     fun findPizRecipeById(id: Long): Flow<PizRecipe?>
 
-//    @Query("SELECT * FROM PizRecipe " +
-//            "JOIN PizIngredient ON PizRecipe.id = PizIngredient.recipeId " +
-//            "WHERE PizRecipe.id = :id")
-//    suspend fun findPizRecipeWithIngredientsById(id: Long): Map<PizRecipe, List<PizIngredient>>?
-
     @Query("SELECT * FROM PizRecipe")
     fun getAllPizRecipes(): Flow<List<PizRecipe>>
 

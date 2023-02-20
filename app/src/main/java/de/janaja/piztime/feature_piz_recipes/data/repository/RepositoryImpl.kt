@@ -16,26 +16,6 @@ class RepositoryImpl(
     private val pizStepIngredientDao: PizStepIngredientDao
 ) : Repository {
 
-//    override suspend fun findPizRecipeWithIngredientsById(id: Long): Pair<PizRecipe, List<PizIngredient>>? {
-//
-//        pizRecipeDao.findPizRecipeWithIngredientsById(id)?.also {
-//            if (it.isEmpty()) {
-//                // maybe recipe has no ingredients. try loading it alone
-//                pizRecipeDao.findPizRecipeById(id).also { recipe ->
-//                    recipe?.let { return Pair(recipe, listOf()) }
-//                }
-//            } else {
-//                val pizRecipe = it.keys.first()
-//                val ingredients: List<PizIngredient> = it.flatMap { entry -> entry.value }
-////            it.forEach { entry ->
-////                ingredients.addAll(entry.value)
-////            }
-//                return Pair(pizRecipe, ingredients)
-//            }
-//        }
-//        return null
-//    }
-
     override fun findPizRecipebyId(id: Long): Flow<PizRecipe?> {
         return pizRecipeDao.findPizRecipeById(id)
     }

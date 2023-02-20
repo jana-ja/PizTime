@@ -5,8 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface Repository {
 
-    //fun findPizRecipeWithIngredientsById(id: Long): Flow<Pair<PizRecipe, List<PizIngredient>>?>
-
     fun findPizRecipebyId(id: Long): Flow<PizRecipe?>
 
     fun findPizIngredientsByPizRecipeId(pizRecipeId: Long): Flow<List<PizIngredient>>
