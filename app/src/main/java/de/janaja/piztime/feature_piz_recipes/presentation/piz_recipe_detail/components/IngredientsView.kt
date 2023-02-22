@@ -11,13 +11,13 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.tooling.preview.Preview
-import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
+import de.janaja.piztime.feature_piz_recipes.data.local.model.PizIngredientEntity
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 import de.janaja.piztime.feature_piz_recipes.presentation.util.cut
 
 @Composable
 fun IngredientsView(
-    ingredients: List<PizIngredient>,
+    ingredients: List<PizIngredientEntity>,
     amount: Int,
     increaseAmount: () -> Unit,
     decreaseAmount: () -> Unit,

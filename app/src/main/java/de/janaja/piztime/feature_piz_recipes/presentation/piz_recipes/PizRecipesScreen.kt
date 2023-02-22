@@ -26,9 +26,9 @@ fun PizRecipesScreen(
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
 
-        state.pizRecipes.forEachIndexed() { index, pizRecipe ->
+        state.pizRecipeEntities.forEachIndexed() { index, pizRecipe ->
                 PizCard(
-                    pizRecipe = pizRecipe,
+                    pizRecipeEntity = pizRecipe,
                     onClick = {
                         navController.navigate(Screen.PizRecipeDetailScreen.route + "pizRecipeId=${pizRecipe.id}")
                     },

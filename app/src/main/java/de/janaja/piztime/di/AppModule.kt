@@ -9,7 +9,7 @@ import dagger.hilt.components.SingletonComponent
 import de.janaja.piztime.feature_piz_recipes.data.repository.RepositoryImpl
 import de.janaja.piztime.feature_piz_recipes.domain.repository.Repository
 import de.janaja.piztime.feature_piz_recipes.domain.use_case.*
-import de.janaja.piztime.feature_piz_recipes.data.data_source.PizRecipeDatabase
+import de.janaja.piztime.feature_piz_recipes.data.local.PizRecipeDatabase
 import javax.inject.Singleton
 
 // wenn man mehrere features hat könnte man auch pro feature ein di ding machen

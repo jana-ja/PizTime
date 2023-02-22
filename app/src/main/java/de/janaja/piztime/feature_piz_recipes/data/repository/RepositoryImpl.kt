@@ -1,53 +1,55 @@
 package de.janaja.piztime.feature_piz_recipes.data.repository
 
-import de.janaja.piztime.feature_piz_recipes.data.data_source.PizIngredientDao
-import de.janaja.piztime.feature_piz_recipes.data.data_source.PizRecipeDao
-import de.janaja.piztime.feature_piz_recipes.data.data_source.PizStepDao
-import de.janaja.piztime.feature_piz_recipes.data.data_source.PizStepIngredientDao
-import de.janaja.piztime.feature_piz_recipes.domain.model.*
+import de.janaja.piztime.feature_piz_recipes.data.local.*
+import de.janaja.piztime.feature_piz_recipes.data.local.model.PizIngredientEntity
+import de.janaja.piztime.feature_piz_recipes.data.local.model.PizRecipeEntity
+import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepEntity
+import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepIngredientEntity
 import de.janaja.piztime.feature_piz_recipes.domain.repository.Repository
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 import kotlinx.coroutines.flow.Flow
 
-class RepositoryImpl(
+class RepositoryImpl( // TODO here db bekommen mit dagger hilt
     private val pizRecipeDao: PizRecipeDao,
     private val pizIngredientDao: PizIngredientDao,
     private val pizStepDao: PizStepDao,
     private val pizStepIngredientDao: PizStepIngredientDao
 ) : Repository {
 
-    override fun findPizRecipebyId(id: Long): Flow<PizRecipe?> {
+    override fun findPizRecipebyId(id: Long): Flow<PizRecipeEntity?> {
         return pizRecipeDao.findPizRecipeById(id)
     }
 
-    override fun findPizIngredientsByPizRecipeId(pizRecipeId: Long): Flow<List<PizIngredient>> {
+    override fun findPizIngredientsByPizRecipeId(pizRecipeId: Long): Flow<List<PizIngredientEntity>> {
         return pizIngredientDao.findPizIngredientsByPizRecipeId(pizRecipeId)
     }
 
-    override fun findPizStepsWithIngredientsByPizRecipeId(pizRecipeId: Long): Flow<Map<PizStep, List<PizStepIngredient>>> {
+    override fun findPizStepsWithIngredientsByPizRecipeId(pizRecipeId: Long): Flow<Map<PizStepEntity, List<PizStepIngredientEntity>>> {
         return pizStepDao.findPizStepsWithPizStepIngredientsByPizRecipeId(pizRecipeId)
     }
 
+    // TODO repository baut den flow, bekommt ihn nicht von room. wenn was inserted wird dann müsste sich room darum kümmern neuen flow zu emitten.
+    //  aber wie soll das gehen in unterschiedlichen funktionen??
 
-    override fun getAllPizRecipes(): Flow<List<PizRecipe>> {
+    override fun getAllPizRecipes(): Flow<List<PizRecipeEntity>> {
         return pizRecipeDao.getAllPizRecipes()
 
     }
 
-    override suspend fun updatePizRecipe(pizRecipe: PizRecipe) {
-        pizRecipeDao.updatePizRecipe(pizRecipe)
+    override suspend fun updatePizRecipe(pizRecipeEntity: PizRecipeEntity) {
+        pizRecipeDao.updatePizRecipe(pizRecipeEntity)
     }
 
-    override suspend fun updatePizIngredients(pizIngredients: List<PizIngredient>) {
-        pizIngredientDao.updatePizIngredients(pizIngredients)
+    override suspend fun updatePizIngredients(pizIngredientEntities: List<PizIngredientEntity>) {
+        pizIngredientDao.updatePizIngredients(pizIngredientEntities)
     }
 
-    override suspend fun updatePizStep(pizStep: PizStep) {
-        pizStepDao.updatePizStep(pizStep)
+    override suspend fun updatePizStep(pizStepEntity: PizStepEntity) {
+        pizStepDao.updatePizStep(pizStepEntity)
     }
 
-    override suspend fun updatePizStepIngredients(pizStepIngredients: List<PizStepIngredient>) {
-        pizStepIngredientDao.updatePizStepIngredients(pizStepIngredients)
+    override suspend fun updatePizStepIngredients(pizStepIngredientEntities: List<PizStepIngredientEntity>) {
+        pizStepIngredientDao.updatePizStepIngredients(pizStepIngredientEntities)
     }
 
 

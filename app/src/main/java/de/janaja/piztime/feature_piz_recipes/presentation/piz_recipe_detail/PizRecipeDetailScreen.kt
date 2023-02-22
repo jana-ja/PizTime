@@ -2,18 +2,23 @@ package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import de.janaja.piztime.feature_piz_recipes.domain.model.*
+import de.janaja.piztime.feature_piz_recipes.data.local.model.PizIngredientEntity
+import de.janaja.piztime.feature_piz_recipes.data.local.model.PizRecipeEntity
+import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepEntity
+import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepIngredientEntity
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components.DescriptionView
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components.IngredientsView
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
@@ -63,9 +68,9 @@ fun PizRecipeDetailScreen(
 
     PizRecipeDetailView(
         modifier = Modifier,//.offset(x = offset.dp),
-        recipeState.pizRecipe,
-        ingredientsState.pizIngredients,
-        stepsWithIngredientsState.pizStepsWithIngredients,
+        recipeState.pizRecipeEntity,
+        ingredientsState.pizIngredientEntities,
+        stepsWithIngredientsState.pizStepsWithIngredientsDto,
         amountState.amount,
         { viewModel.increaseAmount() },
         { viewModel.decreaseAmount() },
@@ -86,9 +91,9 @@ fun PizRecipeDetailScreen(
 @Composable
 fun PizRecipeDetailView(
     modifier: Modifier,
-    pizRecipe: PizRecipe,
-    pizIngredients: List<PizIngredient>,
-    pizStepsWithIngredients: List<Pair<PizStep, List<PizStepIngredient>>>,
+    pizRecipeEntity: PizRecipeEntity,
+    pizIngredientEntities: List<PizIngredientEntity>,
+    pizStepsWithIngredientsDto: List<Pair<PizStepEntity, List<PizStepIngredientEntity>>>,
     amount: Int,
     increaseAmount: () -> Unit,
     decreaseAmount: () -> Unit,
@@ -105,19 +110,19 @@ fun PizRecipeDetailView(
 
             Column(modifier = Modifier.height(100.dp)){
                 Text(
-                    text = pizRecipe.title,
+                    text = pizRecipeEntity.title,
                     style = MaterialTheme.typography.headlineMedium
                 )
                 Text(
-                    text = pizRecipe.feature,
+                    text = pizRecipeEntity.feature,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(top = 16.dp, start = 8.dp)
                 )
             }
 
-            IngredientsView(pizIngredients, amount, increaseAmount, decreaseAmount, Modifier.padding(top = 16.dp))
+            IngredientsView(pizIngredientEntities, amount, increaseAmount, decreaseAmount, Modifier.padding(top = 16.dp))
 
-            DescriptionView(pizStepsWithIngredients, amount, Modifier.padding(top = 16.dp))
+            DescriptionView(pizStepsWithIngredientsDto, amount, Modifier.padding(top = 16.dp))
         }
 
         // pizza image
@@ -128,8 +133,8 @@ fun PizRecipeDetailView(
                 .padding(top = 16.dp, end = 16.dp)
         ) {
             Image(
-                painter = painterResource(id = pizRecipe.imageResourceId),
-                contentDescription = "Image of ${pizRecipe.title}",//stringResource(id = ),
+                painter = painterResource(id = pizRecipeEntity.imageResourceId),
+                contentDescription = "Image of ${pizRecipeEntity.title}",//stringResource(id = ),
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .size(100.dp)
@@ -146,8 +151,8 @@ fun PizRecipeDetailView(
 @Composable
 fun PizRecipeDetailViewPreview() {
     PizRecipeDetailView(
-        Modifier,
-        DummyData.DummyPizRecipe,
+        Modifier.background(Color(0xFFC49E2F)),
+        DummyData.DummyPizRecipeEntity,
         DummyData.DummyIngredients,
         DummyData.DummySteps,
         4,

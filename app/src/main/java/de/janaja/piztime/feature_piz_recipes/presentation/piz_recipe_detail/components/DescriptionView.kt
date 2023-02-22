@@ -14,15 +14,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import de.janaja.piztime.feature_piz_recipes.domain.model.PizStep
-import de.janaja.piztime.feature_piz_recipes.domain.model.PizStepIngredient
+import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepEntity
+import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepIngredientEntity
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 import de.janaja.piztime.feature_piz_recipes.presentation.util.SimpleFlowRow
 import de.janaja.piztime.feature_piz_recipes.presentation.util.cut
 
 @Composable
 fun DescriptionView(
-    stepsWithIngredients: List<Pair<PizStep, List<PizStepIngredient>>>,
+    stepsWithIngredients: List<Pair<PizStepEntity, List<PizStepIngredientEntity>>>,
     amount: Int,
     modifier: Modifier = Modifier
 ) {

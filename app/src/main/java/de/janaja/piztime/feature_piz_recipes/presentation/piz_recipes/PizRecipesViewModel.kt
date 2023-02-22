@@ -51,7 +51,7 @@ class PizRecipesViewModel @Inject constructor(
         getPizRecipesJob = allPizRecipesUseCases.getAllPizRecipesUseCase()
             .onEach {
                 _state.value = _state.value.copy(
-                    pizRecipes = it
+                    pizRecipeEntities = it
                 )
             }
             .launchIn(viewModelScope)

@@ -1,8 +1,8 @@
 package de.janaja.piztime.feature_piz_recipes.domain.util
 
-import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipe
+import de.janaja.piztime.feature_piz_recipes.data.local.model.PizRecipeEntity
 
 data class HomePizRecipesState(
-    val pizRecipes: List<PizRecipe> = emptyList(),
+    val pizRecipeEntities: List<PizRecipeEntity> = emptyList(),
 
-)
+    )

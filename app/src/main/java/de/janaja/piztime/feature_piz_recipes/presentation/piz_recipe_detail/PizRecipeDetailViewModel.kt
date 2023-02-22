@@ -6,8 +6,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.janaja.piztime.feature_piz_recipes.domain.model.PizStep
-import de.janaja.piztime.feature_piz_recipes.domain.model.PizStepIngredient
+import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepEntity
+import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepIngredientEntity
 import de.janaja.piztime.feature_piz_recipes.domain.use_case.AllPizRecipeUseCases
 import de.janaja.piztime.feature_piz_recipes.domain.util.DetailAmountState
 import de.janaja.piztime.feature_piz_recipes.domain.util.DetailPizIngredientsState
@@ -56,7 +56,7 @@ class PizRecipeDetailViewModel @Inject constructor(
             .onEach {
                 it?.let {
                     _pizRecipeState.value = _pizRecipeState.value.copy(
-                        pizRecipe = it
+                        pizRecipeEntity = it
                     )
                 }
 
@@ -69,7 +69,7 @@ class PizRecipeDetailViewModel @Inject constructor(
         getPizIngredientsJob = allPizRecipesUseCases.getIngredientsUseCase(id)
             .onEach {
                 _pizIngredientsState.value = _pizIngredientsState.value.copy(
-                    pizIngredients = it
+                    pizIngredientEntities = it
                 )
             }
             .launchIn(viewModelScope)
@@ -81,7 +81,7 @@ class PizRecipeDetailViewModel @Inject constructor(
             .onEach {
                 // convert map to list here
                 val stepWithIngredientList =
-                    mutableListOf<Pair<PizStep, List<PizStepIngredient>>>()
+                    mutableListOf<Pair<PizStepEntity, List<PizStepIngredientEntity>>>()
                 for (key in it.keys) {
                     val value = it[key]
                     if (value != null) {
@@ -91,7 +91,7 @@ class PizRecipeDetailViewModel @Inject constructor(
                     }
                 }
                 _pizStepsWithIngredientsState.value = _pizStepsWithIngredientsState.value.copy(
-                    pizStepsWithIngredients = stepWithIngredientList
+                    pizStepsWithIngredientsDto = stepWithIngredientList
                 )
             }
             .launchIn(viewModelScope)
