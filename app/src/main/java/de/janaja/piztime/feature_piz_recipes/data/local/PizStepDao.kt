@@ -18,7 +18,14 @@ interface PizStepDao {
                 "LEFT JOIN PizStepIngredientEntity ON PizStepEntity.stepid = PizStepIngredientEntity.stepIdMap " +
                 "WHERE PizStepEntity.recipeIdMap = :id"
     )
-    fun findPizStepsWithPizStepIngredientsByPizRecipeId(id: Long): Flow<Map<PizStepEntity, List<PizStepIngredientEntity>>>
+    fun findPizStepsWithPizStepIngredientsByPizRecipeIdFlow(id: Long): Flow<Map<PizStepEntity, List<PizStepIngredientEntity>>>
+
+    @Query(
+        "SELECT * FROM PizStepEntity " +
+                "LEFT JOIN PizStepIngredientEntity ON PizStepEntity.stepid = PizStepIngredientEntity.stepIdMap " +
+                "WHERE PizStepEntity.recipeIdMap = :id"
+    )
+    fun findPizStepsWithPizStepIngredientsByPizRecipeId(id: Long): Map<PizStepEntity, List<PizStepIngredientEntity>>
 
     @Update
     suspend fun updatePizStep(pizStepEntity: PizStepEntity)

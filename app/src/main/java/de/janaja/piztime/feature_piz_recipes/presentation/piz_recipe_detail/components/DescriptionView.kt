@@ -14,15 +14,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepEntity
-import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepIngredientEntity
+import de.janaja.piztime.feature_piz_recipes.domain.model.PizStepWithIngredients
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 import de.janaja.piztime.feature_piz_recipes.presentation.util.SimpleFlowRow
 import de.janaja.piztime.feature_piz_recipes.presentation.util.cut
 
 @Composable
 fun DescriptionView(
-    stepsWithIngredients: List<Pair<PizStepEntity, List<PizStepIngredientEntity>>>,
+    stepsWithIngredients: List<PizStepWithIngredients>,
     amount: Int,
     modifier: Modifier = Modifier
 ) {
@@ -41,7 +40,7 @@ fun DescriptionView(
         items(stepsWithIngredients.size) {
             // step description
             Text(
-                "${it + 1}:\t\t${stepsWithIngredients[it].first.description}",
+                "${it + 1}:\t\t${stepsWithIngredients[it].description}",
                 Modifier.padding(PaddingValues(start = 16.dp, top = 16.dp)),
                 style = MaterialTheme.typography.bodyMedium
             )
@@ -51,9 +50,9 @@ fun DescriptionView(
                 horizontalGap = 8.dp,
                 modifier = Modifier.padding(16.dp)
             ) {
-                for (ingredient in stepsWithIngredients[it].second) {
+                for (ingredient in stepsWithIngredients[it].ingredients) {
                     Text(
-                        text = "${ingredient.ingredient}: ${(ingredient.baseStepAmount * amount).cut()}",
+                        text = "${ingredient.ingredient}: ${(ingredient.baseAmount * amount).cut()}",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier

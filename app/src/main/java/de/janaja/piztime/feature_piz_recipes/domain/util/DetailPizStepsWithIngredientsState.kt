@@ -1,8 +1,7 @@
 package de.janaja.piztime.feature_piz_recipes.domain.util
 
-import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepEntity
-import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepIngredientEntity
+import de.janaja.piztime.feature_piz_recipes.domain.model.PizStepWithIngredients
 
 data class DetailPizStepsWithIngredientsState (
-    val pizStepsWithIngredientsDto: List<Pair<PizStepEntity, List<PizStepIngredientEntity>>> = listOf()
+    val pizStepsWithIngredients: List<PizStepWithIngredients> = listOf()
 )

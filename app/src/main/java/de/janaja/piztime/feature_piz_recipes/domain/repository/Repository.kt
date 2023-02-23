@@ -4,6 +4,7 @@ import de.janaja.piztime.feature_piz_recipes.data.local.model.PizIngredientEntit
 import de.janaja.piztime.feature_piz_recipes.data.local.model.PizRecipeEntity
 import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepEntity
 import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepIngredientEntity
+import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipeWithDetails
 import kotlinx.coroutines.flow.Flow
 
 interface Repository {
@@ -25,4 +26,6 @@ interface Repository {
     suspend fun updatePizStepIngredients(pizStepIngredientEntities: List<PizStepIngredientEntity>)
 
     suspend fun initDbIfEmpty()
+
+    suspend fun findPizRecipeWithDetailsById(id: Long): PizRecipeWithDetails?
 }

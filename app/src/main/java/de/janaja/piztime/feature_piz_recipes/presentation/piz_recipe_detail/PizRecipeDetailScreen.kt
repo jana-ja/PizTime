@@ -15,10 +15,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import de.janaja.piztime.feature_piz_recipes.data.local.model.PizIngredientEntity
-import de.janaja.piztime.feature_piz_recipes.data.local.model.PizRecipeEntity
-import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepEntity
-import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepIngredientEntity
+import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
+import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipe
+import de.janaja.piztime.feature_piz_recipes.domain.model.PizStepWithIngredients
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components.DescriptionView
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components.IngredientsView
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
@@ -68,9 +67,9 @@ fun PizRecipeDetailScreen(
 
     PizRecipeDetailView(
         modifier = Modifier,//.offset(x = offset.dp),
-        recipeState.pizRecipeEntity,
-        ingredientsState.pizIngredientEntities,
-        stepsWithIngredientsState.pizStepsWithIngredientsDto,
+        recipeState.pizRecipe,
+        ingredientsState.pizIngredients,
+        stepsWithIngredientsState.pizStepsWithIngredients,
         amountState.amount,
         { viewModel.increaseAmount() },
         { viewModel.decreaseAmount() },
@@ -91,9 +90,9 @@ fun PizRecipeDetailScreen(
 @Composable
 fun PizRecipeDetailView(
     modifier: Modifier,
-    pizRecipeEntity: PizRecipeEntity,
-    pizIngredientEntities: List<PizIngredientEntity>,
-    pizStepsWithIngredientsDto: List<Pair<PizStepEntity, List<PizStepIngredientEntity>>>,
+    pizRecipeEntity: PizRecipe,
+    pizIngredientEntities: List<PizIngredient>,
+    pizStepsWithIngredientsDto: List<PizStepWithIngredients>,
     amount: Int,
     increaseAmount: () -> Unit,
     decreaseAmount: () -> Unit,
@@ -152,7 +151,7 @@ fun PizRecipeDetailView(
 fun PizRecipeDetailViewPreview() {
     PizRecipeDetailView(
         Modifier.background(Color(0xFFC49E2F)),
-        DummyData.DummyPizRecipeEntity,
+        DummyData.DummyPizRecipe,
         DummyData.DummyIngredients,
         DummyData.DummySteps,
         4,

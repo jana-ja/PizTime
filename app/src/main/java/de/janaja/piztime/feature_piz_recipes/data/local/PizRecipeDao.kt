@@ -11,10 +11,13 @@ interface PizRecipeDao {
     suspend fun addAllPizRecipes(pizRecipeEntities: List<PizRecipeEntity>)
 
     @Query("SELECT * FROM PizRecipeEntity WHERE recipeId = :id")
-    fun findPizRecipeById(id: Long): Flow<PizRecipeEntity?>
+    fun findPizRecipeByIdFlow(id: Long): Flow<PizRecipeEntity?>
+
+    @Query("SELECT * FROM PizRecipeEntity WHERE recipeId = :id")
+    fun findPizRecipeById(id: Long): PizRecipeEntity?
 
     @Query("SELECT * FROM PizRecipeEntity")
-    fun getAllPizRecipes(): Flow<List<PizRecipeEntity>>
+    fun getAllPizRecipesFlow(): Flow<List<PizRecipeEntity>>
 
     @Update
     suspend fun updatePizRecipe(pizRecipeEntity: PizRecipeEntity)

@@ -8,10 +8,11 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepEntity
 import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepIngredientEntity
+import de.janaja.piztime.feature_piz_recipes.data.mapper.toRecipe
 import de.janaja.piztime.feature_piz_recipes.domain.use_case.AllPizRecipeUseCases
 import de.janaja.piztime.feature_piz_recipes.domain.util.DetailAmountState
 import de.janaja.piztime.feature_piz_recipes.domain.util.DetailPizIngredientsState
-import de.janaja.piztime.feature_piz_recipes.domain.util.DetailPizRecipeState
+import de.janaja.piztime.feature_piz_recipes.domain.util.DetailPizRecipeWithDetailsState
 import de.janaja.piztime.feature_piz_recipes.domain.util.DetailPizStepsWithIngredientsState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
@@ -28,8 +29,8 @@ class PizRecipeDetailViewModel @Inject constructor(
     private val _detailAmountState = mutableStateOf(DetailAmountState())
     val detailAmountState: State<DetailAmountState> = _detailAmountState
 
-    private val _pizRecipeState = mutableStateOf(DetailPizRecipeState())
-    val pizRecipeState: State<DetailPizRecipeState> = _pizRecipeState
+    private val _pizRecipeState = mutableStateOf(DetailPizRecipeWithDetailsState())
+    val pizRecipeState: State<DetailPizRecipeWithDetailsState> = _pizRecipeState
 
     private val _pizIngredientsState = mutableStateOf(DetailPizIngredientsState())
     val pizIngredientsState: State<DetailPizIngredientsState> = _pizIngredientsState
@@ -38,25 +39,26 @@ class PizRecipeDetailViewModel @Inject constructor(
     val pizStepsWithIngredientsState: State<DetailPizStepsWithIngredientsState> =
         _pizStepsWithIngredientsState
 
-    private var getPizRecipeJob: Job? = null
-    private var getPizIngredientsJob: Job? = null
-    private var getPizStepsWithIngredientsJob: Job? = null
+    private var getPizRecipeWithdetailsJob: Job? = null
+//    private var getPizRecipeJob: Job? = null
+//    private var getPizIngredientsJob: Job? = null
+//    private var getPizStepsWithIngredientsJob: Job? = null
 
     init {
         savedStateHandle.get<Long>("pizRecipeId")?.let { id ->
-            getPizRecipe(id)
-            getPizIngredients(id)
-            getPizStepsWithIngredients(id)
+            getPizRecipeWithDetails(id)
+//            getPizRecipe(id)
+//            getPizIngredients(id)
+//            getPizStepsWithIngredients(id)
         }
     }
-
-    fun getPizRecipe(id: Long) {
-        getPizRecipeJob?.cancel()
-        getPizRecipeJob = allPizRecipesUseCases.getPizRecipeUseCase(id)
+    fun getPizRecipeWithDetails(id: Long) {
+        getPizRecipeWithdetailsJob?.cancel()
+        getPizRecipeWithdetailsJob = allPizRecipesUseCases.getPizRecipeWithDetailsUseCase(id)
             .onEach {
                 it?.let {
                     _pizRecipeState.value = _pizRecipeState.value.copy(
-                        pizRecipeEntity = it
+                        pizRecipe = it.toRecipe()
                     )
                 }
 
@@ -64,38 +66,52 @@ class PizRecipeDetailViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    fun getPizIngredients(id: Long) {
-        getPizIngredientsJob?.cancel()
-        getPizIngredientsJob = allPizRecipesUseCases.getIngredientsUseCase(id)
-            .onEach {
-                _pizIngredientsState.value = _pizIngredientsState.value.copy(
-                    pizIngredientEntities = it
-                )
-            }
-            .launchIn(viewModelScope)
-    }
-
-    fun getPizStepsWithIngredients(id: Long) {
-        getPizStepsWithIngredientsJob?.cancel()
-        getPizStepsWithIngredientsJob = allPizRecipesUseCases.getStepsWithIngredientsUseCase(id)
-            .onEach {
-                // convert map to list here
-                val stepWithIngredientList =
-                    mutableListOf<Pair<PizStepEntity, List<PizStepIngredientEntity>>>()
-                for (key in it.keys) {
-                    val value = it[key]
-                    if (value != null) {
-                        stepWithIngredientList.add(Pair(key, value))
-                    } else {
-                        stepWithIngredientList.add(Pair(key, listOf()))
-                    }
-                }
-                _pizStepsWithIngredientsState.value = _pizStepsWithIngredientsState.value.copy(
-                    pizStepsWithIngredientsDto = stepWithIngredientList
-                )
-            }
-            .launchIn(viewModelScope)
-    }
+//    fun getPizRecipe(id: Long) {
+//        getPizRecipeJob?.cancel()
+//        getPizRecipeJob = allPizRecipesUseCases.getPizRecipeUseCase(id)
+//            .onEach {
+//                it?.let {
+//                    _pizRecipeState.value = _pizRecipeState.value.copy(
+//                        pizRecipe = it.toRecipe()
+//                    )
+//                }
+//
+//            }
+//            .launchIn(viewModelScope)
+//    }
+//
+//    fun getPizIngredients(id: Long) {
+//        getPizIngredientsJob?.cancel()
+//        getPizIngredientsJob = allPizRecipesUseCases.getIngredientsUseCase(id)
+//            .onEach {
+//                _pizIngredientsState.value = _pizIngredientsState.value.copy(
+//                    pizIngredients = it
+//                )
+//            }
+//            .launchIn(viewModelScope)
+//    }
+//
+//    fun getPizStepsWithIngredients(id: Long) {
+//        getPizStepsWithIngredientsJob?.cancel()
+//        getPizStepsWithIngredientsJob = allPizRecipesUseCases.getStepsWithIngredientsUseCase(id)
+//            .onEach {
+//                // convert map to list here
+//                val stepWithIngredientList =
+//                    mutableListOf<Pair<PizStepEntity, List<PizStepIngredientEntity>>>()
+//                for (key in it.keys) {
+//                    val value = it[key]
+//                    if (value != null) {
+//                        stepWithIngredientList.add(Pair(key, value))
+//                    } else {
+//                        stepWithIngredientList.add(Pair(key, listOf()))
+//                    }
+//                }
+//                _pizStepsWithIngredientsState.value = _pizStepsWithIngredientsState.value.copy(
+//                    pizStepsWithIngredients = stepWithIngredientList
+//                )
+//            }
+//            .launchIn(viewModelScope)
+//    }
 
     // 1:41 er sagt mit textfields ist alles in einem state nicht gut weil dann alle views recomposed werden wenn man buchstabe eintippt.
     fun onEvent(event: PizRecipeDetailEvent) {

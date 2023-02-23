@@ -9,8 +9,6 @@ import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipe
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipeWithDetails
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizStepWithIngredients
 
-class PizRecipeMapper {
-
     // domain -> data
     fun PizRecipe.toRecipeEntity(): PizRecipeEntity {
         return PizRecipeEntity(title, feature, imageResourceId, id)
@@ -85,4 +83,3 @@ class PizRecipeMapper {
             pizStepsWithIngredients
         )
     }
-}
