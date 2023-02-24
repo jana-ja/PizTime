@@ -17,6 +17,7 @@ import de.janaja.piztime.feature_piz_recipes.domain.util.DetailPizStepsWithIngre
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 // in clean architecture viewmodel calls use cases or changes things in state (that ui observes)
@@ -46,6 +47,7 @@ class PizRecipeDetailViewModel @Inject constructor(
 
     init {
         savedStateHandle.get<Long>("pizRecipeId")?.let { id ->
+
             getPizRecipeWithDetails(id)
 //            getPizRecipe(id)
 //            getPizIngredients(id)
@@ -53,17 +55,22 @@ class PizRecipeDetailViewModel @Inject constructor(
         }
     }
     fun getPizRecipeWithDetails(id: Long) {
+        // observe result
         getPizRecipeWithdetailsJob?.cancel()
-        getPizRecipeWithdetailsJob = allPizRecipesUseCases.getPizRecipeWithDetailsUseCase(id)
+        getPizRecipeWithdetailsJob = allPizRecipesUseCases.getPizRecipeWithDetailsFlowUseCase()
             .onEach {
                 it?.let {
                     _pizRecipeState.value = _pizRecipeState.value.copy(
-                        pizRecipe = it.toRecipe()
+                        pizRecipe = it
                     )
                 }
 
             }
             .launchIn(viewModelScope)
+        // load data
+        viewModelScope.launch {
+            allPizRecipesUseCases.getPizRecipeWithDetailsUseCase(id)
+        }
     }
 
 //    fun getPizRecipe(id: Long) {

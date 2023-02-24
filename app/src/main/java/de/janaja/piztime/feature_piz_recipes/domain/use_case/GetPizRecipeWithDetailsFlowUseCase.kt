@@ -4,11 +4,12 @@ import de.janaja.piztime.feature_piz_recipes.data.local.model.PizRecipeEntity
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipeWithDetails
 import de.janaja.piztime.feature_piz_recipes.domain.repository.Repository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
-class GetPizRecipeWithDetailsUseCase(
+class GetPizRecipeWithDetailsFlowUseCase(
     private val repository: Repository
 ) {
-    suspend operator fun invoke(id: Long) {
-       repository.findPizRecipeWithDetailsById(id)
+    operator fun invoke(): StateFlow<PizRecipeWithDetails> {
+       return repository.pizRecipeWithDetailsFlow
     }
 }

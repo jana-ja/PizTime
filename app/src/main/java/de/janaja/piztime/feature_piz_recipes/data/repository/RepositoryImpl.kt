@@ -12,10 +12,7 @@ import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipeWithDetails
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizStepWithIngredients
 import de.janaja.piztime.feature_piz_recipes.domain.repository.Repository
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 
 class RepositoryImpl( // TODO here db bekommen mit dagger hilt
     private val pizRecipeDao: PizRecipeDao,
@@ -25,9 +22,9 @@ class RepositoryImpl( // TODO here db bekommen mit dagger hilt
 ) : Repository {
 
     private val _pizRecipeWithDetailsFlow = MutableStateFlow(DummyData.DummyPizRecipeWithDetails)
-    val pizRecipeWithDetailsFlow = _pizRecipeWithDetailsFlow.asStateFlow()
+    override val pizRecipeWithDetailsFlow = _pizRecipeWithDetailsFlow.asStateFlow()
 
-    override suspend fun findPizRecipeWithDetailsById(id: Long): PizRecipeWithDetails? {
+    override suspend fun findPizRecipeWithDetailsById(id: Long){
         // TODO hier flow bauen und returnen oder member flow haben und dann im viewmodel einmal den flow holen und "observen" und findPizRecipe.. aufrufen.
         // TODO vllt use case layer wegwerfen?
         pizRecipeDao.findPizRecipeById(id)?.let {
@@ -35,9 +32,10 @@ class RepositoryImpl( // TODO here db bekommen mit dagger hilt
             val pizIngredientEntities: List<PizIngredientEntity>  = pizIngredientDao.findPizIngredientsByPizRecipeId(id)
             val pizStepWithIngredientEntities: List<Pair<PizStepEntity, List<PizStepIngredientEntity>>> = mapToList(pizStepDao.findPizStepsWithPizStepIngredientsByPizRecipeId(id))
 
-            return EntityCollection(pizRecipeEntity, pizIngredientEntities, pizStepWithIngredientEntities).toPizRecipeWithDetails()
+            _pizRecipeWithDetailsFlow.update { EntityCollection(pizRecipeEntity, pizIngredientEntities, pizStepWithIngredientEntities).toPizRecipeWithDetails() }
         }
-        return null
+        // TODO update with null? do nothing??
+        //return null
     }
 
     private fun mapToList(map: Map<PizStepEntity, List<PizStepIngredientEntity>>): List<Pair<PizStepEntity, List<PizStepIngredientEntity>>>{
