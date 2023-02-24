@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.janaja.piztime.feature_piz_recipes.domain.use_case.AllPizRecipeUseCases
 import de.janaja.piztime.feature_piz_recipes.domain.util.HomePizRecipesState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -48,13 +49,16 @@ class PizRecipesViewModel @Inject constructor(
 
     private fun getPizRecipes() {
         getPizRecipesJob?.cancel()
-        getPizRecipesJob = allPizRecipesUseCases.getAllPizRecipesUseCase()
+        getPizRecipesJob = allPizRecipesUseCases.getAllPizRecipesFlowUseCase()
             .onEach {
                 _state.value = _state.value.copy(
-                    pizRecipeEntities = it
+                    pizRecipes = it
                 )
             }
             .launchIn(viewModelScope)
+        viewModelScope.launch(Dispatchers.IO) {
+            allPizRecipesUseCases.getAllPizRecipesUseCase()
+        }
     }
 
     sealed class UiEvent{

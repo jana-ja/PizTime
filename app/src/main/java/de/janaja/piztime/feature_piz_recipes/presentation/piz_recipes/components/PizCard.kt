@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import de.janaja.piztime.feature_piz_recipes.data.local.model.PizRecipeEntity
+import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipe
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 import de.janaja.piztime.ui.theme.PizTimeTheme
 import kotlinx.coroutines.delay
@@ -30,7 +31,7 @@ enum class PizVisibility {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PizCard(
-    pizRecipeEntity: PizRecipeEntity,
+    pizRecipeEntity: PizRecipe,
     onClick: () -> Unit,
     index: Int
 ) {
@@ -162,6 +163,6 @@ fun PizCard(
 @Composable
 fun PizCardPreview() {
     PizTimeTheme {
-        PizCard(DummyData.DummyPizRecipeEntity, {}, 0)
+        PizCard(DummyData.DummyPizRecipe, {}, 0)
     }
 }

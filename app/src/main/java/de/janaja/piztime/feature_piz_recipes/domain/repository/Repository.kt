@@ -4,6 +4,7 @@ import de.janaja.piztime.feature_piz_recipes.data.local.model.PizIngredientEntit
 import de.janaja.piztime.feature_piz_recipes.data.local.model.PizRecipeEntity
 import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepEntity
 import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepIngredientEntity
+import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipe
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipeWithDetails
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,13 +13,15 @@ import kotlinx.coroutines.flow.asStateFlow
 interface Repository {
 
     val pizRecipeWithDetailsFlow: StateFlow<PizRecipeWithDetails>
+    val allPizRecipesFlow: StateFlow<List<PizRecipe>>
+
     fun findPizRecipebyId(id: Long): Flow<PizRecipeEntity?>
 
     fun findPizIngredientsByPizRecipeId(pizRecipeId: Long): Flow<List<PizIngredientEntity>>
 
     fun findPizStepsWithIngredientsByPizRecipeId(pizRecipeId: Long): Flow<Map<PizStepEntity, List<PizStepIngredientEntity>>>
 
-    fun getAllPizRecipes(): Flow<List<PizRecipeEntity>>
+    suspend fun getAllPizRecipes()
 
     suspend fun updatePizRecipe(pizRecipeEntity: PizRecipeEntity)
     

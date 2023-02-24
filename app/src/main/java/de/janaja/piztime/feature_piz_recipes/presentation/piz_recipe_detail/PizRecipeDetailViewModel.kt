@@ -14,6 +14,7 @@ import de.janaja.piztime.feature_piz_recipes.domain.util.DetailAmountState
 import de.janaja.piztime.feature_piz_recipes.domain.util.DetailPizIngredientsState
 import de.janaja.piztime.feature_piz_recipes.domain.util.DetailPizRecipeWithDetailsState
 import de.janaja.piztime.feature_piz_recipes.domain.util.DetailPizStepsWithIngredientsState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -68,7 +69,7 @@ class PizRecipeDetailViewModel @Inject constructor(
             }
             .launchIn(viewModelScope)
         // load data
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             allPizRecipesUseCases.getPizRecipeWithDetailsUseCase(id)
         }
     }

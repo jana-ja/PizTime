@@ -38,8 +38,10 @@ object AppModule {
         return AllPizRecipeUseCases(
             initDbIfEmptyUseCase = InitDbIfEmptyUseCase(repository),
             getAllPizRecipesUseCase = GetAllPizRecipesUseCase(repository),
+            getAllPizRecipesFlowUseCase = GetAllPizRecipesFlowUseCase(repository),
             getPizRecipeUseCase = GetPizRecipeUseCase(repository),
             getPizRecipeWithDetailsUseCase = GetPizRecipeWithDetailsUseCase(repository),
+            getPizRecipeWithDetailsFlowUseCase = GetPizRecipeWithDetailsFlowUseCase(repository),
             updatePizRecipeUseCase = UpdatePizRecipeUseCase(repository),
             getIngredientsUseCase = GetIngredientsUseCase(repository),
             updateIngredientsUseCase = UpdateIngredientsUseCase(repository),

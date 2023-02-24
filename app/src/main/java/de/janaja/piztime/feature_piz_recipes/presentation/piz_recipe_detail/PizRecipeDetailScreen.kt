@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipe
+import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipeWithDetails
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizStepWithIngredients
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components.DescriptionView
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components.IngredientsView
@@ -31,8 +32,8 @@ fun PizRecipeDetailScreen(
 
     val amountState = viewModel.detailAmountState.value
     val recipeState = viewModel.pizRecipeState.value
-    val ingredientsState = viewModel.pizIngredientsState.value
-    val stepsWithIngredientsState = viewModel.pizStepsWithIngredientsState.value
+//    val ingredientsState = viewModel.pizIngredientsState.value
+//    val stepsWithIngredientsState = viewModel.pizStepsWithIngredientsState.value
 
     //  TODO extra states for edit
 
@@ -68,8 +69,6 @@ fun PizRecipeDetailScreen(
     PizRecipeDetailView(
         modifier = Modifier,//.offset(x = offset.dp),
         recipeState.pizRecipe,
-        ingredientsState.pizIngredients,
-        stepsWithIngredientsState.pizStepsWithIngredients,
         amountState.amount,
         { viewModel.increaseAmount() },
         { viewModel.decreaseAmount() },
@@ -90,9 +89,7 @@ fun PizRecipeDetailScreen(
 @Composable
 fun PizRecipeDetailView(
     modifier: Modifier,
-    pizRecipeEntity: PizRecipe,
-    pizIngredientEntities: List<PizIngredient>,
-    pizStepsWithIngredientsDto: List<PizStepWithIngredients>,
+    pizRecipeWithDetails: PizRecipeWithDetails,
     amount: Int,
     increaseAmount: () -> Unit,
     decreaseAmount: () -> Unit,
@@ -109,19 +106,19 @@ fun PizRecipeDetailView(
 
             Column(modifier = Modifier.height(100.dp)){
                 Text(
-                    text = pizRecipeEntity.title,
+                    text = pizRecipeWithDetails.title,
                     style = MaterialTheme.typography.headlineMedium
                 )
                 Text(
-                    text = pizRecipeEntity.feature,
+                    text = pizRecipeWithDetails.feature,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(top = 16.dp, start = 8.dp)
                 )
             }
 
-            IngredientsView(pizIngredientEntities, amount, increaseAmount, decreaseAmount, Modifier.padding(top = 16.dp))
+            IngredientsView(pizRecipeWithDetails.ingredients, amount, increaseAmount, decreaseAmount, Modifier.padding(top = 16.dp))
 
-            DescriptionView(pizStepsWithIngredientsDto, amount, Modifier.padding(top = 16.dp))
+            DescriptionView(pizRecipeWithDetails.steps, amount, Modifier.padding(top = 16.dp))
         }
 
         // pizza image
@@ -132,8 +129,8 @@ fun PizRecipeDetailView(
                 .padding(top = 16.dp, end = 16.dp)
         ) {
             Image(
-                painter = painterResource(id = pizRecipeEntity.imageResourceId),
-                contentDescription = "Image of ${pizRecipeEntity.title}",//stringResource(id = ),
+                painter = painterResource(id = pizRecipeWithDetails.imageResourceId),
+                contentDescription = "Image of ${pizRecipeWithDetails.title}",//stringResource(id = ),
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .size(100.dp)
@@ -151,9 +148,7 @@ fun PizRecipeDetailView(
 fun PizRecipeDetailViewPreview() {
     PizRecipeDetailView(
         Modifier.background(Color(0xFFC49E2F)),
-        DummyData.DummyPizRecipe,
-        DummyData.DummyIngredients,
-        DummyData.DummySteps,
+        DummyData.DummyPizRecipeWithDetails,
         4,
         { },
         { },

@@ -26,7 +26,7 @@ fun PizRecipesScreen(
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
 
-        state.pizRecipeEntities.forEachIndexed() { index, pizRecipe ->
+        state.pizRecipes.forEachIndexed() { index, pizRecipe ->
                 PizCard(
                     pizRecipeEntity = pizRecipe,
                     onClick = {
