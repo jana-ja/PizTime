@@ -6,9 +6,6 @@ import de.janaja.piztime.feature_piz_recipes.data.local.model.PizRecipeEntity
 import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepEntity
 import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepIngredientEntity
 import de.janaja.piztime.feature_piz_recipes.data.mapper.*
-import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
-import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipeWithDetails
-import de.janaja.piztime.feature_piz_recipes.domain.model.PizStepWithIngredients
 import de.janaja.piztime.feature_piz_recipes.domain.repository.Repository
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 import kotlinx.coroutines.flow.*
@@ -124,6 +121,7 @@ override suspend fun initDbIfEmpty() {
             }
 
         }
+        getAllPizRecipes()
 //                pizRecipeDao.addAllPizRecipes(DummyData.DummyRecipeWithDetailsData.map { recipeWithDetails ->
 //                    recipeWithDetails.toPizRecipe().toRecipeEntity()
 //                })
