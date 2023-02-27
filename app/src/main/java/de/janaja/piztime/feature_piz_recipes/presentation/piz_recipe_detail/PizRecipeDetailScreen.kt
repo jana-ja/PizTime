@@ -11,15 +11,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
-import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipe
+import de.janaja.piztime.R
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipeWithDetails
-import de.janaja.piztime.feature_piz_recipes.domain.model.PizStepWithIngredients
-import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components.DescriptionView
+import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components.StepsView
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components.IngredientsView
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 import kotlinx.coroutines.launch
@@ -96,15 +96,22 @@ fun PizRecipeDetailView(
     pizOffset: Float,
     pizRotation: Float
 ) {
+
+    val overlap: Dp = dimensionResource(id = R.dimen.sectionTopShadowHeight)
     Box {
         // screen content
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .background(Color.White)
+
         ) {
 
-            Column(modifier = Modifier.height(100.dp)){
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .height(100.dp)
+            ) {
                 Text(
                     text = pizRecipeWithDetails.title,
                     style = MaterialTheme.typography.headlineMedium
@@ -116,9 +123,21 @@ fun PizRecipeDetailView(
                 )
             }
 
-            IngredientsView(pizRecipeWithDetails.ingredients, amount, increaseAmount, decreaseAmount, Modifier.padding(top = 16.dp))
+            IngredientsView(
+                pizRecipeWithDetails.ingredients,
+                amount,
+                increaseAmount,
+                decreaseAmount,
+                Modifier.padding(bottom = overlap)
+            )
 
-            DescriptionView(pizRecipeWithDetails.steps, amount, Modifier.padding(top = 16.dp))
+            StepsView(
+                pizRecipeWithDetails.steps,
+                amount,
+                Modifier.padding(top = 16.dp),
+                Modifier.offset(y = -overlap)
+            )
+
         }
 
         // pizza image
