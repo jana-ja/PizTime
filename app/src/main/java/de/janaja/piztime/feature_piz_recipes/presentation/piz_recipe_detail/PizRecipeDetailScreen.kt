@@ -16,9 +16,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import de.janaja.piztime.R
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipeWithDetails
+import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components.HeaderView
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components.StepsView
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components.IngredientsView
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
@@ -103,39 +105,32 @@ fun PizRecipeDetailView(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .background(Color.White)
+//                .background(Color.White)
 
         ) {
 
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .height(100.dp)
-            ) {
-                Text(
-                    text = pizRecipeWithDetails.title,
-                    style = MaterialTheme.typography.headlineMedium
-                )
-                Text(
-                    text = pizRecipeWithDetails.feature,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(top = 16.dp, start = 8.dp)
-                )
-            }
+            HeaderView(
+                title = pizRecipeWithDetails.title,
+                feature = pizRecipeWithDetails.feature,
+                contentModifier = Modifier,
+                backGroundModifier = Modifier.zIndex(1f)
+
+            )
 
             IngredientsView(
-                pizRecipeWithDetails.ingredients,
-                amount,
-                increaseAmount,
-                decreaseAmount,
-                Modifier.padding(bottom = overlap)
+                ingredients = pizRecipeWithDetails.ingredients,
+                amount = amount,
+                increaseAmount = increaseAmount,
+                decreaseAmount = decreaseAmount,
+                contentModifier = Modifier.padding(top = overlap),
+                backGroundModifier = Modifier.offset(y = -overlap)
             )
 
             StepsView(
-                pizRecipeWithDetails.steps,
-                amount,
-                Modifier.padding(top = 16.dp),
-                Modifier.offset(y = -overlap)
+                stepsWithIngredients = pizRecipeWithDetails.steps,
+                amount = amount,
+                contentModifier = Modifier,
+                backGroundModifier = Modifier
             )
 
         }
@@ -161,6 +156,7 @@ fun PizRecipeDetailView(
 
     }
 }
+
 
 @Preview
 @Composable

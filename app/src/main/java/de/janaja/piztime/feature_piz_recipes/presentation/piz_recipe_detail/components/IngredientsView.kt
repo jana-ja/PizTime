@@ -9,12 +9,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.tooling.preview.Preview
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 import de.janaja.piztime.feature_piz_recipes.presentation.util.cut
-
 
 
 @Composable
@@ -31,15 +34,31 @@ fun IngredientsView(
     val column1Weight = .2f
     val column2Weight = .8f
 
+    /*
     Box(
         modifier = backGroundModifier
     ) {
         // background
-        SectionTopShadow(
+        SectionBottomShadow(
             modifier = Modifier.matchParentSize()
         )
 
         // content
+*/
+
+    // TODO ich könnte surface mit der großen shape benutzen udn die bottomElevation extension function damit nur unten shadow ist.
+    //  das gleiche ergebnis bekomme ich auch mit meinem custom box backgroudn zeugs
+    //  wenn ich aber will dass das auch gut aussieht ohen dass diese dinge und der gesamte backgroudn die gleiche farbe haben muss ich mit offsets arbeiten.
+    Surface(
+        modifier = backGroundModifier.bottomElevation(),
+        shape = BackgroundAndBottomShadowShape(100.dp.value),
+        color = Color.White,
+        shadowElevation = 8.dp
+    ) {
+
+        // content
+
+
         Column(
             modifier = contentModifier
                 .fillMaxWidth()
@@ -109,3 +128,15 @@ fun RowScope.TableCell(
 fun IngredientsViewPreview() {
     IngredientsView(ingredients = DummyData.DummyIngredients, amount = 4, {}, {})
 }
+
+private fun Modifier.bottomElevation(): Modifier = this.then(Modifier.drawWithContent {
+    val paddingPx = 8.dp.toPx()
+    clipRect(
+        left = 0f,
+        top = 0f,
+        right = size.width,
+        bottom = size.height + paddingPx
+    ) {
+        this@drawWithContent.drawContent()
+    }
+})

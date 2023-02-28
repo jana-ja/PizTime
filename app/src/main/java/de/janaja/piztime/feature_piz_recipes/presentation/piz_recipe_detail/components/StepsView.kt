@@ -33,9 +33,9 @@ fun StepsView(
         modifier = backGroundModifier
     ) {
         // background
-        SectionTopShadow(
-            modifier = Modifier.matchParentSize()
-        )
+//        SectionTopShadow(
+//            modifier = Modifier.matchParentSize()
+//        )
 
         // content
 
