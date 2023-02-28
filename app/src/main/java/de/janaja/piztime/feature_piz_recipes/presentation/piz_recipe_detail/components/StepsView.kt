@@ -23,14 +23,15 @@ import de.janaja.piztime.feature_piz_recipes.presentation.util.cut
 
 @Composable
 fun StepsView(
+    modifier: Modifier = Modifier,
     stepsWithIngredients: List<PizStepWithIngredients>,
     amount: Int,
     contentModifier: Modifier = Modifier,
-    backGroundModifier: Modifier = Modifier
+
 ) {
 
     Box(
-        modifier = backGroundModifier
+        modifier = modifier
     ) {
         // background
 //        SectionTopShadow(

@@ -2,38 +2,34 @@ package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.com
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import de.janaja.piztime.feature_piz_recipes.presentation.util.TopSheetShape
+import de.janaja.piztime.feature_piz_recipes.presentation.util.bottomElevation
 
 @Composable
 fun HeaderView(
+    modifier: Modifier = Modifier,
     title: String,
     feature: String,
     contentModifier: Modifier = Modifier,
-    backGroundModifier: Modifier = Modifier
+
 ) {
 
-    Box(
-        modifier = backGroundModifier.fillMaxWidth()
-    ) {
-        // background
-        SectionBottomShadow(
-            modifier = Modifier.matchParentSize()
-        )
-
-        // content
-
-    /*Surface(
-        shape = BackgroundAndBottomShadowShape(100.dp.value),
+    Surface(
+        modifier = modifier.fillMaxWidth().bottomElevation(),
+        shape = TopSheetShape(100.dp.value),
         color = Color.White,
         shadowElevation = 8.dp
     ) {
 
         // content
-*/
+
         Column(
             modifier = contentModifier
                 .padding(16.dp)

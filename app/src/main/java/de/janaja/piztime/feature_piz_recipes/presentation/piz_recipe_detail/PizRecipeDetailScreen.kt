@@ -4,7 +4,6 @@ import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -110,27 +109,30 @@ fun PizRecipeDetailView(
         ) {
 
             HeaderView(
+                modifier = Modifier.zIndex(1f),
                 title = pizRecipeWithDetails.title,
                 feature = pizRecipeWithDetails.feature,
-                contentModifier = Modifier,
-                backGroundModifier = Modifier.zIndex(1f)
-
+                contentModifier = Modifier
             )
 
+            // if sections should have different background colors or have no gaps in general,
+            // then they have to overlap with offset and padding (offset for the whole thing and padding for the content)
             IngredientsView(
+                modifier = Modifier.offset(y = -overlap),
                 ingredients = pizRecipeWithDetails.ingredients,
                 amount = amount,
                 increaseAmount = increaseAmount,
                 decreaseAmount = decreaseAmount,
                 contentModifier = Modifier.padding(top = overlap),
-                backGroundModifier = Modifier.offset(y = -overlap)
+
             )
 
             StepsView(
+                modifier = Modifier,
                 stepsWithIngredients = pizRecipeWithDetails.steps,
                 amount = amount,
                 contentModifier = Modifier,
-                backGroundModifier = Modifier
+
             )
 
         }
