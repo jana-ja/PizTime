@@ -25,14 +25,17 @@ fun HeaderView(
 ) {
 
 
+
+    // content
+    // TODO this is only here to fix current preview issue with resource dimen values
+    val borderHeight: Dp = 100.dp //dimensionResource(id = R.dimen.topSheetBorderHeight).value // TODO look up how to turn to dp properly
     Surface(
         modifier = modifier.fillMaxWidth().bottomElevation(),
-        shape = TopSheetShape(dimensionResource(id = R.dimen.topSheetBorderHeight).value),
+        shape = TopSheetShape(borderHeight.value),
         color = Color.White,
         shadowElevation = 8.dp
     ) {
 
-        // content
 
         Column(
             modifier = contentModifier

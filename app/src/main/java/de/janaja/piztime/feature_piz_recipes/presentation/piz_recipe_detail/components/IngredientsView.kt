@@ -12,9 +12,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
-import de.janaja.piztime.R
+import androidx.compose.ui.unit.Dp
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 import de.janaja.piztime.feature_piz_recipes.presentation.util.TopSheetShape
@@ -36,10 +35,13 @@ fun IngredientsView(
     val column1Weight = .2f
     val column2Weight = .8f
 
+    // TODO this is only here to fix current preview issue with resource dimen values
+    val borderHeight: Dp = 100.dp //dimensionResource(id = R.dimen.topSheetBorderHeight).value // TODO look up how to turn to dp properly
+
 
     Surface(
         modifier = modifier.bottomElevation(),
-        shape = TopSheetShape(dimensionResource(id = R.dimen.topSheetBorderHeight).value),
+        shape = TopSheetShape(borderHeight.value),
         color = Color.White,
         shadowElevation = 8.dp
     ) {
