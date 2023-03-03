@@ -31,7 +31,7 @@ fun StepsView(
 ) {
 
     Box(
-        modifier = modifier.background(Color.Green)
+        modifier = modifier.background(Color.White)
     ) {
 
         LazyColumn(

@@ -105,10 +105,13 @@ fun PizRecipeDetailView(
         // screen content
         Column(
             modifier = modifier
-                .fillMaxSize()
-//                .background(Color.White)
+                .fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(-overlap)
 
         ) {
+            // if sections should have different background colors or have no gaps in general,
+            // then they have to overlap (negative space in layout arrangement and extra padding for the views tops)
+
 
             HeaderView(
                 modifier = Modifier.zIndex(1f),
@@ -118,10 +121,8 @@ fun PizRecipeDetailView(
                 height = headerHeight
             )
 
-            // if sections should have different background colors or have no gaps in general,
-            // then they have to overlap with offset and padding (offset for the whole thing and padding for the content)
             IngredientsView(
-                modifier = Modifier.offset(y = -overlap),
+                modifier = Modifier.zIndex(.9f),
                 ingredients = pizRecipeWithDetails.ingredients,
                 amount = amount,
                 increaseAmount = increaseAmount,
@@ -130,12 +131,11 @@ fun PizRecipeDetailView(
 
             )
 
-            // TODO komische offset überlappungs sache vllt mit constraintlayout lösen.
             StepsView(
-                modifier = Modifier,
+                modifier = Modifier.zIndex(.8f),
                 stepsWithIngredients = pizRecipeWithDetails.steps,
                 amount = amount,
-                contentModifier = Modifier
+                contentModifier = Modifier.padding(top = overlap)
 
             )
 
