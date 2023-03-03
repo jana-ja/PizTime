@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -37,7 +38,7 @@ fun HeaderView(
     // animation stuff
     val animDuration = 1100
     var screenVisible by remember {
-        mutableStateOf(false)
+        mutableStateOf(true) // TODO change back
     }
     val transition = updateTransition(targetState = screenVisible, null)
 
@@ -81,7 +82,8 @@ fun HeaderView(
             .padding(16.dp)
             .height(height)) {
             Column(
-
+                modifier = Modifier.matchParentSize().padding(bottom = 24.dp),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
                     text = title,
@@ -90,7 +92,13 @@ fun HeaderView(
                 Text(
                     text = feature,
                     style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(top = 16.dp, start = 8.dp)
+                    fontStyle = FontStyle.Italic,
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+                Text(
+                    text = "Start x hours early",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(start = 16.dp)
                 )
             }
 
@@ -99,14 +107,15 @@ fun HeaderView(
                 modifier = Modifier
                     .offset(pizOffset.dp)
                     .align(Alignment.TopEnd)
-                    .padding(top = 16.dp, end = 16.dp)
+                    //.padding(top = 16.dp, end = 8.dp, bottom = 16.dp)
             ) {
                 Image(
                     painter = painterResource(id = imageResId),
                     contentDescription = "Image of $title",
                     contentScale = ContentScale.Fit,
                     modifier = Modifier
-                        .size(100.dp) // TDOD set
+                        .size(height)
+                        .padding(8.dp)
                         .rotate(pizRotation)
 
                 )

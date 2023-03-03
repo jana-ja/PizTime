@@ -32,9 +32,6 @@ fun IngredientsView(
 ) {
     Log.i("IngredientsView", "I got recomposed!")
 
-    val column1Weight = .2f
-    val column2Weight = .8f
-
     // TODO this is only here to fix current preview issue with resource dimen values
     val borderHeight: Dp = 100.dp //dimensionResource(id = R.dimen.topSheetBorderHeight).value // TODO look up how to turn to dp properly
 
@@ -77,19 +74,14 @@ fun IngredientsView(
                 Modifier
                     .padding(PaddingValues(start = 16.dp, top = 16.dp))
             ) {
-//            item {
-//                Row(Modifier.background(Color.GRAY)) {
-//                    TableCell(text = "Column 1", weight = column1Weight)
-//                    TableCell(text = "Column 2", weight = column2Weight)
-//                }
-//            }
+
                 items(ingredients) { ingredient ->
                     Row(Modifier.fillMaxWidth()) {
                         TableCell(
                             text = (ingredient.baseAmount * amount).cut(),
-                            weight = column1Weight
+                            modifier = Modifier.weight(0.2f)
                         )
-                        TableCell(text = ingredient.ingredient, weight = column2Weight)
+                        TableCell(text = ingredient.ingredient, modifier = Modifier.weight(0.8f))
                     }
                 }
             }
@@ -100,15 +92,14 @@ fun IngredientsView(
 
 @Composable
 fun RowScope.TableCell(
-    text: String,
-    weight: Float
+    modifier: Modifier,
+    text: String
 ) {
     Text(
         text = text,
-        Modifier
+        modifier.padding(bottom = 8.dp)
             //.border(1.dp, Color.BLACK)
-            .weight(weight)
-            .padding(8.dp),
+            ,
         style = MaterialTheme.typography.bodyMedium
     )
 }

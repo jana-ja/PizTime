@@ -11,7 +11,7 @@ fun Double.cut(): String {
 }
 
 fun Modifier.bottomElevation(): Modifier = this.then(Modifier.drawWithContent {
-    val paddingPx = 8.dp.toPx()
+    val paddingPx = 24.dp.toPx() // TODO find the right value here, different elevation levels (zIndex) have different length of shadows event with same shadowElevation Value
     clipRect(
         left = 0f,
         top = 0f,
