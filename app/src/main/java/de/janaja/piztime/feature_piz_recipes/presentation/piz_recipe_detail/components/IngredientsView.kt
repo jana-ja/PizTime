@@ -12,7 +12,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
+import de.janaja.piztime.R
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 import de.janaja.piztime.feature_piz_recipes.presentation.util.TopSheetShape
@@ -37,7 +39,7 @@ fun IngredientsView(
 
     Surface(
         modifier = modifier.bottomElevation(),
-        shape = TopSheetShape(100.dp.value),
+        shape = TopSheetShape(dimensionResource(id = R.dimen.topSheetBorderHeight).value),
         color = Color.White,
         shadowElevation = 8.dp
     ) {
@@ -56,7 +58,7 @@ fun IngredientsView(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     "Zutaten für",
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleLarge
                 )
                 AmountSelector(
                     amount,
@@ -65,7 +67,7 @@ fun IngredientsView(
                 )
                 Text(
                     "Pizzen:",
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleLarge
                 )
             }
 

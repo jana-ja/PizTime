@@ -31,14 +31,8 @@ fun StepsView(
 ) {
 
     Box(
-        modifier = modifier
+        modifier = modifier.background(Color.Green)
     ) {
-        // background
-//        SectionTopShadow(
-//            modifier = Modifier.matchParentSize()
-//        )
-
-        // content
 
         LazyColumn(
             modifier = contentModifier
@@ -51,7 +45,7 @@ fun StepsView(
             item {
                 Text(
                     "Rezept:",
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleLarge
                 )
             }
 
@@ -60,7 +54,7 @@ fun StepsView(
                 Text(
                     "${it + 1}:\t\t${stepsWithIngredients[it].description}",
                     Modifier.padding(PaddingValues(start = 16.dp, top = 16.dp)),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyLarge
                 )
                 // step ingredients
                 SimpleFlowRow(

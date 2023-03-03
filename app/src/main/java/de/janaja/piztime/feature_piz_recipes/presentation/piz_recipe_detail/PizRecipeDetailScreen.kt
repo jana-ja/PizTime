@@ -98,7 +98,9 @@ fun PizRecipeDetailView(
     pizRotation: Float
 ) {
 
-    val overlap: Dp = dimensionResource(id = R.dimen.sectionTopShadowHeight)
+    val overlap: Dp = dimensionResource(id = R.dimen.topSheetBorderHeight)
+    val headerHeight = 150.dp
+
     Box {
         // screen content
         Column(
@@ -112,7 +114,8 @@ fun PizRecipeDetailView(
                 modifier = Modifier.zIndex(1f),
                 title = pizRecipeWithDetails.title,
                 feature = pizRecipeWithDetails.feature,
-                contentModifier = Modifier
+                contentModifier = Modifier,
+                height = headerHeight
             )
 
             // if sections should have different background colors or have no gaps in general,
@@ -127,16 +130,18 @@ fun PizRecipeDetailView(
 
             )
 
+            // TODO komische offset überlappungs sache vllt mit constraintlayout lösen.
             StepsView(
                 modifier = Modifier,
                 stepsWithIngredients = pizRecipeWithDetails.steps,
                 amount = amount,
-                contentModifier = Modifier,
+                contentModifier = Modifier
 
             )
 
         }
 
+        // TODO kann ich die piz jetzt doch in den header packen, weil der header nicht animiert wird?
         // pizza image
         Box(
             modifier = Modifier
@@ -149,7 +154,7 @@ fun PizRecipeDetailView(
                 contentDescription = "Image of ${pizRecipeWithDetails.title}",//stringResource(id = ),
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
-                    .size(100.dp)
+                    .size(headerHeight / 3 * 2)
                     .rotate(pizRotation)
 
             )

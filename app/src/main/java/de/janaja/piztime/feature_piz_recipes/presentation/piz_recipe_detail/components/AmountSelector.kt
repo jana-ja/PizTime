@@ -27,7 +27,7 @@ fun AmountSelector(
         CompositionLocalProvider(LocalMinimumTouchTargetEnforcement provides false) {
             IconButton(
                 onClick = decreaseAmount,
-                Modifier.height(32.dp).width(24.dp)
+                Modifier.height(40.dp).width(32.dp)
             ) {
                 Icon(
                     Icons.Default.KeyboardArrowLeft,
@@ -39,13 +39,13 @@ fun AmountSelector(
         Text(
             text = amount.toString(),
             modifier = Modifier.align(Alignment.CenterVertically),
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Center
         )
         CompositionLocalProvider(LocalMinimumTouchTargetEnforcement provides false) {
             IconButton(
                 onClick = increaseAmount,
-                Modifier.height(32.dp).width(24.dp)
+                Modifier.height(40.dp).width(32.dp)
             ) {
                 Icon(
                     Icons.Default.KeyboardArrowRight,
