@@ -56,7 +56,8 @@ fun PizRecipeDetailView(
     Box {
         Column(
             modifier = modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .background(Color.White),
             verticalArrangement = Arrangement.spacedBy(-overlap)
 
         ) {

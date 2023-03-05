@@ -2,12 +2,8 @@ package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.com
 
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,8 +33,7 @@ fun StepsView(
         LazyColumn(
             modifier = contentModifier
                 .fillMaxWidth()
-                .padding(top = 16.dp)
-                .padding(horizontal = 16.dp)
+                .padding(16.dp)
         ) {
             Log.i("StepsView", "I got recomposed!")
 
@@ -50,29 +45,43 @@ fun StepsView(
             }
 
             items(stepsWithIngredients.size) {
-                // step description
-                Text(
-                    "${it + 1}:\t\t${stepsWithIngredients[it].description}",
-                    Modifier.padding(PaddingValues(start = 16.dp, top = 16.dp)),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                // step ingredients
-                SimpleFlowRow(
-                    verticalGap = 8.dp,
-                    horizontalGap = 8.dp,
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    for (ingredient in stepsWithIngredients[it].ingredients) {
+                Column {
+                    // step description
+                    Row{
                         Text(
-                            text = "${ingredient.ingredient}: ${(ingredient.baseAmount * amount).cut()}",
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier
-                                .background(Color.LightGray, RoundedCornerShape(4.dp))
-                                .padding(4.dp)
+                            "${it + 1}: ",
+                            Modifier.padding(PaddingValues(start = 16.dp, top = 16.dp)),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                        Text(
+                            stepsWithIngredients[it].description,
+                            Modifier.padding(PaddingValues(top = 16.dp)),
+                            style = MaterialTheme.typography.bodyLarge
                         )
                     }
+
+                    // step ingredients
+                    if(stepsWithIngredients[it].ingredients.isNotEmpty()) {
+                        SimpleFlowRow(
+                            verticalGap = 8.dp,
+                            horizontalGap = 8.dp,
+                            modifier = Modifier.padding(start = 16.dp, top = 8.dp)
+                        ) {
+                            for (ingredient in stepsWithIngredients[it].ingredients) {
+                                Text(
+                                    text = "${ingredient.ingredient}: ${(ingredient.baseAmount * amount).cut()}g",
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                    modifier = Modifier
+                                        //.background(MaterialTheme.colorScheme.background, RoundedCornerShape(8.dp))
+                                        .padding(4.dp),
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                        }
+                    }
                 }
+
             }
         }
     }

@@ -33,7 +33,7 @@ fun IngredientsView(
     Log.i("IngredientsView", "I got recomposed!")
 
     // TODO this is only here to fix current preview issue with resource dimen values
-    val borderHeight: Dp = 100.dp //dimensionResource(id = R.dimen.topSheetBorderHeight).value // TODO look up how to turn to dp properly
+    val borderHeight: Dp = 100.dp //dimensionResource(id = R.dimen.topSheetBorderHeight).value // TODO look up how to turn to dp properly. roundToPx()?
 
 
     Surface(
@@ -78,10 +78,10 @@ fun IngredientsView(
                 items(ingredients) { ingredient ->
                     Row(Modifier.fillMaxWidth()) {
                         TableCell(
-                            text = (ingredient.baseAmount * amount).cut(),
-                            modifier = Modifier.weight(0.2f)
+                            text = "${(ingredient.baseAmount * amount).cut()}g",
+                            modifier = Modifier.weight(0.15f)
                         )
-                        TableCell(text = ingredient.ingredient, modifier = Modifier.weight(0.8f))
+                        TableCell(text = ingredient.ingredient, modifier = Modifier.weight(0.85f))
                     }
                 }
             }
@@ -100,7 +100,7 @@ fun RowScope.TableCell(
         modifier.padding(bottom = 8.dp)
             //.border(1.dp, Color.BLACK)
             ,
-        style = MaterialTheme.typography.bodyMedium
+        style = MaterialTheme.typography.bodyLarge
     )
 }
 
