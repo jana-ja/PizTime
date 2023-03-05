@@ -6,12 +6,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepEntity
-import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepIngredientEntity
-import de.janaja.piztime.feature_piz_recipes.data.mapper.toRecipe
 import de.janaja.piztime.feature_piz_recipes.domain.use_case.AllPizRecipeUseCases
 import de.janaja.piztime.feature_piz_recipes.domain.util.DetailAmountState
-import de.janaja.piztime.feature_piz_recipes.domain.util.DetailPizIngredientsState
+import de.janaja.piztime.feature_piz_recipes.domain.util.EditPizIngredientsState
 import de.janaja.piztime.feature_piz_recipes.domain.util.DetailPizRecipeWithDetailsState
 import de.janaja.piztime.feature_piz_recipes.domain.util.DetailPizStepsWithIngredientsState
 import kotlinx.coroutines.Dispatchers
@@ -34,8 +31,8 @@ class PizRecipeDetailViewModel @Inject constructor(
     private val _pizRecipeState = mutableStateOf(DetailPizRecipeWithDetailsState())
     val pizRecipeState: State<DetailPizRecipeWithDetailsState> = _pizRecipeState
 
-    private val _pizIngredientsState = mutableStateOf(DetailPizIngredientsState())
-    val pizIngredientsState: State<DetailPizIngredientsState> = _pizIngredientsState
+    private val _pizIngredientsState = mutableStateOf(EditPizIngredientsState())
+    val pizIngredientsState: State<EditPizIngredientsState> = _pizIngredientsState
 
     private val _pizStepsWithIngredientsState = mutableStateOf(DetailPizStepsWithIngredientsState())
     val pizStepsWithIngredientsState: State<DetailPizStepsWithIngredientsState> =

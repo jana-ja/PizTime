@@ -77,11 +77,20 @@ fun IngredientsView(
 
                 items(ingredients) { ingredient ->
                     Row(Modifier.fillMaxWidth()) {
-                        TableCell(
+                        Text(
                             text = "${(ingredient.baseAmount * amount).cut()}g",
-                            modifier = Modifier.weight(0.15f)
+                            Modifier.weight(0.15f).padding(bottom = 8.dp)// TODO find dynamic way for column width
+                            //.border(1.dp, Color.BLACK)
+                            ,
+                            style = MaterialTheme.typography.bodyLarge
                         )
-                        TableCell(text = ingredient.ingredient, modifier = Modifier.weight(0.85f))
+                        Text(
+                            text = ingredient.ingredient,
+                            Modifier.weight(0.85f).padding(bottom = 8.dp)
+                            //.border(1.dp, Color.BLACK)
+                            ,
+                            style = MaterialTheme.typography.bodyLarge
+                        )
                     }
                 }
             }
@@ -90,19 +99,6 @@ fun IngredientsView(
 
 }
 
-@Composable
-fun RowScope.TableCell(
-    modifier: Modifier,
-    text: String
-) {
-    Text(
-        text = text,
-        modifier.padding(bottom = 8.dp)
-            //.border(1.dp, Color.BLACK)
-            ,
-        style = MaterialTheme.typography.bodyLarge
-    )
-}
 
 @Preview
 @Composable
