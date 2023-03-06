@@ -31,7 +31,7 @@ class PizRecipesViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             allPizRecipesUseCases.initDbIfEmptyUseCase()
         }
         getPizRecipes()
