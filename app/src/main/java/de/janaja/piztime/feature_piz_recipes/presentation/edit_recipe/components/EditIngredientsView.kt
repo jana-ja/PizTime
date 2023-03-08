@@ -20,9 +20,14 @@ import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 @Composable
 fun EditIngredientsView(
     modifier: Modifier = Modifier,
-    viewModel: EditRecipeViewModel = hiltViewModel()
+    viewModel: EditRecipeViewModel = hiltViewModel(),
+    new: MutableState<Boolean>
 ) {
 
+    // really ugly solution to reset state when this is opened in a dialog, but not reset it on recomposition
+    if(new.value){
+        viewModel.reloadIngredients()
+    }
     EditIngredientsViewContent(
         modifier = modifier,
         ingredientNames = viewModel.pizIngredientsState.value.ingredientNames,
@@ -33,8 +38,9 @@ fun EditIngredientsView(
 
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditIngredientsViewContent(
+private fun EditIngredientsViewContent(
     modifier: Modifier = Modifier,
     ingredientNames: List<String>,
     ingredientAmounts: List<Double>,
@@ -44,87 +50,92 @@ fun EditIngredientsViewContent(
     // TODO states of textfields cant be inside of items because data will get lost on scrolling
     //  could have a statelist on top but state should be handled from viewmodel
     //  how to avoid recomposing every textfield when one state inside the list changes
-
-    LazyColumn(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-
-    ) {
-        item() {
+    Scaffold(
+        topBar = {
             Text(
                 "Zutaten",
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.padding(16.dp)
             )
-        }
-
-        items(count = ingredientNames.size, key = { it }) { index ->
-
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(PaddingValues(start = 8.dp, top = 16.dp, end = 8.dp)),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(
-                    onClick = { onEvent(EditRecipeEvent.ClickRemove(index)) },
-                    //modifier = Modifier.padding(end = 8.dp)
-                ) {
-
-                    Icon(
-                        Icons.Default.Delete,
-                        "delete ingredient",
-                        Modifier.fillMaxHeight()
-                    )
-                }
-
-                TextField(
-                    value = "${ingredientAmounts[index]}",
-                    onValueChange = { onEvent(EditRecipeEvent.AmountChanged(index, it))},
-                    maxLines = 1,
-                    modifier = Modifier
-                        .weight(.3f)
-                        .padding(end = 8.dp)
-                )
-
-                TextField(
-                    value = (ingredientNames[index]),
-                    onValueChange = { onEvent(EditRecipeEvent.NameChanged(index, it)) },
-                    maxLines = 1,
-                    modifier = Modifier
-                        .weight(.7f)
-                )
-
-            }
-        }
-
-        item() {
-            IconButton(
-                onClick = { onEvent(EditRecipeEvent.ClickAdd) },
-                modifier = Modifier.padding(start = 8.dp, top = 16.dp)
-            ) {
-                Icon(
-                    Icons.Default.Add,
-                    "add ingredient",
-                    Modifier.fillMaxHeight()
-                )
-            }
-        }
-
-        item() {
+        },
+        bottomBar = {
             Button(
                 onClick = { onEvent(EditRecipeEvent.ClickSave) },
                 modifier = Modifier
-                    .padding(start = 8.dp, top = 16.dp)
+                    .padding(16.dp)
                     .fillMaxWidth()
                     .wrapContentWidth(align = Alignment.End),
             ) {
                 Icon(
                     Icons.Rounded.Check,
                     "add ingredient",
-                    Modifier.fillMaxHeight()
                 )
             }
+        }
+    ) {
+        LazyColumn(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(it)
+                .padding(end = 24.dp, start = 16.dp)
+                .padding(vertical = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+
+        ) {
+
+
+            items(count = ingredientNames.size, key = { it }) { index ->
+
+                Row(
+                    Modifier
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    IconButton(
+                        onClick = { onEvent(EditRecipeEvent.ClickRemove(index)) },
+                        //modifier = Modifier.padding(end = 8.dp)
+                    ) {
+
+                        Icon(
+                            Icons.Default.Delete,
+                            "delete ingredient",
+                            Modifier.fillMaxHeight()
+                        )
+                    }
+
+                    TextField(
+                        value = "${ingredientAmounts[index]}",
+                        onValueChange = { onEvent(EditRecipeEvent.AmountChanged(index, it)) },
+                        maxLines = 1,
+                        modifier = Modifier
+                            .weight(.3f)
+                            .padding(end = 8.dp)
+                    )
+
+                    TextField(
+                        value = (ingredientNames[index]),
+                        onValueChange = { onEvent(EditRecipeEvent.NameChanged(index, it)) },
+                        maxLines = 1,
+                        modifier = Modifier
+                            .weight(.7f)
+                    )
+
+                }
+            }
+
+            item() {
+                IconButton(
+                    onClick = { onEvent(EditRecipeEvent.ClickAdd) },
+                    modifier = Modifier.padding(start = 8.dp, top = 16.dp)
+                ) {
+                    Icon(
+                        Icons.Default.Add,
+                        "add ingredient",
+                        Modifier.fillMaxHeight()
+                    )
+                }
+            }
+
         }
     }
 }

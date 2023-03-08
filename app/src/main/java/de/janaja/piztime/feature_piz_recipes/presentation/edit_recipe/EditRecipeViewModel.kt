@@ -23,8 +23,6 @@ class EditRecipeViewModel @Inject constructor(
     private val allPizRecipesUseCases: AllPizRecipeUseCases, savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-
-    // TODO clear this state when dialog is dismissed or reload everytime dialog is opened
     private val _pizIngredientsState = mutableStateOf(EditPizIngredientsState())
     val pizIngredientsState: State<EditPizIngredientsState> = _pizIngredientsState
 
@@ -37,10 +35,12 @@ class EditRecipeViewModel @Inject constructor(
     init {
         savedStateHandle.get<Long>("pizRecipeId")?.let { id ->
             currentRecipeId = id
-
             getPizIngredients(id)
-//            getPizStepsWithIngredients(id)
         }
+    }
+
+    fun reloadIngredients(){
+        currentRecipeId?.let { getPizIngredients(currentRecipeId!!) }
     }
 
     private fun getPizIngredients(id: Long) {

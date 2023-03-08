@@ -64,6 +64,9 @@ fun PizRecipeDetailView(
 
             // edit dialog
 
+            // really ugly solution to reset state when this is opened in a dialog, but not reset it on recomposition
+            val new = remember{mutableStateOf(true)}
+
             if (dialogState != EditDialog.None) {
                 Dialog(onDismissRequest = {
                     onEvent(PizRecipeDetailEvent.DismissDialog)
@@ -76,7 +79,7 @@ fun PizRecipeDetailView(
                     ) {
                         when (dialogState){
                             EditDialog.Header -> {}
-                            EditDialog.Ingredients -> EditIngredientsView()
+                            EditDialog.Ingredients -> {new.value = true; EditIngredientsView(new = new); new.value = false }
                             EditDialog.Steps -> {}
                             else -> {}
                         }
