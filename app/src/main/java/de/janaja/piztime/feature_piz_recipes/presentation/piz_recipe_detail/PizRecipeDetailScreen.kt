@@ -79,8 +79,8 @@ fun PizRecipeDetailView(
                     ) {
                         when (dialogState){
                             EditDialog.Header -> {}
-                            EditDialog.Ingredients -> {new.value = true; EditIngredientsView(new = new); new.value = false }
-                            EditDialog.Steps -> {new.value = true; EditStepsView(new = new); new.value = false }
+                            EditDialog.Ingredients -> {new.value = true; EditIngredientsView(new = new, dismissDialog = {onEvent(PizRecipeDetailEvent.DismissDialog)}); new.value = false }
+                            EditDialog.Steps -> {new.value = true; EditStepsView(new = new, dismissDialog = {onEvent(PizRecipeDetailEvent.DismissDialog)}); new.value = false }
                             else -> {}
                         }
 

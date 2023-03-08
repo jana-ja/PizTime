@@ -22,18 +22,20 @@ import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 fun EditStepsView(
     modifier: Modifier = Modifier,
     viewModel: EditRecipeViewModel = hiltViewModel(),
-    new: MutableState<Boolean>
+    new: MutableState<Boolean>,
+    dismissDialog: () -> Unit // TODO ugly solution
 ) {
 
     // really ugly solution to reset state when this is opened in a dialog, but not reset it on recomposition
-    if(new.value){
+    if (new.value) {
         viewModel.reloadSteps()
     }
     EditStepsViewContent(
         modifier = modifier,
         steps = viewModel.pizStepsWithIngredientsState.value.stepDescriptions,
         ingredients = viewModel.pizStepsWithIngredientsState.value.ingredients,
-        viewModel::onEvent
+        viewModel::onEvent,
+        dismissDialog
     )
 
 
@@ -45,7 +47,8 @@ private fun EditStepsViewContent(
     modifier: Modifier = Modifier,
     steps: List<String>,
     ingredients: List<List<PizIngredient>>,
-    onEvent: (EditRecipeEvent) -> Unit
+    onEvent: (EditRecipeEvent) -> Unit,
+    dismissDialog: () -> Unit // TODO ugly solution
 ) {
 
     // TODO states of textfields cant be inside of items because data will get lost on scrolling
@@ -61,7 +64,7 @@ private fun EditStepsViewContent(
         },
         bottomBar = {
             Button(
-                onClick = { onEvent(EditRecipeEvent.ClickSaveSteps) },
+                onClick = { onEvent(EditRecipeEvent.ClickSaveSteps); dismissDialog() },
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth()
@@ -140,5 +143,6 @@ fun EditStepsViewPreview() {
         modifier = Modifier,
         steps = DummyData.DummySteps.map { step -> step.description },
         ingredients = DummyData.DummySteps.map { step -> step.ingredients },
-        onEvent = {})
+        onEvent = {},
+        dismissDialog = {})
 }
