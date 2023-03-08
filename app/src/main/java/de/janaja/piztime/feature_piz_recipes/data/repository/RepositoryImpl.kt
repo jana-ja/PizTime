@@ -69,7 +69,7 @@ class RepositoryImpl( // TODO here db bekommen mit dagger hilt
         return pizIngredientDao.findPizIngredientsByPizRecipeIdFlow(pizRecipeId)
     }
 
-    override fun findPizStepsWithIngredientsByPizRecipeId(pizRecipeId: Long): Flow<Map<PizStepEntity, List<PizStepIngredientEntity>>> {
+    override fun findPizStepsWithIngredientsByPizRecipeId(pizRecipeId: Long): Map<PizStepEntity, List<PizStepIngredientEntity>> {
         return pizStepDao.findPizStepsWithPizStepIngredientsByPizRecipeIdFlow(pizRecipeId)
     }
 
@@ -89,20 +89,28 @@ class RepositoryImpl( // TODO here db bekommen mit dagger hilt
         pizRecipeDao.updatePizRecipe(pizRecipeEntity)
     }
 
-    override suspend fun updatePizIngredients(pizIngredientEntities: List<PizIngredientEntity>) {
+    override suspend fun insertPizIngredients(pizIngredientEntities: List<PizIngredientEntity>) {
         pizIngredientDao.insertPizIngredients(pizIngredientEntities)
     }
 
-    override suspend fun updatePizStep(pizStepEntity: PizStepEntity) {
-        pizStepDao.updatePizStep(pizStepEntity)
+    override suspend fun insertPizSteps(pizStepEntities: List<PizStepEntity>){
+        pizStepDao.insertPizSteps(pizStepEntities)
     }
 
-    override suspend fun updatePizStepIngredients(pizStepIngredientEntities: List<PizStepIngredientEntity>) {
-        pizStepIngredientDao.updatePizStepIngredients(pizStepIngredientEntities)
+    override suspend fun insertPizStepIngredients(pizStepIngredientEntities: List<PizStepIngredientEntity>) {
+        pizStepIngredientDao.insertPizStepIngredients(pizStepIngredientEntities)
     }
 
     override suspend fun deletePizIngredientsForRecipeId(recipeId: Long) {
         pizIngredientDao.deletePizIngredientsForRecipeId(recipeId)
+    }
+
+    override suspend fun deletePizStepsForRecipeId(recipeId: Long) {
+        pizStepDao.deletePizStepsForRecipeId(recipeId)
+    }
+
+    override suspend fun deletePizStepIngredientsForStepId(stepId: Long) {
+        pizStepIngredientDao.deletePizStepIngredientsForRecipeId(stepId)
     }
 
 

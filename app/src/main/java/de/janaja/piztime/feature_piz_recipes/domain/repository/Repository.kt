@@ -18,19 +18,21 @@ interface Repository {
 
     suspend fun findPizIngredientsByPizRecipeId(pizRecipeId: Long): List<PizIngredientEntity>
 
-    fun findPizStepsWithIngredientsByPizRecipeId(pizRecipeId: Long): Flow<Map<PizStepEntity, List<PizStepIngredientEntity>>>
+    fun findPizStepsWithIngredientsByPizRecipeId(pizRecipeId: Long): Map<PizStepEntity, List<PizStepIngredientEntity>>
 
     suspend fun getAllPizRecipes()
 
     suspend fun updatePizRecipe(pizRecipeEntity: PizRecipeEntity)
     
-    suspend fun updatePizIngredients(pizIngredientEntities: List<PizIngredientEntity>)
+    suspend fun insertPizIngredients(pizIngredientEntities: List<PizIngredientEntity>)
 
     suspend fun deletePizIngredientsForRecipeId(recipeId: Long)
+    suspend fun deletePizStepsForRecipeId(recipeId: Long)
+    suspend fun deletePizStepIngredientsForStepId(stepId: Long)
 
-    suspend fun updatePizStep(pizStepEntity: PizStepEntity)
+    suspend fun insertPizSteps(pizStepEntities: List<PizStepEntity>)
 
-    suspend fun updatePizStepIngredients(pizStepIngredientEntities: List<PizStepIngredientEntity>)
+    suspend fun insertPizStepIngredients(pizStepIngredientEntities: List<PizStepIngredientEntity>)
 
     suspend fun initDbIfEmpty()
 

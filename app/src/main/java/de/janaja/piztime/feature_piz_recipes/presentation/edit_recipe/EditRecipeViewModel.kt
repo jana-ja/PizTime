@@ -9,9 +9,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
+import de.janaja.piztime.feature_piz_recipes.domain.model.PizStepWithIngredients
 import de.janaja.piztime.feature_piz_recipes.domain.use_case.AllPizRecipeUseCases
 import de.janaja.piztime.feature_piz_recipes.domain.util.EditPizIngredientsState
-import de.janaja.piztime.feature_piz_recipes.domain.util.DetailPizStepsWithIngredientsState
+import de.janaja.piztime.feature_piz_recipes.domain.util.EditPizStepsWithIngredientsState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -26,8 +27,8 @@ class EditRecipeViewModel @Inject constructor(
     private val _pizIngredientsState = mutableStateOf(EditPizIngredientsState())
     val pizIngredientsState: State<EditPizIngredientsState> = _pizIngredientsState
 
-    private val _pizStepsWithIngredientsState = mutableStateOf(DetailPizStepsWithIngredientsState())
-    val pizStepsWithIngredientsState: State<DetailPizStepsWithIngredientsState> = _pizStepsWithIngredientsState
+    private val _pizStepsWithIngredientsState = mutableStateOf(EditPizStepsWithIngredientsState())
+    val pizStepsWithIngredientsState: State<EditPizStepsWithIngredientsState> = _pizStepsWithIngredientsState
 
     private var currentRecipeId: Long? = null
 
@@ -36,12 +37,10 @@ class EditRecipeViewModel @Inject constructor(
         savedStateHandle.get<Long>("pizRecipeId")?.let { id ->
             currentRecipeId = id
             getPizIngredients(id)
+            getPizStepsWithIngredients(id)
         }
     }
 
-    fun reloadIngredients(){
-        currentRecipeId?.let { getPizIngredients(currentRecipeId!!) }
-    }
 
     private fun getPizIngredients(id: Long) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -56,38 +55,21 @@ class EditRecipeViewModel @Inject constructor(
             }
         }
     }
-//
-//    fun getPizStepsWithIngredients(id: Long) {
-//        getPizStepsWithIngredientsJob?.cancel()
-//        getPizStepsWithIngredientsJob = allPizRecipesUseCases.getStepsWithIngredientsUseCase(id)
-//            .onEach {
-//                // convert map to list here
-//                val stepWithIngredientList =
-//                    mutableListOf<Pair<PizStepEntity, List<PizStepIngredientEntity>>>()
-//                for (key in it.keys) {
-//                    val value = it[key]
-//                    if (value != null) {
-//                        stepWithIngredientList.add(Pair(key, value))
-//                    } else {
-//                        stepWithIngredientList.add(Pair(key, listOf()))
-//                    }
-//                }
-//                _pizStepsWithIngredientsState.value = _pizStepsWithIngredientsState.value.copy(
-//                    pizStepsWithIngredients = stepWithIngredientList
-//                )
-//            }
-//            .launchIn(viewModelScope)
-//    }
 
-    fun onEvent(event: EditRecipeEvent) {
-        when (event) {
-            is EditRecipeEvent.AmountChanged -> changeIngredientAmountInState(event.index, event.value)
-            EditRecipeEvent.ClickAdd -> addIngredientToState()
-            is EditRecipeEvent.ClickRemove -> removeIngredientFromState(event.index)
-            EditRecipeEvent.ClickSave -> saveIngredients()
-            is EditRecipeEvent.NameChanged -> changeIngredientNameInState(event.index, event.value)
+    private fun getPizStepsWithIngredients(id: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val steps = allPizRecipesUseCases.getStepsWithIngredientsUseCase(id)
+            withContext(Dispatchers.Main) {
+                _pizStepsWithIngredientsState.value = _pizStepsWithIngredientsState.value.copy(
+                    stepsWithIngredients = steps,
+                    stepDescriptions = (steps.map { stepWithIngredients -> stepWithIngredients.description }),
+                    ingredients = (steps.map { stepWithIngredient -> stepWithIngredient.ingredients })
+                )
+
+            }
         }
     }
+
 
     private fun saveIngredients() {
         currentRecipeId?.let {
@@ -129,18 +111,11 @@ class EditRecipeViewModel @Inject constructor(
     }
 
     fun changeIngredientNameInState(index: Int, value: String) {
-        Log.i("Help", "list before: ${_pizIngredientsState.value.ingredientNames}")
-
         _pizIngredientsState.value = _pizIngredientsState.value.copy(
             ingredientNames = _pizIngredientsState.value.ingredientNames.mapIndexed { i, oldValue ->
-                Log.i("Help", "index: $i")
-                Log.i("Help", "oldvlaue: $oldValue")
-                Log.i("Help", "new value: $value")
                 if (i == index) value else oldValue
             }.toMutableStateList()
         )
-        Log.i("Help", "list after: ${_pizIngredientsState.value.ingredientNames}")
-
     }
 
     private fun changeIngredientAmountInState(index: Int, value: String) {
@@ -154,6 +129,55 @@ class EditRecipeViewModel @Inject constructor(
             // TODO handle
         }
 
+    }
+    
+    private fun saveSteps() {
+        currentRecipeId?.let {
+            val pizSteps = _pizStepsWithIngredientsState.value.stepsWithIngredients.indices.map { i ->
+                PizStepWithIngredients(
+                    description = _pizStepsWithIngredientsState.value.stepDescriptions[i],
+                    ingredients = _pizStepsWithIngredientsState.value.ingredients[i],
+                    id = _pizStepsWithIngredientsState.value.stepsWithIngredients[i].id
+                )
+            }
+            viewModelScope.launch(Dispatchers.IO) {
+                allPizRecipesUseCases.updateStepsWithIngredientsUseCase(pizSteps, currentRecipeId!!)
+
+                // reload data
+                allPizRecipesUseCases.getPizRecipeWithDetailsUseCase(it)
+
+                // TODO navigate back/close dialog
+
+            }
+        } // TODO error handling
+
+    }
+    private fun changeStepDescriptionInState(index: Int, value: String) {
+        _pizStepsWithIngredientsState.value = _pizStepsWithIngredientsState.value.copy(
+            stepDescriptions = _pizStepsWithIngredientsState.value.stepDescriptions.mapIndexed { i, oldValue ->
+                if (i == index) value else oldValue
+            }.toMutableStateList()
+        )
+    }
+
+    fun onEvent(event: EditRecipeEvent) {
+        when (event) {
+            is EditRecipeEvent.AmountChanged -> changeIngredientAmountInState(event.index, event.value)
+            EditRecipeEvent.ClickAdd -> addIngredientToState()
+            is EditRecipeEvent.ClickRemove -> removeIngredientFromState(event.index)
+            EditRecipeEvent.ClickSaveIngredients -> saveIngredients()
+            is EditRecipeEvent.NameChanged -> changeIngredientNameInState(event.index, event.value)
+            is EditRecipeEvent.StepChanged -> changeStepDescriptionInState(event.index, event.value)
+            EditRecipeEvent.ClickSaveSteps -> saveSteps()
+        }
+    }
+
+    fun reloadIngredients() {
+        currentRecipeId?.let { getPizIngredients(currentRecipeId!!) }
+    }
+
+    fun reloadSteps() {
+        currentRecipeId?.let { getPizStepsWithIngredients(currentRecipeId!!) }
     }
 }
 

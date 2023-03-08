@@ -52,7 +52,7 @@ fun PizRecipeWithDetails.toEntityCollection(): EntityCollection {
     )
 }
 
-fun PizIngredient.toPizIngredientEntity(recipeId: Long): PizIngredientEntity{
+fun PizIngredient.toPizIngredientEntity(recipeId: Long): PizIngredientEntity {
     return PizIngredientEntity(this.ingredient, this.baseAmount, recipeId, this.id)
 }
 
@@ -94,6 +94,24 @@ fun EntityCollection.toPizRecipeWithDetails(): PizRecipeWithDetails {
     )
 }
 
-fun PizIngredientEntity.toPizIngredient(): PizIngredient{
+fun PizIngredientEntity.toPizIngredient(): PizIngredient {
     return PizIngredient(this.ingredient, this.baseAmount, this.id)
+}
+
+fun stepWithIngredientEntitiesToStepWithIngredients(entities: Map<PizStepEntity, List<PizStepIngredientEntity>>): List<PizStepWithIngredients> {
+
+    return entities.map { entry ->
+
+        PizStepWithIngredients(
+            description = entry.key.description,
+            ingredients = entry.value.map { ingredientEntitiy ->
+                PizIngredient(
+                    ingredientEntitiy.ingredient,
+                    ingredientEntitiy.baseStepAmount,
+                    ingredientEntitiy.id
+                )
+            },
+            id = entry.key.id
+        )
+    }
 }

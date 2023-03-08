@@ -3,7 +3,6 @@ package de.janaja.piztime.feature_piz_recipes.data.local
 import androidx.room.*
 import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepEntity
 import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepIngredientEntity
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PizStepDao {
@@ -18,7 +17,7 @@ interface PizStepDao {
                 "LEFT JOIN PizStepIngredientEntity ON PizStepEntity.stepid = PizStepIngredientEntity.stepIdMap " +
                 "WHERE PizStepEntity.recipeIdMap = :id"
     )
-    fun findPizStepsWithPizStepIngredientsByPizRecipeIdFlow(id: Long): Flow<Map<PizStepEntity, List<PizStepIngredientEntity>>>
+    fun findPizStepsWithPizStepIngredientsByPizRecipeIdFlow(id: Long): Map<PizStepEntity, List<PizStepIngredientEntity>>
 
     @Query(
         "SELECT * FROM PizStepEntity " +
@@ -27,7 +26,9 @@ interface PizStepDao {
     )
     fun findPizStepsWithPizStepIngredientsByPizRecipeId(id: Long): Map<PizStepEntity, List<PizStepIngredientEntity>>
 
-    @Update
-    suspend fun updatePizStep(pizStepEntity: PizStepEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPizSteps(pizStepEntities: List<PizStepEntity>)
+    @Query("DELETE FROM PizStepEntity WHERE PizStepEntity.recipeIdMap = :recipeId")
+    fun deletePizStepsForRecipeId(recipeId: Long)
 
 }

@@ -8,7 +8,8 @@ interface PizStepIngredientDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addPizStepIngredient(pizIngredient: PizStepIngredientEntity)
-
-    @Update
-    suspend fun updatePizStepIngredients(pizStepIngredientEntities: List<PizStepIngredientEntity>)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPizStepIngredients(pizStepIngredientEntities: List<PizStepIngredientEntity>)
+    @Query("DELETE FROM PizStepIngredientEntity WHERE PizStepIngredientEntity.stepidMap = :stepId")
+    fun deletePizStepIngredientsForRecipeId(stepId: Long)
 }

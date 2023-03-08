@@ -13,12 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
 import de.janaja.piztime.feature_piz_recipes.presentation.edit_recipe.EditRecipeEvent
 import de.janaja.piztime.feature_piz_recipes.presentation.edit_recipe.EditRecipeViewModel
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 
 @Composable
-fun EditIngredientsView(
+fun EditStepsView(
     modifier: Modifier = Modifier,
     viewModel: EditRecipeViewModel = hiltViewModel(),
     new: MutableState<Boolean>
@@ -26,12 +27,12 @@ fun EditIngredientsView(
 
     // really ugly solution to reset state when this is opened in a dialog, but not reset it on recomposition
     if(new.value){
-        viewModel.reloadIngredients()
+        viewModel.reloadSteps()
     }
-    EditIngredientsViewContent(
+    EditStepsViewContent(
         modifier = modifier,
-        ingredientNames = viewModel.pizIngredientsState.value.ingredientNames,
-        ingredientAmounts = viewModel.pizIngredientsState.value.ingredientAmounts,
+        steps = viewModel.pizStepsWithIngredientsState.value.stepDescriptions,
+        ingredients = viewModel.pizStepsWithIngredientsState.value.ingredients,
         viewModel::onEvent
     )
 
@@ -40,10 +41,10 @@ fun EditIngredientsView(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun EditIngredientsViewContent(
+private fun EditStepsViewContent(
     modifier: Modifier = Modifier,
-    ingredientNames: List<String>,
-    ingredientAmounts: List<Double>,
+    steps: List<String>,
+    ingredients: List<List<PizIngredient>>,
     onEvent: (EditRecipeEvent) -> Unit
 ) {
 
@@ -60,7 +61,7 @@ private fun EditIngredientsViewContent(
         },
         bottomBar = {
             Button(
-                onClick = { onEvent(EditRecipeEvent.ClickSaveIngredients) },
+                onClick = { onEvent(EditRecipeEvent.ClickSaveSteps) },
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth()
@@ -84,7 +85,7 @@ private fun EditIngredientsViewContent(
         ) {
 
 
-            items(count = ingredientNames.size, key = { it }) { index ->
+            items(count = steps.size, key = { it }) { index ->
 
                 Row(
                     Modifier
@@ -104,21 +105,12 @@ private fun EditIngredientsViewContent(
                     }
 
                     TextField(
-                        value = "${ingredientAmounts[index]}",
-                        onValueChange = { onEvent(EditRecipeEvent.AmountChanged(index, it)) },
-                        maxLines = 1,
+                        value = steps[index],
+                        onValueChange = { onEvent(EditRecipeEvent.StepChanged(index, it)) },
                         modifier = Modifier
-                            .weight(.3f)
                             .padding(end = 8.dp)
                     )
 
-                    TextField(
-                        value = (ingredientNames[index]),
-                        onValueChange = { onEvent(EditRecipeEvent.NameChanged(index, it)) },
-                        maxLines = 1,
-                        modifier = Modifier
-                            .weight(.7f)
-                    )
 
                 }
             }
@@ -143,10 +135,10 @@ private fun EditIngredientsViewContent(
 
 @Preview
 @Composable
-fun EditIngredientsViewPreview() {
-    EditIngredientsViewContent(
+fun EditStepsViewPreview() {
+    EditStepsViewContent(
         modifier = Modifier,
-        ingredientNames = DummyData.DummyIngredients.map { ingredient -> ingredient.ingredient }.toMutableStateList(),
-        ingredientAmounts = DummyData.DummyIngredients.map { ingredient -> ingredient.baseAmount },
+        steps = DummyData.DummySteps.map { step -> step.description },
+        ingredients = DummyData.DummySteps.map { step -> step.ingredients },
         onEvent = {})
 }

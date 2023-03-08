@@ -12,6 +12,6 @@ class UpdateIngredientsUseCase(
         repository.deletePizIngredientsForRecipeId(recipeId)
         // insert new
         val pizIngredientEntities = pizIngredients.map { ingredient -> ingredient.toPizIngredientEntity(recipeId) }
-        repository.updatePizIngredients(pizIngredientEntities)
+        repository.insertPizIngredients(pizIngredientEntities)
     }
 }
