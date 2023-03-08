@@ -8,7 +8,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.janaja.piztime.feature_piz_recipes.domain.use_case.AllPizRecipeUseCases
 import de.janaja.piztime.feature_piz_recipes.domain.util.DetailAmountState
+import de.janaja.piztime.feature_piz_recipes.domain.util.DetailEditDialogState
 import de.janaja.piztime.feature_piz_recipes.domain.util.DetailPizRecipeWithDetailsState
+import de.janaja.piztime.feature_piz_recipes.domain.util.EditDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
@@ -25,6 +27,9 @@ class PizRecipeDetailViewModel @Inject constructor(
     private val _detailAmountState = mutableStateOf(DetailAmountState())
     val detailAmountState: State<DetailAmountState> = _detailAmountState
 
+    private val _detailEditDialogState = mutableStateOf(DetailEditDialogState())
+    val detailEditDialogState: State<DetailEditDialogState> = _detailEditDialogState
+
     private val _pizRecipeState = mutableStateOf(DetailPizRecipeWithDetailsState())
     val pizRecipeState: State<DetailPizRecipeWithDetailsState> = _pizRecipeState
 
@@ -40,7 +45,7 @@ class PizRecipeDetailViewModel @Inject constructor(
         }
     }
 
-    fun getPizRecipeWithDetails(id: Long) {
+    private fun getPizRecipeWithDetails(id: Long) {
         // observe result
         getPizRecipeWithdetailsJob?.cancel()
         getPizRecipeWithdetailsJob = allPizRecipesUseCases.getPizRecipeWithDetailsFlowUseCase().onEach {
@@ -56,19 +61,23 @@ class PizRecipeDetailViewModel @Inject constructor(
     }
     fun onEvent(event: PizRecipeDetailEvent) {
         when (event) {
-            is PizRecipeDetailEvent.SetAmount -> {
-                _detailAmountState.value = _detailAmountState.value.copy(
-                    amount = event.amount
-                )
+            PizRecipeDetailEvent.DecreaseAmount -> decreaseAmount()
+            PizRecipeDetailEvent.IncreaseAmount -> increaseAmount()
+            PizRecipeDetailEvent.ClickEditHeader -> _detailEditDialogState.value = _detailEditDialogState.value.copy(editDialogState = EditDialog.Header)
+            PizRecipeDetailEvent.ClickEditIngredients -> _detailEditDialogState.value = _detailEditDialogState.value.copy(editDialogState = EditDialog.Ingredients)
+            PizRecipeDetailEvent.ClickEditSteps -> _detailEditDialogState.value = _detailEditDialogState.value.copy(editDialogState = EditDialog.Steps)
+            PizRecipeDetailEvent.DismissDialog -> {
+                _detailEditDialogState.value = _detailEditDialogState.value.copy(editDialogState = EditDialog.None)
+                // TODO reset state of edit?
             }
         }
     }
 
-    fun increaseAmount() {
+    private fun increaseAmount() {
         _detailAmountState.value = _detailAmountState.value.copy(amount = _detailAmountState.value.amount + 1)
     }
 
-    fun decreaseAmount() {
+    private fun decreaseAmount() {
         if (_detailAmountState.value.amount < 1) return
         _detailAmountState.value = _detailAmountState.value.copy(amount = _detailAmountState.value.amount - 1)
     }

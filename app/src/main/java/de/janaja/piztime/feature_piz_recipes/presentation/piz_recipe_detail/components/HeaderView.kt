@@ -21,6 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import de.janaja.piztime.R
+import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.PizRecipeDetailEvent
 import de.janaja.piztime.feature_piz_recipes.presentation.util.TopSheetShape
 import de.janaja.piztime.feature_piz_recipes.presentation.util.bottomElevation
 import kotlinx.coroutines.launch
@@ -33,13 +34,13 @@ fun HeaderView(
     imageResId: Int,
     contentModifier: Modifier = Modifier,
     height: Dp,
-    onClickEdit: () -> Unit // TODO implement UiEvent
+    onEvent: (PizRecipeDetailEvent) -> Unit
 ) {
 
     // animation stuff
     val animDuration = 1100
     var screenVisible by remember {
-        mutableStateOf(true) // TODO change back
+        mutableStateOf(false)
     }
     val transition = updateTransition(targetState = screenVisible, null)
 
@@ -124,10 +125,10 @@ fun HeaderView(
 
             // edit button
             IconButton(
-                onClick = onClickEdit,
+                onClick = {onEvent(PizRecipeDetailEvent.ClickEditHeader)},
                 Modifier
                     .size(36.dp)
-                    .align(Alignment.TopEnd)
+                    .align(Alignment.BottomEnd)
             ) {
                 Icon(
                     Icons.Default.Edit,

@@ -16,6 +16,7 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import de.janaja.piztime.R
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipeWithDetails
+import de.janaja.piztime.feature_piz_recipes.domain.util.EditDialog
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components.*
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 
@@ -26,25 +27,27 @@ fun PizRecipeDetailScreen(
 
     val amountState = viewModel.detailAmountState.value
     val recipeState = viewModel.pizRecipeState.value
+    val dialogState = viewModel.detailEditDialogState.value
     
     PizRecipeDetailView(
         modifier = Modifier,//.offset(x = offset.dp),
         recipeState.pizRecipe,
         amountState.amount,
-        { viewModel.increaseAmount() },
-        { viewModel.decreaseAmount() },
+        dialogState.editDialogState,
+        viewModel::onEvent
     )
 
 
 }
+
 
 @Composable
 fun PizRecipeDetailView(
     modifier: Modifier,
     pizRecipeWithDetails: PizRecipeWithDetails,
     amount: Int,
-    increaseAmount: () -> Unit,
-    decreaseAmount: () -> Unit
+    dialogState: EditDialog,
+    onEvent: (PizRecipeDetailEvent) -> Unit
 ) {
 
     val overlap: Dp = dimensionResource(id = R.dimen.topSheetBorderHeight)
@@ -60,13 +63,10 @@ fun PizRecipeDetailView(
         ) {
 
             // edit dialog
-            var dialogOpen by remember {
-                mutableStateOf(false)
-            }
 
-            if (dialogOpen) {
+            if (dialogState != EditDialog.None) {
                 Dialog(onDismissRequest = {
-                    dialogOpen = false
+                    onEvent(PizRecipeDetailEvent.DismissDialog)
                 }) {
                     Surface(
                         modifier = Modifier
@@ -74,7 +74,13 @@ fun PizRecipeDetailView(
                             .fillMaxHeight(.9f),
                         shape = RoundedCornerShape(size = 10.dp)
                     ) {
-                        EditIngredientsView()
+                        when (dialogState){
+                            EditDialog.Header -> {}
+                            EditDialog.Ingredients -> EditIngredientsView()
+                            EditDialog.Steps -> {}
+                            else -> {}
+                        }
+
                     }
                 }
             }
@@ -90,25 +96,23 @@ fun PizRecipeDetailView(
                 imageResId = pizRecipeWithDetails.imageResourceId,
                 contentModifier = Modifier,
                 height = headerHeight,
-                onClickEdit = { dialogOpen = true }
+                onEvent = onEvent
             )
 
             IngredientsView(
                 modifier = Modifier.zIndex(.9f),
                 ingredients = pizRecipeWithDetails.ingredients,
                 amount = amount,
-                increaseAmount = increaseAmount,
-                decreaseAmount = decreaseAmount,
-                contentModifier = Modifier.padding(top = overlap),
-
+                onEvent = onEvent,
+                contentModifier = Modifier.padding(top = overlap)
                 )
 
             StepsView(
                 modifier = Modifier.zIndex(.8f),
                 stepsWithIngredients = pizRecipeWithDetails.steps,
                 amount = amount,
-                contentModifier = Modifier.padding(top = overlap)
-
+                contentModifier = Modifier.padding(top = overlap),
+                onEvent = onEvent
             )
 
         }
@@ -123,9 +127,8 @@ fun PizRecipeDetailViewPreview() {
         Modifier.background(Color(0xFFC49E2F)),
         DummyData.DummyPizRecipeWithDetails,
         4,
-        { },
-        { }
-    )
+        EditDialog.None
+    ) { }
 }
 
 

@@ -13,20 +13,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.PizRecipeDetailEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AmountSelector(
     amount: Int,
-    increaseAmount: () -> Unit,
-    decreaseAmount: () -> Unit
+    onEvent: (PizRecipeDetailEvent) -> Unit
 ) {
     Log.i("AmountSelector", "I got recomposed!")
 
     Row {
         CompositionLocalProvider(LocalMinimumTouchTargetEnforcement provides false) {
             IconButton(
-                onClick = decreaseAmount,
+                onClick = {onEvent(PizRecipeDetailEvent.DecreaseAmount)},
                 Modifier.height(40.dp).width(32.dp)
             ) {
                 Icon(
@@ -44,7 +44,7 @@ fun AmountSelector(
         )
         CompositionLocalProvider(LocalMinimumTouchTargetEnforcement provides false) {
             IconButton(
-                onClick = increaseAmount,
+                onClick = {onEvent(PizRecipeDetailEvent.IncreaseAmount)},
                 Modifier.height(40.dp).width(32.dp)
             ) {
                 Icon(
@@ -62,5 +62,5 @@ fun AmountSelector(
 @Preview
 @Composable
 fun AmountSelectorPreview() {
-    AmountSelector(1, {}, {})
+    AmountSelector(1, {})
 }
