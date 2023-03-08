@@ -85,43 +85,47 @@ class RepositoryImpl( // TODO here db bekommen mit dagger hilt
     // TODO update with null? do nothing??
 
 
-override suspend fun updatePizRecipe(pizRecipeEntity: PizRecipeEntity) {
-    pizRecipeDao.updatePizRecipe(pizRecipeEntity)
-}
+    override suspend fun updatePizRecipe(pizRecipeEntity: PizRecipeEntity) {
+        pizRecipeDao.updatePizRecipe(pizRecipeEntity)
+    }
 
-override suspend fun updatePizIngredients(pizIngredientEntities: List<PizIngredientEntity>) {
-    pizIngredientDao.updatePizIngredients(pizIngredientEntities)
-}
+    override suspend fun updatePizIngredients(pizIngredientEntities: List<PizIngredientEntity>) {
+        pizIngredientDao.insertPizIngredients(pizIngredientEntities)
+    }
 
-override suspend fun updatePizStep(pizStepEntity: PizStepEntity) {
-    pizStepDao.updatePizStep(pizStepEntity)
-}
+    override suspend fun updatePizStep(pizStepEntity: PizStepEntity) {
+        pizStepDao.updatePizStep(pizStepEntity)
+    }
 
-override suspend fun updatePizStepIngredients(pizStepIngredientEntities: List<PizStepIngredientEntity>) {
-    pizStepIngredientDao.updatePizStepIngredients(pizStepIngredientEntities)
-}
+    override suspend fun updatePizStepIngredients(pizStepIngredientEntities: List<PizStepIngredientEntity>) {
+        pizStepIngredientDao.updatePizStepIngredients(pizStepIngredientEntities)
+    }
+
+    override suspend fun deletePizIngredientsForRecipeId(recipeId: Long) {
+        pizIngredientDao.deletePizIngredientsForRecipeId(recipeId)
+    }
 
 
-override suspend fun initDbIfEmpty() {
-    if (pizRecipeDao.isEmpty()) {
+    override suspend fun initDbIfEmpty() {
+        if (pizRecipeDao.isEmpty()) {
 
-        DummyData.DummyRecipeWithDetailsData.forEach {
-            val bla = it.toEntityCollection()
-            pizRecipeDao.addPizRecipe(bla.pizRecipeEntity)
-            bla.pizIngredientEntities.forEach { ingredient ->
-                pizIngredientDao.addPizIngredient(ingredient)
-            }
-            bla.pizStepWithIngredientEntities.forEach { stepWithIngredients ->
-                val step = stepWithIngredients.first
-                val newId = pizStepDao.addPizStep(step)
-                stepWithIngredients.second.forEach { ingredient ->
-                    ingredient.stepId = newId
-                    pizStepIngredientDao.addPizStepIngredient(ingredient)
+            DummyData.DummyRecipeWithDetailsData.forEach {
+                val bla = it.toEntityCollection()
+                pizRecipeDao.addPizRecipe(bla.pizRecipeEntity)
+                bla.pizIngredientEntities.forEach { ingredient ->
+                    pizIngredientDao.addPizIngredient(ingredient)
                 }
-            }
+                bla.pizStepWithIngredientEntities.forEach { stepWithIngredients ->
+                    val step = stepWithIngredients.first
+                    val newId = pizStepDao.addPizStep(step)
+                    stepWithIngredients.second.forEach { ingredient ->
+                        ingredient.stepId = newId
+                        pizStepIngredientDao.addPizStepIngredient(ingredient)
+                    }
+                }
 
-        }
-        getAllPizRecipes()
+            }
+            getAllPizRecipes()
 //                pizRecipeDao.addAllPizRecipes(DummyData.DummyRecipeWithDetailsData.map { recipeWithDetails ->
 //                    recipeWithDetails.toPizRecipe().toRecipeEntity()
 //                })
@@ -146,6 +150,6 @@ override suspend fun initDbIfEmpty() {
 //                        }
 //                    }
 //                }
+        }
     }
-}
 }

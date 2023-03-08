@@ -26,11 +26,7 @@ fun PizRecipeDetailScreen(
 
     val amountState = viewModel.detailAmountState.value
     val recipeState = viewModel.pizRecipeState.value
-//    val ingredientsState = viewModel.pizIngredientsState.value
-//    val stepsWithIngredientsState = viewModel.pizStepsWithIngredientsState.value
-
-    //  TODO extra states for edit
-
+    
     PizRecipeDetailView(
         modifier = Modifier,//.offset(x = offset.dp),
         recipeState.pizRecipe,

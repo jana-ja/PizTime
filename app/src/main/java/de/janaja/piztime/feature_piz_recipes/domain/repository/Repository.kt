@@ -25,7 +25,9 @@ interface Repository {
     suspend fun updatePizRecipe(pizRecipeEntity: PizRecipeEntity)
     
     suspend fun updatePizIngredients(pizIngredientEntities: List<PizIngredientEntity>)
-    
+
+    suspend fun deletePizIngredientsForRecipeId(recipeId: Long)
+
     suspend fun updatePizStep(pizStepEntity: PizStepEntity)
 
     suspend fun updatePizStepIngredients(pizStepIngredientEntities: List<PizStepIngredientEntity>)

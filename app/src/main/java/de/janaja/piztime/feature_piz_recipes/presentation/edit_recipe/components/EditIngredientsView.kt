@@ -8,32 +8,26 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.PizRecipeDetailViewModel
+import de.janaja.piztime.feature_piz_recipes.presentation.edit_recipe.EditRecipeEvent
+import de.janaja.piztime.feature_piz_recipes.presentation.edit_recipe.EditRecipeViewModel
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 
 @Composable
 fun EditIngredientsView(
     modifier: Modifier = Modifier,
-    viewModel: PizRecipeDetailViewModel = hiltViewModel()
+    viewModel: EditRecipeViewModel = hiltViewModel()
 ) {
 
-    // TODO implement UIEvent instead of direct callbacks
     EditIngredientsViewContent(
         modifier = modifier,
         ingredientNames = viewModel.pizIngredientsState.value.ingredientNames,
         ingredientAmounts = viewModel.pizIngredientsState.value.ingredientAmounts,
-        viewModel::updateIngredients,
-        viewModel::removeIngredientFromState,
-        viewModel::addIngredientToState,
-        viewModel::changeIngredientNameInState,
-        viewModel::changeIngredientAmountInState
-
+        viewModel::onEvent
     )
 
 
@@ -42,23 +36,10 @@ fun EditIngredientsView(
 @Composable
 fun EditIngredientsViewContent(
     modifier: Modifier = Modifier,
-    ingredientNames: SnapshotStateList<String>,
+    ingredientNames: List<String>,
     ingredientAmounts: List<Double>,
-    onClickSave: () -> Unit,
-    onClickRemove: (index: Int) -> Unit, // TODO really remove by index?
-    onClickAdd: () -> Unit,
-    onIngredientNameChanged: (index: Int, value: String) -> Unit,
-    onIngredientAmountChanged: (index: Int, value: String) -> Unit
+    onEvent: (EditRecipeEvent) -> Unit
 ) {
-//    val ingredientNames: SnapshotStateList<String>
-//    val ingredientAmounts: SnapshotStateList<Double>
-//
-//    // TODO use viewmodel state
-//    ingredients.also {
-//        ingredientNames = remember{ ingredients.map { ingredient -> ingredient.ingredient }.toMutableStateList() }
-//        ingredientAmounts = remember { ingredients.map { ingredient -> ingredient.baseAmount }.toMutableStateList() }
-//
-//    }
 
     // TODO states of textfields cant be inside of items because data will get lost on scrolling
     //  could have a statelist on top but state should be handled from viewmodel
@@ -86,7 +67,7 @@ fun EditIngredientsViewContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
-                    onClick = { onClickRemove(index) },
+                    onClick = { onEvent(EditRecipeEvent.ClickRemove(index)) },
                     //modifier = Modifier.padding(end = 8.dp)
                 ) {
 
@@ -99,7 +80,7 @@ fun EditIngredientsViewContent(
 
                 TextField(
                     value = "${ingredientAmounts[index]}",
-                    onValueChange = { onIngredientAmountChanged(index, it) }, // TODO error handling
+                    onValueChange = { onEvent(EditRecipeEvent.AmountChanged(index, it))},
                     maxLines = 1,
                     modifier = Modifier
                         .weight(.3f)
@@ -108,7 +89,7 @@ fun EditIngredientsViewContent(
 
                 TextField(
                     value = (ingredientNames[index]),
-                    onValueChange = { onIngredientNameChanged(index, it) },
+                    onValueChange = { onEvent(EditRecipeEvent.NameChanged(index, it)) },
                     maxLines = 1,
                     modifier = Modifier
                         .weight(.7f)
@@ -119,7 +100,7 @@ fun EditIngredientsViewContent(
 
         item() {
             IconButton(
-                onClick = { onClickAdd() },
+                onClick = { onEvent(EditRecipeEvent.ClickAdd) },
                 modifier = Modifier.padding(start = 8.dp, top = 16.dp)
             ) {
                 Icon(
@@ -132,7 +113,7 @@ fun EditIngredientsViewContent(
 
         item() {
             Button(
-                onClick = onClickSave,
+                onClick = { onEvent(EditRecipeEvent.ClickSave) },
                 modifier = Modifier
                     .padding(start = 8.dp, top = 16.dp)
                     .fillMaxWidth()
@@ -156,9 +137,5 @@ fun EditIngredientsViewPreview() {
         modifier = Modifier,
         ingredientNames = DummyData.DummyIngredients.map { ingredient -> ingredient.ingredient }.toMutableStateList(),
         ingredientAmounts = DummyData.DummyIngredients.map { ingredient -> ingredient.baseAmount },
-        onClickSave = {},
-        onClickRemove = {},
-        onClickAdd = {},
-        onIngredientNameChanged = { _, _ -> },
-        onIngredientAmountChanged = { _, _ -> })
+        onEvent = {})
 }
