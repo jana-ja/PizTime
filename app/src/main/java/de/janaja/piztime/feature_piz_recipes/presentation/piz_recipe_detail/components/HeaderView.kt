@@ -6,9 +6,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,7 +32,8 @@ fun HeaderView(
     feature: String,
     imageResId: Int,
     contentModifier: Modifier = Modifier,
-    height: Dp
+    height: Dp,
+    onClickEdit: () -> Unit // TODO implement UiEvent
 ) {
 
     // animation stuff
@@ -120,6 +121,21 @@ fun HeaderView(
 
                 )
             }
+
+            // edit button
+            IconButton(
+                onClick = onClickEdit,
+                Modifier
+                    .size(36.dp)
+                    .align(Alignment.TopEnd)
+            ) {
+                Icon(
+                    Icons.Default.Edit,
+                    "edit recipe",
+                    Modifier.fillMaxHeight()
+                )
+
+            }
         }
     }
 }
@@ -127,5 +143,10 @@ fun HeaderView(
 @Preview
 @Composable
 fun HeaderViewPreview() {
-    HeaderView(title = "Pizza", feature = "ist lecker", imageResId = R.drawable.bsp_piz, height = 200.dp)
+    HeaderView(
+        title = "Pizza",
+        feature = "ist lecker",
+        imageResId = R.drawable.bsp_piz,
+        height = 200.dp
+    ) {}
 }

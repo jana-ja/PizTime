@@ -2,7 +2,6 @@ package de.janaja.piztime.feature_piz_recipes.data.local
 
 import androidx.room.*
 import de.janaja.piztime.feature_piz_recipes.data.local.model.PizIngredientEntity
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PizIngredientDao {
@@ -15,7 +14,7 @@ interface PizIngredientDao {
 //    suspend fun addAllPizIngredients(pizIngredients: List<PizIngredient>)
 
     @Query("SELECT * FROM PizIngredientEntity WHERE recipeIdMap = :pizRecipeId")
-    fun findPizIngredientsByPizRecipeIdFlow(pizRecipeId: Long): Flow<List<PizIngredientEntity>> // TODO does flow work on this kind of query???
+    suspend fun findPizIngredientsByPizRecipeIdFlow(pizRecipeId: Long): List<PizIngredientEntity> // TODO does flow work on this kind of query???
 
     @Query("SELECT * FROM PizIngredientEntity WHERE recipeIdMap = :pizRecipeId")
     fun findPizIngredientsByPizRecipeId(pizRecipeId: Long): List<PizIngredientEntity>

@@ -65,7 +65,7 @@ class RepositoryImpl( // TODO here db bekommen mit dagger hilt
         return pizRecipeDao.findPizRecipeByIdFlow(id)
     }
 
-    override fun findPizIngredientsByPizRecipeId(pizRecipeId: Long): Flow<List<PizIngredientEntity>> {
+    suspend override fun findPizIngredientsByPizRecipeId(pizRecipeId: Long): List<PizIngredientEntity> {
         return pizIngredientDao.findPizIngredientsByPizRecipeIdFlow(pizRecipeId)
     }
 
