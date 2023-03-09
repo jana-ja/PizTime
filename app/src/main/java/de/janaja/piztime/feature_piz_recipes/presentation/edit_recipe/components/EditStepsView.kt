@@ -96,7 +96,7 @@ private fun EditStepsViewContent(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(
-                        onClick = { onEvent(EditRecipeEvent.ClickRemove(index)) },
+                        onClick = { onEvent(EditRecipeEvent.ClickRemoveStep(index)) },
                         //modifier = Modifier.padding(end = 8.dp)
                     ) {
 
@@ -120,7 +120,7 @@ private fun EditStepsViewContent(
 
             item() {
                 IconButton(
-                    onClick = { onEvent(EditRecipeEvent.ClickAdd) },
+                    onClick = { onEvent(EditRecipeEvent.ClickAddStep) },
                     modifier = Modifier.padding(start = 8.dp, top = 16.dp)
                 ) {
                     Icon(

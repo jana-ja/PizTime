@@ -110,7 +110,30 @@ class EditRecipeViewModel @Inject constructor(
         )
     }
 
-    fun changeIngredientNameInState(index: Int, value: String) {
+    private fun addStepToState() {
+        val list = _pizStepsWithIngredientsState.value.ingredients.toMutableList()
+        list.add(listOf())
+        _pizStepsWithIngredientsState.value = _pizStepsWithIngredientsState.value.copy(
+            stepsWithIngredients = _pizStepsWithIngredientsState.value.stepsWithIngredients + PizStepWithIngredients(
+                "",
+                listOf()
+            ),
+            stepDescriptions = _pizStepsWithIngredientsState.value.stepDescriptions + "",
+            ingredients = list.toList() // + operator does not append an empty list to a List<List<T>>.
+        )
+    }
+
+    private fun removeStepFromState(index: Int) {
+        _pizStepsWithIngredientsState
+        _pizStepsWithIngredientsState.value = _pizStepsWithIngredientsState.value.copy(
+            stepsWithIngredients = _pizStepsWithIngredientsState.value.stepsWithIngredients.filterIndexed { i, _ -> i != index },
+            stepDescriptions = _pizStepsWithIngredientsState.value.stepDescriptions.filterIndexed { i, _ -> i != index }
+                .toMutableStateList(),
+            ingredients = _pizStepsWithIngredientsState.value.ingredients.filterIndexed { i, _ -> i != index }
+        )
+    }
+    
+    private fun changeIngredientNameInState(index: Int, value: String) {
         _pizIngredientsState.value = _pizIngredientsState.value.copy(
             ingredientNames = _pizIngredientsState.value.ingredientNames.mapIndexed { i, oldValue ->
                 if (i == index) value else oldValue
@@ -130,7 +153,7 @@ class EditRecipeViewModel @Inject constructor(
         }
 
     }
-    
+
     private fun saveSteps() {
         currentRecipeId?.let {
             val pizSteps = _pizStepsWithIngredientsState.value.stepsWithIngredients.indices.map { i ->
@@ -152,6 +175,7 @@ class EditRecipeViewModel @Inject constructor(
         } // TODO error handling
 
     }
+
     private fun changeStepDescriptionInState(index: Int, value: String) {
         _pizStepsWithIngredientsState.value = _pizStepsWithIngredientsState.value.copy(
             stepDescriptions = _pizStepsWithIngredientsState.value.stepDescriptions.mapIndexed { i, oldValue ->
@@ -163,12 +187,14 @@ class EditRecipeViewModel @Inject constructor(
     fun onEvent(event: EditRecipeEvent) {
         when (event) {
             is EditRecipeEvent.AmountChanged -> changeIngredientAmountInState(event.index, event.value)
-            EditRecipeEvent.ClickAdd -> addIngredientToState()
-            is EditRecipeEvent.ClickRemove -> removeIngredientFromState(event.index)
+            EditRecipeEvent.ClickAddIngredient -> addIngredientToState()
+            is EditRecipeEvent.ClickRemoveIngredient -> removeIngredientFromState(event.index)
             EditRecipeEvent.ClickSaveIngredients -> saveIngredients()
             is EditRecipeEvent.NameChanged -> changeIngredientNameInState(event.index, event.value)
             is EditRecipeEvent.StepChanged -> changeStepDescriptionInState(event.index, event.value)
             EditRecipeEvent.ClickSaveSteps -> saveSteps()
+            EditRecipeEvent.ClickAddStep -> addStepToState()
+            is EditRecipeEvent.ClickRemoveStep -> removeStepFromState(event.index)
         }
     }
 

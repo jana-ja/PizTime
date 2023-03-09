@@ -95,7 +95,7 @@ private fun EditIngredientsViewContent(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(
-                        onClick = { onEvent(EditRecipeEvent.ClickRemove(index)) },
+                        onClick = { onEvent(EditRecipeEvent.ClickRemoveIngredient(index)) },
                         //modifier = Modifier.padding(end = 8.dp)
                     ) {
 
@@ -128,7 +128,7 @@ private fun EditIngredientsViewContent(
 
             item() {
                 IconButton(
-                    onClick = { onEvent(EditRecipeEvent.ClickAdd) },
+                    onClick = { onEvent(EditRecipeEvent.ClickAddIngredient) },
                     modifier = Modifier.padding(start = 8.dp, top = 16.dp)
                 ) {
                     Icon(
