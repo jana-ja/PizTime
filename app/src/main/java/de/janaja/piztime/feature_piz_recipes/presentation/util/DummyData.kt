@@ -76,13 +76,12 @@ object DummyData {
         PizRecipeWithDetails(
             "Pizza Rom", "Dünner Boden", R.drawable.bsp_piz,
             listOf(
-                PizIngredient("1050er Mehl", 148.0),
-                PizIngredient("Roggenmehl", 17.0),
-                PizIngredient("Wasser", 107.0),
-                PizIngredient("Salz", 5.0),
-                PizIngredient("Zucker", 2.5),
-//                PizIngredient("Öl", 1.5),
-                PizIngredient("Trockenhefe", 0.8)
+                PizIngredient("Mehl", 120.0),
+                PizIngredient("Wasser", 75.0),
+                PizIngredient("Salz", 2.5),
+                PizIngredient("Zucker", 1.5),
+                PizIngredient("Öl", 1.5),
+                PizIngredient("Trockenhefe", 0.5)
             ),
             listOf(
                 PizStepWithIngredients(
@@ -96,7 +95,14 @@ object DummyData {
         ),
         PizRecipeWithDetails(
             "Pizza New York", "Fett sein", R.drawable.bsp_piz,
-            listOf(),
+            listOf(
+                PizIngredient("1050er Mehl", 148.0),
+                PizIngredient("Roggenmehl", 17.0),
+                PizIngredient("Wasser", 107.0),
+                PizIngredient("Salz", 5.0),
+                PizIngredient("Zucker", 2.5),
+                PizIngredient("Trockenhefe", 0.8)
+            ),
             listOf(PizStepWithIngredients("back die piz", listOf())),
             id = 3
         )
