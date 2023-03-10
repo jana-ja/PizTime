@@ -40,7 +40,7 @@ fun HeaderView(
     // animation stuff
     val animDuration = 1100
     var screenVisible by remember {
-        mutableStateOf(false)
+        mutableStateOf(true)
     }
     val transition = updateTransition(targetState = screenVisible, null)
 
@@ -84,7 +84,7 @@ fun HeaderView(
             .padding(16.dp)
             .height(height)) {
             Column(
-                modifier = Modifier.matchParentSize().padding(bottom = 24.dp),
+                modifier = Modifier.matchParentSize().padding(bottom = 16.dp),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
@@ -117,7 +117,8 @@ fun HeaderView(
                     contentScale = ContentScale.Fit,
                     modifier = Modifier
                         .size(height)
-                        .padding(8.dp)
+                        .padding(bottom = 16.dp)
+                        .padding(horizontal = 16.dp)
                         .rotate(pizRotation)
 
                 )

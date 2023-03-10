@@ -47,11 +47,10 @@ fun IngredientsView(
         Box(
             modifier = contentModifier
                 .fillMaxWidth()
-                .padding(top = 16.dp, bottom = 16.dp)
-                .padding(horizontal = 16.dp)
+                .padding(16.dp)
 
         ) {
-            Column() {
+            Column(modifier = Modifier.padding(bottom = 16.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         "Zutaten für", style = MaterialTheme.typography.titleLarge
@@ -64,7 +63,7 @@ fun IngredientsView(
                     )
                 }
                 Column(
-                    Modifier.padding(PaddingValues(start = 16.dp, top = 16.dp))
+                    Modifier.padding(PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp))
                 ) {
                     ingredients.forEach { ingredient ->
                         Row(Modifier.fillMaxWidth()) {
