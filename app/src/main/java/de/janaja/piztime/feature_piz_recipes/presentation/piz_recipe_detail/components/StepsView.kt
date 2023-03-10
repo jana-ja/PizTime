@@ -3,7 +3,6 @@ package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.com
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
@@ -36,24 +35,23 @@ fun StepsView(
         modifier = modifier.background(Color.White)
     ) {
 
-        LazyColumn(
+        Column(
             modifier = contentModifier
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
             Log.i("StepsView", "I got recomposed!")
 
-            item {
-                Text(
-                    "Rezept:",
-                    style = MaterialTheme.typography.titleLarge
-                )
-            }
+            Text(
+                "Rezept:",
+                style = MaterialTheme.typography.titleLarge
+            )
 
-            items(stepsWithIngredients.size) {
+
+            stepsWithIngredients.indices.forEach {
                 Column {
                     // step description
-                    Row{
+                    Row {
                         Text(
                             "${it + 1}: ",
                             Modifier.padding(PaddingValues(start = 16.dp, top = 16.dp)),
@@ -67,7 +65,7 @@ fun StepsView(
                     }
 
                     // step ingredients
-                    if(stepsWithIngredients[it].ingredients.isNotEmpty()) {
+                    if (stepsWithIngredients[it].ingredients.isNotEmpty()) {
                         SimpleFlowRow(
                             verticalGap = 8.dp,
                             horizontalGap = 8.dp,
@@ -92,7 +90,7 @@ fun StepsView(
         }
         // edit button
         IconButton(
-            onClick = {onEvent(PizRecipeDetailEvent.ClickEditSteps)},
+            onClick = { onEvent(PizRecipeDetailEvent.ClickEditSteps) },
             Modifier
                 .size(36.dp)
                 .align(Alignment.BottomEnd)

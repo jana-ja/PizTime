@@ -2,6 +2,7 @@ package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
@@ -28,7 +29,7 @@ fun PizRecipeDetailScreen(
     val amountState = viewModel.detailAmountState.value
     val recipeState = viewModel.pizRecipeState.value
     val dialogState = viewModel.detailEditDialogState.value
-    
+
     PizRecipeDetailView(
         modifier = Modifier,//.offset(x = offset.dp),
         recipeState.pizRecipe,
@@ -52,9 +53,11 @@ fun PizRecipeDetailView(
 
     val overlap: Dp = dimensionResource(id = R.dimen.topSheetBorderHeight)
     val headerHeight = 150.dp
+    // really ugly solution to reset state when this is opened in a dialog, but not reset it on recomposition
+    val new = remember { mutableStateOf(true) }
 
     Box {
-        Column(
+        LazyColumn(
             modifier = modifier
                 .fillMaxSize()
                 .background(Color.White),
@@ -63,61 +66,71 @@ fun PizRecipeDetailView(
         ) {
 
             // edit dialog
-
-            // really ugly solution to reset state when this is opened in a dialog, but not reset it on recomposition
-            val new = remember{mutableStateOf(true)}
-
             if (dialogState != EditDialog.None) {
-                Dialog(onDismissRequest = {
-                    onEvent(PizRecipeDetailEvent.DismissDialog)
-                }) {
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(.9f),
-                        shape = RoundedCornerShape(size = 10.dp)
-                    ) {
-                        when (dialogState){
-                            EditDialog.Header -> {}
-                            EditDialog.Ingredients -> {new.value = true; EditIngredientsView(new = new, dismissDialog = {onEvent(PizRecipeDetailEvent.DismissDialog)}); new.value = false }
-                            EditDialog.Steps -> {new.value = true; EditStepsView(new = new, dismissDialog = {onEvent(PizRecipeDetailEvent.DismissDialog)}); new.value = false }
-                            else -> {}
-                        }
+                item() {
+                    Dialog(onDismissRequest = {
+                        onEvent(PizRecipeDetailEvent.DismissDialog)
+                    }) {
+                        Surface(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .fillMaxHeight(.9f),
+                            shape = RoundedCornerShape(size = 10.dp)
+                        ) {
+                            when (dialogState) {
+                                EditDialog.Header -> {}
+                                EditDialog.Ingredients -> {
+                                    new.value = true; EditIngredientsView(
+                                        new = new,
+                                        dismissDialog = { onEvent(PizRecipeDetailEvent.DismissDialog) }); new.value =
+                                        false
+                                }
+                                EditDialog.Steps -> {
+                                    new.value = true; EditStepsView(
+                                        new = new,
+                                        dismissDialog = { onEvent(PizRecipeDetailEvent.DismissDialog) }); new.value =
+                                        false
+                                }
+                                else -> {}
+                            }
 
+                        }
                     }
                 }
             }
 
-
             // if sections should have different background colors or have no gaps in general,
             // then they have to overlap (negative space in layout arrangement and extra padding for the views tops)
-
-            HeaderView(
-                modifier = Modifier.zIndex(1f),
-                title = pizRecipeWithDetails.title,
-                feature = pizRecipeWithDetails.feature,
-                imageResId = pizRecipeWithDetails.imageResourceId,
-                contentModifier = Modifier,
-                height = headerHeight,
-                onEvent = onEvent
-            )
-
-            IngredientsView(
-                modifier = Modifier.zIndex(.9f),
-                ingredients = pizRecipeWithDetails.ingredients,
-                amount = amount,
-                onEvent = onEvent,
-                contentModifier = Modifier.padding(top = overlap)
+            item {
+                HeaderView(
+                    modifier = Modifier.zIndex(1f),
+                    title = pizRecipeWithDetails.title,
+                    feature = pizRecipeWithDetails.feature,
+                    imageResId = pizRecipeWithDetails.imageResourceId,
+                    contentModifier = Modifier,
+                    height = headerHeight,
+                    onEvent = onEvent
+                )
+            }
+            item {
+                IngredientsView(
+                    modifier = Modifier.zIndex(.9f),
+                    ingredients = pizRecipeWithDetails.ingredients,
+                    amount = amount,
+                    onEvent = onEvent,
+                    contentModifier = Modifier.padding(top = overlap)
+                )
+            }
+            item {
+                StepsView(
+                    modifier = Modifier.zIndex(.8f),
+                    stepsWithIngredients = pizRecipeWithDetails.steps,
+                    amount = amount,
+                    contentModifier = Modifier.padding(top = overlap),
+                    onEvent = onEvent
                 )
 
-            StepsView(
-                modifier = Modifier.zIndex(.8f),
-                stepsWithIngredients = pizRecipeWithDetails.steps,
-                amount = amount,
-                contentModifier = Modifier.padding(top = overlap),
-                onEvent = onEvent
-            )
-
+            }
         }
     }
 }
