@@ -55,6 +55,31 @@ fun PizRecipeDetailView(
     val headerHeight = 150.dp
 
     Box {
+        // edit dialog
+        if (dialogState != EditDialog.None) {
+            Dialog(onDismissRequest = {
+                onEvent(PizRecipeDetailEvent.DismissDialog)
+            }) {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(.9f),
+                    shape = RoundedCornerShape(size = 10.dp)
+                ) {
+                    when (dialogState) {
+                        EditDialog.Header -> {}
+                        EditDialog.Ingredients -> {
+                            EditIngredientsView(dismissDialog = { onEvent(PizRecipeDetailEvent.DismissDialog) })
+                        }
+                        EditDialog.Steps -> {
+                            EditStepsView(dismissDialog = { onEvent(PizRecipeDetailEvent.DismissDialog) })
+                        }
+                        else -> {}
+                    }
+
+                }
+            }
+        }
         LazyColumn(
             modifier = modifier
                 .fillMaxSize()
@@ -62,34 +87,6 @@ fun PizRecipeDetailView(
             verticalArrangement = Arrangement.spacedBy(-overlap)
 
         ) {
-
-            // edit dialog
-            if (dialogState != EditDialog.None) {
-                item() {
-                    Dialog(onDismissRequest = {
-                        onEvent(PizRecipeDetailEvent.DismissDialog)
-                    }) {
-                        Surface(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .fillMaxHeight(.9f),
-                            shape = RoundedCornerShape(size = 10.dp)
-                        ) {
-                            when (dialogState) {
-                                EditDialog.Header -> {}
-                                EditDialog.Ingredients -> {
-                                    EditIngredientsView(dismissDialog = { onEvent(PizRecipeDetailEvent.DismissDialog) })
-                                }
-                                EditDialog.Steps -> {
-                                    EditStepsView(dismissDialog = { onEvent(PizRecipeDetailEvent.DismissDialog) })
-                                }
-                                else -> {}
-                            }
-
-                        }
-                    }
-                }
-            }
 
             // if sections should have different background colors or have no gaps in general,
             // then they have to overlap (negative space in layout arrangement and extra padding for the views tops)
