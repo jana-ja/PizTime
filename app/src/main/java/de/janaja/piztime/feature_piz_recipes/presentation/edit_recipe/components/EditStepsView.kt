@@ -22,12 +22,13 @@ import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 fun EditStepsView(
     modifier: Modifier = Modifier,
     viewModel: EditRecipeViewModel = hiltViewModel(),
-    new: MutableState<Boolean>,
     dismissDialog: () -> Unit // TODO ugly solution
 ) {
 
-    // really ugly solution to reset state when this is opened in a dialog, but not reset it on recomposition
-    if (new.value) {
+    val coroutineScope = rememberCoroutineScope()
+    // reset state when this is opened in a dialog, but not reset it on recomposition
+    // launched effect is not triggered on recomposition
+    LaunchedEffect(coroutineScope){
         viewModel.reloadSteps()
     }
     EditStepsViewContent(
@@ -37,6 +38,8 @@ fun EditStepsView(
         viewModel::onEvent,
         dismissDialog
     )
+
+
 
 
 }

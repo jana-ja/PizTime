@@ -53,8 +53,6 @@ fun PizRecipeDetailView(
 
     val overlap: Dp = dimensionResource(id = R.dimen.topSheetBorderHeight)
     val headerHeight = 150.dp
-    // really ugly solution to reset state when this is opened in a dialog, but not reset it on recomposition
-    val new = remember { mutableStateOf(true) }
 
     Box {
         LazyColumn(
@@ -80,16 +78,10 @@ fun PizRecipeDetailView(
                             when (dialogState) {
                                 EditDialog.Header -> {}
                                 EditDialog.Ingredients -> {
-                                    new.value = true; EditIngredientsView(
-                                        new = new,
-                                        dismissDialog = { onEvent(PizRecipeDetailEvent.DismissDialog) }); new.value =
-                                        false
+                                    EditIngredientsView(dismissDialog = { onEvent(PizRecipeDetailEvent.DismissDialog) })
                                 }
                                 EditDialog.Steps -> {
-                                    new.value = true; EditStepsView(
-                                        new = new,
-                                        dismissDialog = { onEvent(PizRecipeDetailEvent.DismissDialog) }); new.value =
-                                        false
+                                    EditStepsView(dismissDialog = { onEvent(PizRecipeDetailEvent.DismissDialog) })
                                 }
                                 else -> {}
                             }
