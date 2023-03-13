@@ -2,6 +2,7 @@ package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.com
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -16,6 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import de.janaja.piztime.feature_piz_recipes.presentation.edit_recipe.EditRecipeEvent
 import de.janaja.piztime.feature_piz_recipes.presentation.edit_recipe.EditRecipeViewModel
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
+import kotlinx.coroutines.launch
 
 @Composable
 fun EditIngredientsView(
@@ -26,7 +28,7 @@ fun EditIngredientsView(
 
     // reset state when this is opened in a dialog, but not reset it on recomposition
     val coroutineScope = rememberCoroutineScope()
-    LaunchedEffect(coroutineScope){
+    LaunchedEffect(coroutineScope) {
         viewModel.reloadIngredients()
     }
 
@@ -37,7 +39,6 @@ fun EditIngredientsView(
         viewModel::onEvent,
         dismissDialog
     )
-
 
 
 }
@@ -51,6 +52,9 @@ private fun EditIngredientsViewContent(
     onEvent: (EditRecipeEvent) -> Unit,
     dismissDialog: () -> Unit // TODO ugly solution
 ) {
+
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
 
     // TODO states of textfields cant be inside of items because data will get lost on scrolling
     //  could have a statelist on top but state should be handled from viewmodel
@@ -130,7 +134,12 @@ private fun EditIngredientsViewContent(
 
             item() {
                 IconButton(
-                    onClick = { onEvent(EditRecipeEvent.ClickAddIngredient) },
+                    onClick = {
+                        onEvent(EditRecipeEvent.ClickAddIngredient)
+                        coroutineScope.launch {
+                            listState.animateScrollToItem(ingredientNames.size)
+                        }
+                    },
                     modifier = Modifier.padding(start = 8.dp, top = 16.dp)
                 ) {
                     Icon(

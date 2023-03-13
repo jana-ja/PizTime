@@ -2,6 +2,7 @@ package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.com
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -17,6 +18,7 @@ import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
 import de.janaja.piztime.feature_piz_recipes.presentation.edit_recipe.EditRecipeEvent
 import de.janaja.piztime.feature_piz_recipes.presentation.edit_recipe.EditRecipeViewModel
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
+import kotlinx.coroutines.launch
 
 @Composable
 fun EditStepsView(
@@ -28,7 +30,7 @@ fun EditStepsView(
     val coroutineScope = rememberCoroutineScope()
     // reset state when this is opened in a dialog, but not reset it on recomposition
     // launched effect is not triggered on recomposition
-    LaunchedEffect(coroutineScope){
+    LaunchedEffect(coroutineScope) {
         viewModel.reloadSteps()
     }
     EditStepsViewContent(
@@ -38,8 +40,6 @@ fun EditStepsView(
         viewModel::onEvent,
         dismissDialog
     )
-
-
 
 
 }
@@ -53,7 +53,8 @@ private fun EditStepsViewContent(
     onEvent: (EditRecipeEvent) -> Unit,
     dismissDialog: () -> Unit // TODO ugly solution
 ) {
-
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
     // TODO states of textfields cant be inside of items because data will get lost on scrolling
     //  could have a statelist on top but state should be handled from viewmodel
     //  how to avoid recomposing every textfield when one state inside the list changes
@@ -85,8 +86,11 @@ private fun EditStepsViewContent(
                 .fillMaxWidth()
                 .padding(it)
                 .padding(end = 24.dp, start = 16.dp)
-                .padding(vertical = 24.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+                .padding(vertical = 24.dp)
+                //.background(Color.LightGray)
+            ,
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            state = listState
 
         ) {
 
@@ -123,7 +127,12 @@ private fun EditStepsViewContent(
 
             item() {
                 IconButton(
-                    onClick = { onEvent(EditRecipeEvent.ClickAddStep) },
+                    onClick = {
+                        onEvent(EditRecipeEvent.ClickAddStep)
+                        coroutineScope.launch {
+                            listState.animateScrollToItem(steps.size)
+                        }
+                    },
                     modifier = Modifier.padding(start = 8.dp, top = 16.dp)
                 ) {
                     Icon(
