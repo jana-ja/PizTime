@@ -11,5 +11,8 @@ sealed class EditRecipeEvent {
     data class ClickRemoveStep(val index: Int) : EditRecipeEvent()
     data class StepChanged(val index: Int, val value: String): EditRecipeEvent()
     object ClickAddStep : EditRecipeEvent()
+    data class StepIngredientNameChanged(val stepIndex: Int, val index: Int, val value: String): EditRecipeEvent()
+    data class StepIngredientAmountChanged(val stepIndex: Int, val index: Int, val value: String): EditRecipeEvent()
+
 
 }
