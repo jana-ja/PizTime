@@ -3,6 +3,8 @@ package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.com
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -99,8 +101,32 @@ fun StepsView(
                                     style = MaterialTheme.typography.bodyMedium
                                 )
                             }
+                            if (editMode) {
+                                IconButton(
+                                    onClick = {
+                                        onEvent(PizRecipeDetailEvent.ClickAddIngredient(false, stepsWithIngredients[stepIndex].id))
+                                    }
+                                ) {
+                                    Icon(
+                                        Icons.Default.Add,
+                                        "add step ingredient"
+                                    )
+                                }
+                            }
                         }
                     }
+                }
+            }
+            if (editMode) {
+                IconButton(
+                    onClick = {
+                        onEvent(PizRecipeDetailEvent.ClickAddStep)
+                    }
+                ) {
+                    Icon(
+                        Icons.Default.Add,
+                        "add step"
+                    )
                 }
             }
         }

@@ -6,7 +6,7 @@ sealed class PizRecipeDetailEvent{
     object IncreaseAmount: PizRecipeDetailEvent()
     object DecreaseAmount: PizRecipeDetailEvent()
     object ClickEditHeader: PizRecipeDetailEvent()
-    data class ClickEditIngredient(val id: Long, val isStepIngredient: Boolean = false, val mapId: Long = -1): PizRecipeDetailEvent()
+    data class ClickEditIngredient(val id: Long, val isStepIngredient: Boolean = false, val stepId: Long = -1): PizRecipeDetailEvent()
     data class ClickEditStep(val id: Long): PizRecipeDetailEvent()
     object DismissDialog: PizRecipeDetailEvent()
     object ClickEdit: PizRecipeDetailEvent()
@@ -17,6 +17,8 @@ sealed class PizRecipeDetailEvent{
     data class IngredientNameChanged(val value: String): PizRecipeDetailEvent()
     data class IngredientAmountChanged(val value: String): PizRecipeDetailEvent()
     data class StepDescriptionChanged(val value: String): PizRecipeDetailEvent()
+    data class ClickAddIngredient(val isStepIngredient: Boolean = false, val stepId: Long = -1): PizRecipeDetailEvent()
+    object ClickAddStep: PizRecipeDetailEvent()
 
 
 

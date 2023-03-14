@@ -3,6 +3,8 @@ package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.com
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -51,6 +53,7 @@ fun IngredientsView(
 
         ) {
             Column(modifier = Modifier.padding(bottom = 16.dp)) {
+                // header
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         "Zutaten für", style = MaterialTheme.typography.titleLarge
@@ -62,6 +65,7 @@ fun IngredientsView(
                         "Pizzen:", style = MaterialTheme.typography.titleLarge
                     )
                 }
+                // content ingredients
                 Column(
                     Modifier.padding(PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp))
                 ) {
@@ -69,7 +73,8 @@ fun IngredientsView(
                         // edit mode
                         var rowModifier = Modifier
                             .fillMaxWidth()
-                        if (editMode) rowModifier = rowModifier.clickable{ onEvent(PizRecipeDetailEvent.ClickEditIngredient(ingredient.id)) }
+                        if (editMode) rowModifier =
+                            rowModifier.clickable { onEvent(PizRecipeDetailEvent.ClickEditIngredient(ingredient.id)) }
 
                         Row(rowModifier) {
                             Text(
@@ -92,6 +97,22 @@ fun IngredientsView(
                         }
                     }
                 }
+                // optional: add ingredient button
+                if (editMode) {
+                    IconButton(
+                        onClick = {
+                            onEvent(PizRecipeDetailEvent.ClickAddIngredient(false))
+//                        coroutineScope.launch {
+//                            listState.animateScrollToItem(ingredientNames.size)
+//                        }
+                        }
+                    ) {
+                        Icon(
+                            Icons.Default.Add,
+                            "add ingredient"
+                        )
+                    }
+                }
             }
         }
     }
@@ -107,6 +128,7 @@ fun IngredientsViewPreview() {
         ingredients = DummyData.DummyIngredients,
         amount = 4,
         onEvent = {},
-        editMode = false)
+        editMode = false
+    )
 }
 

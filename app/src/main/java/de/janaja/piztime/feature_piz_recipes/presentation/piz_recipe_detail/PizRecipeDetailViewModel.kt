@@ -185,7 +185,35 @@ class PizRecipeDetailViewModel @Inject constructor(
         )
     }
 
-    fun onEvent(event: PizRecipeDetailEvent) {
+    private fun editAddIngredient(isStepIngredient: Boolean, stepId: Long) {
+        _detailEditDialogState.value = _detailEditDialogState.value.copy(editDialogState = EditDialog.Ingredient)
+        // load correct ingredient to edit ingredient state
+        if (isStepIngredient && currentRecipeId == null) {
+            return
+        }
+        val mapId = if (isStepIngredient) stepId else currentRecipeId!!
+
+        _editIngredientState.value = _editIngredientState.value.copy(
+            id = 0,
+            ingredientName = "",
+            ingredientAmount = "",
+            isStepIngredient = isStepIngredient,
+            mapId = mapId,
+        )
+    }
+
+    private fun editAddStep() {
+        _detailEditDialogState.value = _detailEditDialogState.value.copy(editDialogState = EditDialog.Step)
+        // load correct step to edit ingredient state
+        _editStepState.value = _editStepState.value.copy(
+            id = 0,
+            description = ""
+        )
+
+    }
+
+
+        fun onEvent(event: PizRecipeDetailEvent) {
         when (event) {
             PizRecipeDetailEvent.DecreaseAmount -> decreaseAmount()
             PizRecipeDetailEvent.IncreaseAmount -> increaseAmount()
@@ -195,7 +223,7 @@ class PizRecipeDetailViewModel @Inject constructor(
             is PizRecipeDetailEvent.ClickEditIngredient -> clickEditIngredient(
                 event.id,
                 event.isStepIngredient,
-                event.mapId
+                event.stepId
             )
             is PizRecipeDetailEvent.ClickEditStep -> clickEditStep(event.id)
             PizRecipeDetailEvent.DismissDialog -> {
@@ -206,6 +234,9 @@ class PizRecipeDetailViewModel @Inject constructor(
             is PizRecipeDetailEvent.IngredientNameChanged -> editIngredientName(event.value)
             PizRecipeDetailEvent.ClickSaveStep -> saveStep()
             is PizRecipeDetailEvent.StepDescriptionChanged -> editStepDescription(event.value)
+            is PizRecipeDetailEvent.ClickAddIngredient -> editAddIngredient(event.isStepIngredient,
+                event.stepId)
+            PizRecipeDetailEvent.ClickAddStep -> editAddStep()
         }
     }
 
