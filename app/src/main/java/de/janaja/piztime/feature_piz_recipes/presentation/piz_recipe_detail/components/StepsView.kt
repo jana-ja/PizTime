@@ -72,7 +72,7 @@ fun StepsView(
                     }
 
                     // step ingredients
-                    if (stepsWithIngredients[stepIndex].ingredients.isNotEmpty()) {
+                    if (stepsWithIngredients[stepIndex].ingredients.isNotEmpty() || editMode) {
                         SimpleFlowRow(
                             verticalGap = 8.dp,
                             horizontalGap = 8.dp,
@@ -104,7 +104,7 @@ fun StepsView(
                             if (editMode) {
                                 IconButton(
                                     onClick = {
-                                        onEvent(PizRecipeDetailEvent.ClickAddIngredient(false, stepsWithIngredients[stepIndex].id))
+                                        onEvent(PizRecipeDetailEvent.ClickAddIngredient(true, stepsWithIngredients[stepIndex].id))
                                     }
                                 ) {
                                     Icon(
