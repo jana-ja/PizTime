@@ -34,7 +34,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providePizrecipeUseCase(repository: Repository): AllPizRecipeUseCases{
+    fun providePizrecipeUseCase(repository: Repository): AllPizRecipeUseCases {
         return AllPizRecipeUseCases(
             initDbIfEmptyUseCase = InitDbIfEmptyUseCase(repository),
             getAllPizRecipesUseCase = GetAllPizRecipesUseCase(repository),
@@ -44,9 +44,13 @@ object AppModule {
             getPizRecipeWithDetailsFlowUseCase = GetPizRecipeWithDetailsFlowUseCase(repository),
             updatePizRecipeUseCase = UpdatePizRecipeUseCase(repository),
             getIngredientsUseCase = GetIngredientsUseCase(repository),
+            getIngredientUseCase = GetIngredientUseCase(repository),
             updateIngredientsUseCase = UpdateIngredientsUseCase(repository),
+            updateIngredientUseCase = UpdateIngredientUseCase(repository),
             getStepsWithIngredientsUseCase = GetStepsWithIngredientsUseCase(repository),
-            updateStepsWithIngredientsUseCase = UpdateStepsWithIngredientsUseCase(repository)
+            getStepWithoutIngredientsUseCase = GetStepWithoutIngredientsUseCase(repository),
+            updateStepsWithIngredientsUseCase = UpdateStepsWithIngredientsUseCase(repository),
+            updateStepUseCase = UpdateStepUseCase(repository)
         )
     }
 }

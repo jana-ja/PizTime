@@ -9,7 +9,11 @@ data class AllPizRecipeUseCases(
     val getPizRecipeWithDetailsFlowUseCase: GetPizRecipeWithDetailsFlowUseCase,
     val updatePizRecipeUseCase: UpdatePizRecipeUseCase,
     val getIngredientsUseCase: GetIngredientsUseCase,
+    val getIngredientUseCase: GetIngredientUseCase,
     val updateIngredientsUseCase: UpdateIngredientsUseCase,
+    val updateIngredientUseCase: UpdateIngredientUseCase,
     val getStepsWithIngredientsUseCase: GetStepsWithIngredientsUseCase,
-    val updateStepsWithIngredientsUseCase: UpdateStepsWithIngredientsUseCase
+    val getStepWithoutIngredientsUseCase: GetStepWithoutIngredientsUseCase,
+    val updateStepsWithIngredientsUseCase: UpdateStepsWithIngredientsUseCase,
+    val updateStepUseCase: UpdateStepUseCase
 )

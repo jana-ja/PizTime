@@ -26,8 +26,13 @@ interface PizStepDao {
     )
     fun findPizStepsWithPizStepIngredientsByPizRecipeId(id: Long): Map<PizStepEntity, List<PizStepIngredientEntity>>
 
+    @Query("SELECT * FROM PizStepEntity WHERE stepid = :id")
+    suspend fun getStep(id: Long): PizStepEntity
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPizSteps(pizStepEntities: List<PizStepEntity>)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPizStep(pizStepEntity: PizStepEntity)
     @Query("DELETE FROM PizStepEntity WHERE PizStepEntity.recipeIdMap = :recipeId")
     fun deletePizStepsForRecipeId(recipeId: Long)
 

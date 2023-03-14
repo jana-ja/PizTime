@@ -56,6 +56,13 @@ fun PizIngredient.toPizIngredientEntity(recipeId: Long): PizIngredientEntity {
     return PizIngredientEntity(this.ingredient, this.baseAmount, recipeId, this.id)
 }
 
+fun PizIngredient.toPizStepIngredientEntity(stepId: Long): PizStepIngredientEntity {
+    return PizStepIngredientEntity(this.ingredient, this.baseAmount, stepId, this.id)
+}
+
+fun PizStepWithIngredients.toPizStepEntity(recipeId: Long): PizStepEntity {
+    return PizStepEntity(this.description, recipeId, this.id)
+}
 
 // data -> domain
 fun PizRecipeEntity.toRecipe(): PizRecipe {
@@ -96,6 +103,10 @@ fun EntityCollection.toPizRecipeWithDetails(): PizRecipeWithDetails {
 
 fun PizIngredientEntity.toPizIngredient(): PizIngredient {
     return PizIngredient(this.ingredient, this.baseAmount, this.id)
+}
+
+fun PizStepIngredientEntity.toPizIngredient(): PizIngredient {
+    return PizIngredient(this.ingredient, this.baseStepAmount, this.id)
 }
 
 fun stepWithIngredientEntitiesToStepWithIngredients(entities: Map<PizStepEntity, List<PizStepIngredientEntity>>): List<PizStepWithIngredients> {

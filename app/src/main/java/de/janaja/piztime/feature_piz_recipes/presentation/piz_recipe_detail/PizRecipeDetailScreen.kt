@@ -4,8 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
@@ -29,12 +34,14 @@ fun PizRecipeDetailScreen(
     val amountState = viewModel.detailAmountState.value
     val recipeState = viewModel.pizRecipeState.value
     val dialogState = viewModel.detailEditDialogState.value
+    val editState = viewModel.detailEditModeState.value
 
     PizRecipeDetailView(
         modifier = Modifier,//.offset(x = offset.dp),
         recipeState.pizRecipe,
         amountState.amount,
         dialogState.editDialogState,
+        editState.editMode,
         viewModel::onEvent
     )
 
@@ -48,6 +55,7 @@ fun PizRecipeDetailView(
     pizRecipeWithDetails: PizRecipeWithDetails,
     amount: Int,
     dialogState: EditDialog,
+    editMode: Boolean,
     onEvent: (PizRecipeDetailEvent) -> Unit
 ) {
 
@@ -68,11 +76,11 @@ fun PizRecipeDetailView(
                 ) {
                     when (dialogState) {
                         EditDialog.Header -> {}
-                        EditDialog.Ingredients -> {
-                            EditIngredientsView(dismissDialog = { onEvent(PizRecipeDetailEvent.DismissDialog) })
+                        EditDialog.Ingredient -> {
+                            EditIngredientView()
                         }
-                        EditDialog.Steps -> {
-                            EditStepsView(dismissDialog = { onEvent(PizRecipeDetailEvent.DismissDialog) })
+                        EditDialog.Step -> {
+                            EditStepView()
                         }
                         else -> {}
                     }
@@ -80,6 +88,8 @@ fun PizRecipeDetailView(
                 }
             }
         }
+
+
         LazyColumn(
             modifier = modifier
                 .fillMaxSize()
@@ -98,7 +108,8 @@ fun PizRecipeDetailView(
                     imageResId = pizRecipeWithDetails.imageResourceId,
                     contentModifier = Modifier,
                     height = headerHeight,
-                    onEvent = onEvent
+                    onEvent = onEvent,
+                    editMode = editMode
                 )
             }
             item {
@@ -107,7 +118,8 @@ fun PizRecipeDetailView(
                     ingredients = pizRecipeWithDetails.ingredients,
                     amount = amount,
                     onEvent = onEvent,
-                    contentModifier = Modifier.padding(top = overlap)
+                    contentModifier = Modifier.padding(top = overlap),
+                    editMode = editMode
                 )
             }
             item {
@@ -116,10 +128,26 @@ fun PizRecipeDetailView(
                     stepsWithIngredients = pizRecipeWithDetails.steps,
                     amount = amount,
                     contentModifier = Modifier.padding(top = overlap),
-                    onEvent = onEvent
+                    onEvent = onEvent,
+                    editMode = editMode
                 )
 
             }
+        }
+
+        // edit button
+        IconButton(
+            onClick = {onEvent(PizRecipeDetailEvent.ClickEdit)},
+            Modifier
+                .size(36.dp)
+                .align(Alignment.TopEnd)
+        ) {
+            Icon(
+                Icons.Default.Edit,
+                "edit recipe",
+                Modifier.fillMaxHeight()
+            )
+
         }
     }
 }
@@ -129,10 +157,11 @@ fun PizRecipeDetailView(
 @Composable
 fun PizRecipeDetailViewPreview() {
     PizRecipeDetailView(
-        Modifier.background(Color(0xFFC49E2F)),
-        DummyData.DummyPizRecipeWithDetails,
-        4,
-        EditDialog.None
+        modifier = Modifier.background(Color(0xFFC49E2F)),
+        pizRecipeWithDetails = DummyData.DummyPizRecipeWithDetails,
+        amount = 4,
+        dialogState = EditDialog.None,
+        editMode = false
     ) { }
 }
 

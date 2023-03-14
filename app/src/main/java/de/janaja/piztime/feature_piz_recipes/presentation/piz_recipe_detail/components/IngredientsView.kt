@@ -1,12 +1,11 @@
 package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components
 
 import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
@@ -26,7 +25,8 @@ fun IngredientsView(
     ingredients: List<PizIngredient>,
     amount: Int,
     onEvent: (PizRecipeDetailEvent) -> Unit,
-    contentModifier: Modifier = Modifier
+    contentModifier: Modifier = Modifier,
+    editMode: Boolean
 ) {
     Log.i("IngredientsView", "I got recomposed!")
 
@@ -66,7 +66,12 @@ fun IngredientsView(
                     Modifier.padding(PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp))
                 ) {
                     ingredients.forEach { ingredient ->
-                        Row(Modifier.fillMaxWidth()) {
+                        // edit mode
+                        var rowModifier = Modifier
+                            .fillMaxWidth()
+                        if (editMode) rowModifier = rowModifier.clickable{ onEvent(PizRecipeDetailEvent.ClickEditIngredient(ingredient.id)) }
+
+                        Row(rowModifier) {
                             Text(
                                 text = "${(ingredient.baseAmount * amount).cut()}g",
                                 Modifier
@@ -88,18 +93,6 @@ fun IngredientsView(
                     }
                 }
             }
-            // edit button
-            IconButton(
-                onClick = { onEvent(PizRecipeDetailEvent.ClickEditIngredients) },
-                Modifier
-                    .size(36.dp)
-                    .align(Alignment.BottomEnd)
-            ) {
-                Icon(
-                    Icons.Default.Edit, "edit recipe", Modifier.fillMaxHeight()
-                )
-
-            }
         }
     }
 
@@ -109,6 +102,11 @@ fun IngredientsView(
 @Preview
 @Composable
 fun IngredientsViewPreview() {
-    IngredientsView(modifier = Modifier, ingredients = DummyData.DummyIngredients, amount = 4, onEvent = {})
+    IngredientsView(
+        modifier = Modifier,
+        ingredients = DummyData.DummyIngredients,
+        amount = 4,
+        onEvent = {},
+        editMode = false)
 }
 

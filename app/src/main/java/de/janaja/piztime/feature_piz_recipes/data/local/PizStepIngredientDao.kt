@@ -10,6 +10,10 @@ interface PizStepIngredientDao {
     suspend fun addPizStepIngredient(pizIngredient: PizStepIngredientEntity)
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPizStepIngredients(pizStepIngredientEntities: List<PizStepIngredientEntity>)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPizStepIngredient(pizStepIngredientEntity: PizStepIngredientEntity)
+    @Query("SELECT * FROM PizStepIngredientEntity WHERE stepIngredientId = :id")
+    suspend fun getPizStepIngredient(id: Long): PizStepIngredientEntity
     @Query("DELETE FROM PizStepIngredientEntity WHERE PizStepIngredientEntity.stepidMap = :stepId")
     fun deletePizStepIngredientsForRecipeId(stepId: Long)
 }

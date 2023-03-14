@@ -22,6 +22,12 @@ interface PizIngredientDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPizIngredients(pizIngredientEntities: List<PizIngredientEntity>)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPizIngredient(pizIngredientEntitiy: PizIngredientEntity)
+
+    @Query("SELECT * FROM PizIngredientEntity WHERE ingredientId = :id")
+    suspend fun getPizIngredient(id: Long): PizIngredientEntity
+
     @Query("DELETE FROM PizIngredientEntity WHERE recipeIdMap = :recipeId")
     suspend fun deletePizIngredientsForRecipeId(recipeId: Long)
 }

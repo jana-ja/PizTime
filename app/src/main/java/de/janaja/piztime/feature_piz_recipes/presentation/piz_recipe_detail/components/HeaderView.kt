@@ -6,8 +6,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -34,7 +32,8 @@ fun HeaderView(
     imageResId: Int,
     contentModifier: Modifier = Modifier,
     height: Dp,
-    onEvent: (PizRecipeDetailEvent) -> Unit
+    onEvent: (PizRecipeDetailEvent) -> Unit,
+    editMode: Boolean
 ) {
 
     // animation stuff
@@ -124,20 +123,6 @@ fun HeaderView(
                 )
             }
 
-            // edit button
-            IconButton(
-                onClick = {onEvent(PizRecipeDetailEvent.ClickEditHeader)},
-                Modifier
-                    .size(36.dp)
-                    .align(Alignment.BottomEnd)
-            ) {
-                Icon(
-                    Icons.Default.Edit,
-                    "edit recipe",
-                    Modifier.fillMaxHeight()
-                )
-
-            }
         }
     }
 }
@@ -149,6 +134,8 @@ fun HeaderViewPreview() {
         title = "Pizza",
         feature = "ist lecker",
         imageResId = R.drawable.bsp_piz,
-        height = 200.dp
-    ) {}
+        height = 200.dp,
+        onEvent = {},
+        editMode = false
+    )
 }

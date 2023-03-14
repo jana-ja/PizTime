@@ -45,6 +45,14 @@ class RepositoryImpl( // TODO here db bekommen mit dagger hilt
         //return null
     }
 
+    override suspend fun getPizIngredient(id: Long): PizIngredientEntity {
+        return pizIngredientDao.getPizIngredient(id)
+    }
+
+    override suspend fun getPizStepIngredient(id: Long): PizStepIngredientEntity {
+        return pizStepIngredientDao.getPizStepIngredient(id)
+    }
+
     private fun mapToList(map: Map<PizStepEntity, List<PizStepIngredientEntity>>): List<Pair<PizStepEntity, List<PizStepIngredientEntity>>> {
         // convert map to list here
         val stepsWithIngredients =
@@ -61,7 +69,7 @@ class RepositoryImpl( // TODO here db bekommen mit dagger hilt
 
     }
 
-    override fun findPizRecipebyId(id: Long): Flow<PizRecipeEntity?> {
+    override fun findPizRecipeById(id: Long): Flow<PizRecipeEntity?> {
         return pizRecipeDao.findPizRecipeByIdFlow(id)
     }
 
@@ -71,6 +79,10 @@ class RepositoryImpl( // TODO here db bekommen mit dagger hilt
 
     override fun findPizStepsWithIngredientsByPizRecipeId(pizRecipeId: Long): Map<PizStepEntity, List<PizStepIngredientEntity>> {
         return pizStepDao.findPizStepsWithPizStepIngredientsByPizRecipeIdFlow(pizRecipeId)
+    }
+
+    override suspend fun getPizStep(id: Long): PizStepEntity {
+        return pizStepDao.getStep(id)
     }
 
     // TODO repository baut den flow, bekommt ihn nicht von room. wenn was inserted wird dann müsste sich room darum kümmern neuen flow zu emitten.
@@ -93,8 +105,20 @@ class RepositoryImpl( // TODO here db bekommen mit dagger hilt
         pizIngredientDao.insertPizIngredients(pizIngredientEntities)
     }
 
+    override suspend fun insertPizIngredient(pizIngredientEntity: PizIngredientEntity) {
+        pizIngredientDao.insertPizIngredient(pizIngredientEntity)
+    }
+
+    override suspend fun insertPizStepIngredient(pizStepIngredientEntity: PizStepIngredientEntity) {
+        pizStepIngredientDao.insertPizStepIngredient(pizStepIngredientEntity)
+    }
+
     override suspend fun insertPizSteps(pizStepEntities: List<PizStepEntity>){
         pizStepDao.insertPizSteps(pizStepEntities)
+    }
+
+    override suspend fun insertPizStep(pizStepEntity: PizStepEntity) {
+        pizStepDao.insertPizStep(pizStepEntity)
     }
 
     override suspend fun insertPizStepIngredients(pizStepIngredientEntities: List<PizStepIngredientEntity>) {

@@ -8,6 +8,6 @@ class GetPizRecipeUseCase(
     private val repository: Repository
 ) {
     operator fun invoke(id: Long): Flow<PizRecipeEntity?> {
-        return repository.findPizRecipebyId(id)
+        return repository.findPizRecipeById(id)
     }
 }
