@@ -36,4 +36,7 @@ interface PizStepDao {
     @Query("DELETE FROM PizStepEntity WHERE PizStepEntity.recipeIdMap = :recipeId")
     fun deletePizStepsForRecipeId(recipeId: Long)
 
+    @Query("DELETE FROM PizStepEntity WHERE stepid = :id")
+    fun deletePizStep(id: Long)
+
 }

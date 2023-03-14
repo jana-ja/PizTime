@@ -37,6 +37,8 @@ object AppModule {
     fun providePizrecipeUseCase(repository: Repository): AllPizRecipeUseCases {
         return AllPizRecipeUseCases(
             initDbIfEmptyUseCase = InitDbIfEmptyUseCase(repository),
+            deleteIngredientUseCase = DeleteIngredientUseCase(repository),
+            deleteStepUseCase = DeleteStepUseCase(repository),
             getAllPizRecipesUseCase = GetAllPizRecipesUseCase(repository),
             getAllPizRecipesFlowUseCase = GetAllPizRecipesFlowUseCase(repository),
             getPizRecipeUseCase = GetPizRecipeUseCase(repository),

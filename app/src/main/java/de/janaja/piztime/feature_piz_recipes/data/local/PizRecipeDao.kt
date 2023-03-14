@@ -27,4 +27,7 @@ interface PizRecipeDao {
 
     @Query("SELECT CASE WHEN EXISTS(SELECT 1 FROM PizRecipeEntity) THEN 0 ELSE 1 END")
     suspend fun isEmpty(): Boolean
+
+    @Query("DELETE FROM PizRecipeEntity WHERE recipeId = :id")
+    suspend fun deletePizRecipe(id: Long)
 }

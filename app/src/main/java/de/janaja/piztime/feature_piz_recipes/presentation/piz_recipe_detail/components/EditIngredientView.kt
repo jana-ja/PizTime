@@ -1,8 +1,8 @@
 package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -40,18 +40,33 @@ private fun EditIngredientViewContent(
     ingredientAmount: String,
     onEvent: (PizRecipeDetailEvent) -> Unit
 ) {
-    
+
     Scaffold(
         topBar = {
-            Text(
-                "Zutaten",
-                style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.padding(16.dp)
+            SmallTopAppBar(
+                title = {
+                    Text(
+                        "Zutaten",
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+                },
+                actions = {
+                    IconButton(
+                        onClick = { onEvent(PizRecipeDetailEvent.ClickDeleteIngredient) },
+                    ) {
+                        Icon(
+                            Icons.Default.Delete,
+                            "delete ingredient",
+                            Modifier.fillMaxHeight()
+                        )
+                    }
+                }
             )
+
         },
         bottomBar = {
             Button(
-                onClick = { onEvent(PizRecipeDetailEvent.ClickSaveIngredient)},
+                onClick = { onEvent(PizRecipeDetailEvent.ClickSaveIngredient) },
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth()

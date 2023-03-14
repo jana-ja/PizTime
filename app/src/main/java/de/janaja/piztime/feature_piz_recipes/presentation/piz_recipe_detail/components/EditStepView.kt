@@ -2,6 +2,7 @@ package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.com
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -39,15 +40,29 @@ private fun EditStepViewContent(
 
     Scaffold(
         topBar = {
-            Text(
-                "Zutaten",
-                style = MaterialTheme.typography.headlineMedium,
-                modifier = Modifier.padding(16.dp)
+            SmallTopAppBar(
+                title = {
+                    Text(
+                        "Zutaten",
+                        style = MaterialTheme.typography.headlineMedium
+                    )
+                },
+                actions = {
+                    IconButton(
+                        onClick = { onEvent(PizRecipeDetailEvent.ClickDeleteStep) },
+                    ) {
+                        Icon(
+                            Icons.Default.Delete,
+                            "delete step",
+                            Modifier.fillMaxHeight()
+                        )
+                    }
+                }
             )
         },
         bottomBar = {
             Button(
-                onClick = { onEvent(PizRecipeDetailEvent.ClickSaveStep)},
+                onClick = { onEvent(PizRecipeDetailEvent.ClickSaveStep) },
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth()

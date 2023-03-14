@@ -30,4 +30,7 @@ interface PizIngredientDao {
 
     @Query("DELETE FROM PizIngredientEntity WHERE recipeIdMap = :recipeId")
     suspend fun deletePizIngredientsForRecipeId(recipeId: Long)
+
+    @Query("DELETE FROM PizIngredientEntity WHERE ingredientId = :id")
+    suspend fun deletePizIngredient(id: Long)
 }

@@ -19,6 +19,8 @@ sealed class PizRecipeDetailEvent{
     data class StepDescriptionChanged(val value: String): PizRecipeDetailEvent()
     data class ClickAddIngredient(val isStepIngredient: Boolean = false, val stepId: Long = -1): PizRecipeDetailEvent()
     object ClickAddStep: PizRecipeDetailEvent()
+    object ClickDeleteIngredient: PizRecipeDetailEvent()
+    object ClickDeleteStep: PizRecipeDetailEvent()
 
 
 

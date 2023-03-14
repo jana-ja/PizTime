@@ -44,4 +44,7 @@ interface Repository {
 
     suspend fun getPizIngredient(id: Long): PizIngredientEntity
     suspend fun getPizStepIngredient(id: Long): PizStepIngredientEntity
+    suspend fun deletePizStepWithIngredients(id: Long)
+    suspend fun deletePizStepIngredient(id: Long)
+    suspend fun deletePizIngredient(id: Long)
 }

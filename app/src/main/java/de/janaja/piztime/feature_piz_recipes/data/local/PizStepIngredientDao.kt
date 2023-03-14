@@ -16,4 +16,9 @@ interface PizStepIngredientDao {
     suspend fun getPizStepIngredient(id: Long): PizStepIngredientEntity
     @Query("DELETE FROM PizStepIngredientEntity WHERE PizStepIngredientEntity.stepidMap = :stepId")
     fun deletePizStepIngredientsForRecipeId(stepId: Long)
+    @Query("DELETE FROM PizStepIngredientEntity WHERE stepIngredientId = :id")
+    fun deletePizStepIngredient(id: Long)
+    @Query("DELETE FROM PizStepIngredientEntity WHERE stepidMap = :stepId")
+    fun deletePizStepIngredientsForStepId(stepId: Long)
+
 }

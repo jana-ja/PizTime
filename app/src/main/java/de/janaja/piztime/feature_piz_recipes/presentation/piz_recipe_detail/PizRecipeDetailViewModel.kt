@@ -212,8 +212,42 @@ class PizRecipeDetailViewModel @Inject constructor(
 
     }
 
+    private fun editDeleteIngredient(){
+        currentRecipeId?.let {
+            // delete
+            val state = _editIngredientState.value
+            viewModelScope.launch(Dispatchers.IO) {
+                allPizRecipesUseCases.deleteIngredientUseCase(
+                    state.id,
+                    state.isStepIngredient
+                )
+                // reload data
+                allPizRecipesUseCases.getPizRecipeWithDetailsUseCase(it)
+            }
+            // dismiss dialog
+            onEvent(PizRecipeDetailEvent.DismissDialog)
+        }
+        // TODO error
+    }
 
-        fun onEvent(event: PizRecipeDetailEvent) {
+    private fun editDeleteStep(){
+        currentRecipeId?.let {
+            // delete
+            viewModelScope.launch(Dispatchers.IO) {
+                allPizRecipesUseCases.deleteStepUseCase(
+                    _editStepState.value.id
+                )
+                // reload data
+                allPizRecipesUseCases.getPizRecipeWithDetailsUseCase(it)
+            }
+            // dismiss dialog
+            onEvent(PizRecipeDetailEvent.DismissDialog)
+        }
+        // TODO error
+    }
+
+
+    fun onEvent(event: PizRecipeDetailEvent) {
         when (event) {
             PizRecipeDetailEvent.DecreaseAmount -> decreaseAmount()
             PizRecipeDetailEvent.IncreaseAmount -> increaseAmount()
@@ -234,9 +268,13 @@ class PizRecipeDetailViewModel @Inject constructor(
             is PizRecipeDetailEvent.IngredientNameChanged -> editIngredientName(event.value)
             PizRecipeDetailEvent.ClickSaveStep -> saveStep()
             is PizRecipeDetailEvent.StepDescriptionChanged -> editStepDescription(event.value)
-            is PizRecipeDetailEvent.ClickAddIngredient -> editAddIngredient(event.isStepIngredient,
-                event.stepId)
+            is PizRecipeDetailEvent.ClickAddIngredient -> editAddIngredient(
+                event.isStepIngredient,
+                event.stepId
+            )
             PizRecipeDetailEvent.ClickAddStep -> editAddStep()
+            PizRecipeDetailEvent.ClickDeleteIngredient -> editDeleteIngredient()
+            PizRecipeDetailEvent.ClickDeleteStep -> editDeleteStep()
         }
     }
 

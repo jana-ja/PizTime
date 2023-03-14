@@ -53,6 +53,19 @@ class RepositoryImpl( // TODO here db bekommen mit dagger hilt
         return pizStepIngredientDao.getPizStepIngredient(id)
     }
 
+    override suspend fun deletePizStepWithIngredients(id: Long) {
+        pizStepDao.deletePizStep(id)
+        pizStepIngredientDao.deletePizStepIngredientsForStepId(id)
+    }
+
+    override suspend fun deletePizStepIngredient(id: Long) {
+        pizStepIngredientDao.deletePizStepIngredient(id)
+    }
+
+    override suspend fun deletePizIngredient(id: Long) {
+        pizIngredientDao.deletePizIngredient(id)
+    }
+
     private fun mapToList(map: Map<PizStepEntity, List<PizStepIngredientEntity>>): List<Pair<PizStepEntity, List<PizStepIngredientEntity>>> {
         // convert map to list here
         val stepsWithIngredients =
