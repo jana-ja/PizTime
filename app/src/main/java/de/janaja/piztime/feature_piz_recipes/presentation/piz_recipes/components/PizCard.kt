@@ -51,8 +51,8 @@ fun PizCard(
     ) {
         if (it) 1f else 0f
     }
-    val mtColor = MaterialTheme.colorScheme.surfaceVariant
-    val cardColor = Color(mtColor.red, mtColor.green, mtColor.blue, alpha)
+//    val mtColor = MaterialTheme.colorScheme.surfaceVariant
+//    val cardColor = Color(mtColor.red, mtColor.green, mtColor.blue, alpha)
 
 
     // piz animation stuff
@@ -95,9 +95,9 @@ fun PizCard(
                 onClick.invoke()
             }
         },
-        colors = CardDefaults.cardColors(
-            containerColor = cardColor
-        ),
+//        colors = CardDefaults.cardColors(
+//            containerColor = cardColor
+//        ),
     ) {
 
         SideEffect {

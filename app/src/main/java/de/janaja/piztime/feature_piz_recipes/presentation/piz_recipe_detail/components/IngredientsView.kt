@@ -40,7 +40,6 @@ fun IngredientsView(
     Surface(
         modifier = modifier.bottomElevation(),
         shape = TopSheetShape(borderHeight.value),
-        color = Color.White,
         shadowElevation = 8.dp
     ) {
 

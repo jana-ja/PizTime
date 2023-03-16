@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -61,6 +62,7 @@ fun PizRecipeDetailView(
 
     val overlap: Dp = dimensionResource(id = R.dimen.topSheetBorderHeight)
     val headerHeight = 150.dp
+    val cardModifier = Modifier.background(MaterialTheme.colorScheme.surface)
 
     Box {
         // edit dialog
@@ -92,8 +94,7 @@ fun PizRecipeDetailView(
 
         LazyColumn(
             modifier = modifier
-                .fillMaxSize()
-                .background(Color.White),
+                .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(-overlap)
 
         ) {
@@ -102,7 +103,7 @@ fun PizRecipeDetailView(
             // then they have to overlap (negative space in layout arrangement and extra padding for the views tops)
             item {
                 HeaderView(
-                    modifier = Modifier.zIndex(1f),
+                    modifier = cardModifier.zIndex(1f),
                     title = pizRecipeWithDetails.title,
                     feature = pizRecipeWithDetails.feature,
                     imageResId = pizRecipeWithDetails.imageResourceId,
@@ -114,7 +115,7 @@ fun PizRecipeDetailView(
             }
             item {
                 IngredientsView(
-                    modifier = Modifier.zIndex(.9f),
+                    modifier = cardModifier.zIndex(.9f),
                     ingredients = pizRecipeWithDetails.ingredients,
                     amount = amount,
                     onEvent = onEvent,
@@ -124,7 +125,7 @@ fun PizRecipeDetailView(
             }
             item {
                 StepsView(
-                    modifier = Modifier.zIndex(.8f),
+                    modifier = cardModifier.zIndex(.8f),
                     stepsWithIngredients = pizRecipeWithDetails.steps,
                     amount = amount,
                     contentModifier = Modifier.padding(top = overlap),

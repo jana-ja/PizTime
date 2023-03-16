@@ -74,7 +74,6 @@ fun HeaderView(
     Surface(
         modifier = modifier.fillMaxWidth().bottomElevation(),
         shape = TopSheetShape(borderHeight.value),
-        color = Color.White,
         shadowElevation = 8.dp
     ) {
 

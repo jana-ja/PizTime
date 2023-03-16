@@ -38,6 +38,7 @@ fun StepsView(
         modifier = contentModifier
             .fillMaxWidth()
             .padding(16.dp)
+            .background(MaterialTheme.colorScheme.surface)
     ) {
 
         Column(
