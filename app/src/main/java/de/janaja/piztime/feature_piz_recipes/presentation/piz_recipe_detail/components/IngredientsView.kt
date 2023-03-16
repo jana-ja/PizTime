@@ -1,16 +1,18 @@
 package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
@@ -64,53 +66,87 @@ fun IngredientsView(
                         "Pizzen:", style = MaterialTheme.typography.titleLarge
                     )
                 }
+
                 // content ingredients
-                Column(
+                Row(
                     Modifier.padding(PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp))
                 ) {
-                    ingredients.forEach { ingredient ->
-                        // edit mode
-                        var rowModifier = Modifier
-                            .fillMaxWidth()
-                        if (editMode) rowModifier =
-                            rowModifier.clickable { onEvent(PizRecipeDetailEvent.ClickEditIngredient(ingredient.id)) }
+                    val height = 30.dp
+                    var clickableModifier = Modifier.padding(0.dp).height(height)
+                    val textStyle = MaterialTheme.typography.bodyLarge
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        ingredients.forEach { ingredient ->
+                            // edit mode
+                            if (editMode) {
+                                clickableModifier =
+                                    clickableModifier
+                                        .clickable {
+                                            onEvent(PizRecipeDetailEvent.ClickEditIngredient(ingredient.id))
+                                        }
 
-                        Row(rowModifier) {
-                            Text(
-                                text = "${(ingredient.baseAmount * amount).cut()}g",
-                                Modifier
-                                    .weight(0.15f)
-                                    .padding(bottom = 8.dp)// TODO find dynamic way for column width
-                                //.border(1.dp, Color.BLACK)
-                                ,
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                            Text(
-                                text = ingredient.ingredient,
-                                Modifier
-                                    .weight(0.85f)
-                                    .padding(bottom = 8.dp)
-                                //.border(1.dp, Color.BLACK)
-                                , style = MaterialTheme.typography.bodyLarge
-                            )
+                            }
+                            Row(modifier = clickableModifier, verticalAlignment = Alignment.CenterVertically) {
+                                if (editMode)
+                                    Icon(
+                                        Icons.Default.Edit,
+                                        "edit ingredient",
+                                        modifier = Modifier
+                                            .padding(end = 16.dp)
+                                            .size(height)
+                                            .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
+                                        .padding(6.dp)
+
+                                    )
+                                Text(
+                                    text = "${(ingredient.baseAmount * amount).cut()}g",
+                                    style = textStyle
+                                )
+                            }
+
+                        }
+                    }
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.padding(start = 16.dp),
+                    ) {
+                        ingredients.forEach { ingredient ->
+                            // edit mode
+                            if (editMode) clickableModifier =
+                                clickableModifier.clickable {
+                                    onEvent(
+                                        PizRecipeDetailEvent.ClickEditIngredient(
+                                            ingredient.id
+                                        )
+                                    )
+                                }
+                            Row(modifier = clickableModifier, verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    text = ingredient.ingredient,
+
+                                    style = textStyle
+                                )
+                            }
                         }
                     }
                 }
+
                 // optional: add ingredient button
                 if (editMode) {
-                    IconButton(
-                        onClick = {
-                            onEvent(PizRecipeDetailEvent.ClickAddIngredient(false))
-//                        coroutineScope.launch {
-//                            listState.animateScrollToItem(ingredientNames.size)
-//                        }
-                        }
-                    ) {
+                    FilledTonalButton(
+                        modifier = Modifier.padding(top = 8.dp, start = 16.dp),
+                        onClick = { onEvent(PizRecipeDetailEvent.ClickAddIngredient(false)) })
+                    {
+                        Text(
+                            "add Ingredient",
+                            style = MaterialTheme.typography.bodyLarge,
+                            modifier = Modifier.padding(end = 8.dp)
+                        )
                         Icon(
                             Icons.Default.Add,
                             "add ingredient"
                         )
                     }
+
                 }
             }
         }
@@ -127,7 +163,7 @@ fun IngredientsViewPreview() {
         ingredients = DummyData.DummyIngredients,
         amount = 4,
         onEvent = {},
-        editMode = false
+        editMode = true
     )
 }
 
