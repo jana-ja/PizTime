@@ -1,12 +1,16 @@
 package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,21 +57,31 @@ fun StepsView(
 
 
             stepsWithIngredients.indices.forEach { stepIndex ->
-                Column {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     // step description
                     var rowModifier = Modifier.padding(0.dp)
                     if (editMode) rowModifier =
                         rowModifier.clickable { onEvent(PizRecipeDetailEvent.ClickEditStep(stepsWithIngredients[stepIndex].id)) }
 
-                    Row(rowModifier) {
+                    Row(rowModifier, verticalAlignment = Alignment.Top) {
+                        if (editMode)
+                            Icon(
+                                Icons.Default.Edit,
+                                "edit ingredient",
+                                modifier = Modifier
+                                    .padding(end = 8.dp)
+                                    .size(30.dp)
+                                    .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
+                                    .padding(6.dp)
+
+                            )
                         Text(
                             "${stepIndex + 1}: ",
-                            Modifier.padding(PaddingValues(start = 16.dp, top = 16.dp)),
+                            Modifier.padding(PaddingValues(start = 16.dp)),
                             style = MaterialTheme.typography.titleMedium
                         )
                         Text(
                             stepsWithIngredients[stepIndex].description,
-                            Modifier.padding(PaddingValues(top = 16.dp)),
                             style = MaterialTheme.typography.bodyLarge
                         )
                     }
@@ -106,11 +120,18 @@ fun StepsView(
                                 IconButton(
                                     onClick = {
                                         onEvent(PizRecipeDetailEvent.ClickAddIngredient(true, stepsWithIngredients[stepIndex].id))
-                                    }
+                                    },
+                                    modifier = Modifier
+                                        .size(16.dp)
                                 ) {
                                     Icon(
                                         Icons.Default.Add,
-                                        "add step ingredient"
+                                        "add step ingredient",
+                                        modifier = Modifier
+                                            .size(16.dp)
+                                            .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
+                                            .padding(6.dp)
+
                                     )
                                 }
                             }
@@ -119,11 +140,17 @@ fun StepsView(
                 }
             }
             if (editMode) {
-                IconButton(
+                FilledTonalButton(
+                    modifier = Modifier.padding(top = 8.dp, start = 16.dp),
                     onClick = {
                         onEvent(PizRecipeDetailEvent.ClickAddStep)
                     }
                 ) {
+                    Text(
+                        "add step",
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(end = 8.dp)
+                    )
                     Icon(
                         Icons.Default.Add,
                         "add step"
