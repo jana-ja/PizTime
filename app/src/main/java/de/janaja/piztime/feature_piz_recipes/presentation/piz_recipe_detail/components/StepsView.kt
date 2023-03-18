@@ -38,6 +38,7 @@ fun StepsView(
 //        color = Color.White,
 //        shadowElevation = 8.dp
 //    ) {
+    val height = 30.dp
     Box(
         modifier = contentModifier
             .fillMaxWidth()
@@ -57,27 +58,27 @@ fun StepsView(
 
 
             stepsWithIngredients.indices.forEach { stepIndex ->
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp)) {
                     // step description
-                    var rowModifier = Modifier.padding(0.dp)
+                    var rowModifier = Modifier.height(height)
                     if (editMode) rowModifier =
                         rowModifier.clickable { onEvent(PizRecipeDetailEvent.ClickEditStep(stepsWithIngredients[stepIndex].id)) }
 
-                    Row(rowModifier, verticalAlignment = Alignment.Top) {
+                    Row(rowModifier, verticalAlignment = Alignment.CenterVertically) {
                         if (editMode)
                             Icon(
                                 Icons.Default.Edit,
                                 "edit ingredient",
                                 modifier = Modifier
                                     .padding(end = 8.dp)
-                                    .size(30.dp)
+                                    .size(height)
                                     .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
                                     .padding(6.dp)
 
                             )
                         Text(
                             "${stepIndex + 1}: ",
-                            Modifier.padding(PaddingValues(start = 16.dp)),
                             style = MaterialTheme.typography.titleMedium
                         )
                         Text(
@@ -87,14 +88,15 @@ fun StepsView(
                     }
 
                     // step ingredients
+                    val ingredientHeight = 20.dp
                     if (stepsWithIngredients[stepIndex].ingredients.isNotEmpty() || editMode) {
                         SimpleFlowRow(
                             verticalGap = 8.dp,
                             horizontalGap = 8.dp,
-                            modifier = Modifier.padding(start = 16.dp, top = 8.dp)
+                            modifier = Modifier.padding(start = 16.dp)
                         ) {
                             stepsWithIngredients[stepIndex].ingredients.forEach { ingredient ->
-                                var ingredientModifier = Modifier.padding(4.dp)
+                                var ingredientModifier = Modifier.height(ingredientHeight)
                                 if (editMode) ingredientModifier =
                                     ingredientModifier.clickable {
                                         onEvent(
@@ -122,15 +124,15 @@ fun StepsView(
                                         onEvent(PizRecipeDetailEvent.ClickAddIngredient(true, stepsWithIngredients[stepIndex].id))
                                     },
                                     modifier = Modifier
-                                        .size(16.dp)
+                                        .size(ingredientHeight)
                                 ) {
                                     Icon(
                                         Icons.Default.Add,
                                         "add step ingredient",
                                         modifier = Modifier
-                                            .size(16.dp)
+                                            .size(ingredientHeight)
                                             .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
-                                            .padding(6.dp)
+                                            .padding(2.dp)
 
                                     )
                                 }
