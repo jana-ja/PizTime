@@ -73,7 +73,7 @@ fun PizRecipeDetailView(
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(.9f),
+                        .fillMaxHeight(.8f),
                     shape = RoundedCornerShape(size = 10.dp)
                 ) {
                     when (dialogState) {

@@ -46,7 +46,7 @@ private fun EditIngredientViewContent(
             SmallTopAppBar(
                 title = {
                     Text(
-                        "Zutaten",
+                        "Zutat bearbeiten",
                         style = MaterialTheme.typography.headlineMedium
                     )
                 },
@@ -94,16 +94,16 @@ private fun EditIngredientViewContent(
                 onValueChange = { onEvent(PizRecipeDetailEvent.IngredientAmountChanged(it)) },
                 maxLines = 1,
                 modifier = Modifier
-                    .weight(.3f)
-                    .padding(end = 8.dp)
+                    .padding(end = 8.dp),
+                label = { Text(text = "Menge")}
             )
 
             TextField(
                 value = (ingredientName),
                 onValueChange = { onEvent(PizRecipeDetailEvent.IngredientNameChanged(it)) },
                 maxLines = 1,
-                modifier = Modifier
-                    .weight(.7f)
+                modifier = Modifier,
+                label = { Text(text = "Zutat")}
             )
 
         }

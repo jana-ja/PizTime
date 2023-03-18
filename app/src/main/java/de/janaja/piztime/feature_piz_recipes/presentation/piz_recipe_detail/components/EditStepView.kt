@@ -43,7 +43,7 @@ private fun EditStepViewContent(
             SmallTopAppBar(
                 title = {
                     Text(
-                        "Zutaten",
+                        "Schritt bearbeiten",
                         style = MaterialTheme.typography.headlineMedium
                     )
                 },
@@ -89,8 +89,8 @@ private fun EditStepViewContent(
             TextField(
                 value = description,
                 onValueChange = { onEvent(PizRecipeDetailEvent.StepDescriptionChanged(it)) },
-                modifier = Modifier
-                    .padding(end = 8.dp)
+                modifier = Modifier.fillMaxHeight(),
+                label = {Text("Beschreibung")}
             )
 
 
