@@ -7,7 +7,7 @@ import androidx.compose.ui.unit.dp
 
 
 fun Double.cut(): String {
-    return if(this % 1 == 0.0) this.toInt().toString() else "%.${2}f".format(this)
+    return "%.${2}f".format(this).replace("0*$".toRegex(), "").replace("\\.$".toRegex(), "").replace(",$".toRegex(),"")
 }
 
 fun Modifier.bottomElevation(): Modifier = this.then(Modifier.drawWithContent {
