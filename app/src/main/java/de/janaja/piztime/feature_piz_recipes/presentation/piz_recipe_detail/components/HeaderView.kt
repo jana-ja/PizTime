@@ -26,7 +26,6 @@ import de.janaja.piztime.R
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.PizRecipeDetailEvent
 import de.janaja.piztime.feature_piz_recipes.presentation.util.TopSheetShape
 import de.janaja.piztime.feature_piz_recipes.presentation.util.bottomElevation
-import kotlinx.coroutines.launch
 
 @Composable
 fun HeaderView(
@@ -37,37 +36,34 @@ fun HeaderView(
     contentModifier: Modifier = Modifier,
     height: Dp,
     onEvent: (PizRecipeDetailEvent) -> Unit,
-    editMode: Boolean
+    editMode: Boolean,
+    firstLaunch: Boolean = false
 ) {
 
     // animation stuff
     val animDuration = 1100
-    var screenVisible by remember {
-        mutableStateOf(false)
-    }
-    val transition = updateTransition(targetState = screenVisible, null)
+//    var screenVisible by remember {
+//        mutableStateOf(false)
+//    }
+    val transition = updateTransition(targetState = firstLaunch, null)
 
     val pizOffset by transition.animateFloat(
         transitionSpec = { tween(animDuration, easing = LinearOutSlowInEasing) },
         label = ""
     ) {
-        if (it) 0f else -400f
+        if (it) -400f else 0f
     }
     val pizRotation by transition.animateFloat(
         transitionSpec = { tween(animDuration, easing = LinearOutSlowInEasing) },
         label = ""
     ) {
         if (it)
-            0f
-        else
             -360f
+        else
+            0f
     }
-    val coroutineScope = rememberCoroutineScope()
-
     SideEffect {
-        coroutineScope.launch {
-            screenVisible = true
-        }
+        onEvent(PizRecipeDetailEvent.LaunchAnimation)
     }
 
 
@@ -76,7 +72,9 @@ fun HeaderView(
     // TODO this is only here to fix current preview issue with resource dimen values
     val borderHeight: Dp = 100.dp //dimensionResource(id = R.dimen.topSheetBorderHeight).value // TODO look up how to turn to dp properly
     Surface(
-        modifier = modifier.fillMaxWidth().bottomElevation(),
+        modifier = modifier
+            .fillMaxWidth()
+            .bottomElevation(),
         shape = TopSheetShape(borderHeight.value),
         shadowElevation = 8.dp
     ) {
@@ -92,7 +90,9 @@ fun HeaderView(
             .padding(16.dp)
             .height(height)) {
             Column(
-                modifier = clickableModifier.matchParentSize().padding(bottom = 16.dp),
+                modifier = clickableModifier
+                    .matchParentSize()
+                    .padding(bottom = 16.dp),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {

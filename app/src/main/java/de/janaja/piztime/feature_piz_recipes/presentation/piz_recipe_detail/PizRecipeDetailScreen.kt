@@ -40,6 +40,7 @@ fun PizRecipeDetailScreen(
     PizRecipeDetailView(
         modifier = Modifier,//.offset(x = offset.dp),
         recipeState.pizRecipe,
+        recipeState.firstLaunch,
         amountState.amount,
         dialogState.editDialogState,
         editState.editMode,
@@ -54,6 +55,7 @@ fun PizRecipeDetailScreen(
 fun PizRecipeDetailView(
     modifier: Modifier,
     pizRecipeWithDetails: PizRecipeWithDetails,
+    firstLaunch: Boolean,
     amount: Int,
     dialogState: EditDialog,
     editMode: Boolean,
@@ -112,7 +114,8 @@ fun PizRecipeDetailView(
                     contentModifier = Modifier,
                     height = headerHeight,
                     onEvent = onEvent,
-                    editMode = editMode
+                    editMode = editMode,
+                    firstLaunch = firstLaunch
                 )
             }
             item {
@@ -162,6 +165,7 @@ fun PizRecipeDetailViewPreview() {
     PizRecipeDetailView(
         modifier = Modifier.background(Color(0xFFC49E2F)),
         pizRecipeWithDetails = DummyData.DummyPizRecipeWithDetails,
+        true,
         amount = 4,
         dialogState = EditDialog.None,
         editMode = false
