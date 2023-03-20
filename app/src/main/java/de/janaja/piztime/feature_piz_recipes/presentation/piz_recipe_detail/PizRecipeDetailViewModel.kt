@@ -338,6 +338,7 @@ class PizRecipeDetailViewModel @Inject constructor(
             PizRecipeDetailEvent.ClickSaveInfo -> saveInfo()
             is PizRecipeDetailEvent.RecipeFeatureChanged -> editInfoFeature(event.value)
             is PizRecipeDetailEvent.RecipeTitleChanged -> editInfoTitle(event.value)
+            is PizRecipeDetailEvent.RecipePrepTimeChanged -> { editInfoPrepTime(event.value) }
             PizRecipeDetailEvent.LaunchAnimation -> {
                 _pizRecipeState.value = _pizRecipeState.value.copy(
                     firstLaunch = false

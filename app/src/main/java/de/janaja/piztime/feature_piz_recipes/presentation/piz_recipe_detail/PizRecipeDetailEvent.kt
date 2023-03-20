@@ -19,6 +19,7 @@ sealed class PizRecipeDetailEvent{
     object ClickSaveInfo : PizRecipeDetailEvent()
     data class RecipeTitleChanged(val value: String): PizRecipeDetailEvent()
     data class RecipeFeatureChanged(val value: String): PizRecipeDetailEvent()
+    data class RecipePrepTimeChanged(val value: String): PizRecipeDetailEvent()
     data class IngredientNameChanged(val value: String): PizRecipeDetailEvent()
     data class IngredientAmountChanged(val value: String): PizRecipeDetailEvent()
     data class StepDescriptionChanged(val value: String): PizRecipeDetailEvent()

@@ -24,6 +24,7 @@ fun EditHeaderView(
         modifier = modifier,
         title = state.title,
         feature = state.feature,
+        prepTime = state.prepTime,
         viewModel::onEvent
     )
 
@@ -36,6 +37,7 @@ private fun EditHeaderViewContent(
     modifier: Modifier = Modifier,
     title: String,
     feature: String,
+    prepTime: String,
     onEvent: (PizRecipeDetailEvent) -> Unit,
 ) {
 
@@ -106,6 +108,14 @@ private fun EditHeaderViewContent(
                 label = { Text(text = "Feature")}
             )
 
+            TextField(
+                value = prepTime,
+                onValueChange = { onEvent(PizRecipeDetailEvent.RecipePrepTimeChanged(it)) },
+                maxLines = 1,
+                modifier = Modifier,
+                label = { Text(text = "PrepTime")}
+            )
+
         }
     }
 }
@@ -116,6 +126,7 @@ fun EditHeaderViewPreview() {
     EditHeaderViewContent(
         title = "Pizza",
         feature = "ist lecker",
+        prepTime = "26",
         onEvent = {},
     )
 }
