@@ -11,18 +11,18 @@ import de.janaja.piztime.feature_piz_recipes.domain.model.PizStepWithIngredients
 
 // domain -> domain
 fun PizRecipeWithDetails.toPizRecipe(): PizRecipe {
-    return PizRecipe(title, feature, imageResourceId, id)
+    return PizRecipe(title, feature, imageResourceId, prepTime, id)
 }
 
 
 // domain -> data
 fun PizRecipe.toRecipeEntity(): PizRecipeEntity {
-    return PizRecipeEntity(title, feature, imageResourceId, id)
+    return PizRecipeEntity(title, feature, imageResourceId, prepTime, id)
 }
 
 fun PizRecipeWithDetails.toEntityCollection(): EntityCollection {
     val recipeId = id
-    val pizRecipeEntity = PizRecipeEntity(title, feature, imageResourceId, id)
+    val pizRecipeEntity = PizRecipeEntity(title, feature, imageResourceId, prepTime, id)
     val pizIngredientEntities: List<PizIngredientEntity> = ingredients.map { ingredient ->
         PizIngredientEntity(
             ingredient.ingredient,
@@ -66,7 +66,7 @@ fun PizStepWithIngredients.toPizStepEntity(recipeId: Long): PizStepEntity {
 
 // data -> domain
 fun PizRecipeEntity.toRecipe(): PizRecipe {
-    return PizRecipe(title, feature, imageResourceId, id)
+    return PizRecipe(title, feature, imageResourceId, prepTime, id)
 }
 
 fun EntityCollection.toPizRecipeWithDetails(): PizRecipeWithDetails {
@@ -96,6 +96,7 @@ fun EntityCollection.toPizRecipeWithDetails(): PizRecipeWithDetails {
         pizRecipeEntity.title,
         pizRecipeEntity.feature,
         pizRecipeEntity.imageResourceId,
+        pizRecipeEntity.prepTime,
         pizIngredients,
         pizStepsWithIngredients
     )

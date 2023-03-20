@@ -9,6 +9,7 @@ data class PizRecipeEntity(
     var title: String,
     var feature: String,
     var imageResourceId: Int,
+    var prepTime: Double,
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name="recipeId")
     var id: Long = 0

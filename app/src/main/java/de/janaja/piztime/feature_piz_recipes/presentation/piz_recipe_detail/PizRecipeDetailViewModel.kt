@@ -88,7 +88,8 @@ class PizRecipeDetailViewModel @Inject constructor(
                     _editInfoState.value = _editInfoState.value.copy(
                         title = recipe.title,
                         feature = recipe.feature,
-                        imageResId = recipe.imageResourceId
+                        imageResId = recipe.imageResourceId,
+                        prepTime = recipe.prepTime.toString()
                     )
                 }
             }
@@ -132,19 +133,25 @@ class PizRecipeDetailViewModel @Inject constructor(
     private fun saveInfo() {
         val state = _editInfoState.value
         currentRecipeId?.let {
-            val pizRecipe = PizRecipe(
-                state.title, state.feature, state.imageResId, currentRecipeId!!
-            )
+            try {
+                val prepTime = state.prepTime.toDouble()
+                val pizRecipe = PizRecipe(
+                    state.title, state.feature, state.imageResId, prepTime, currentRecipeId!!
+                )
 
-            viewModelScope.launch(Dispatchers.IO) {
-                // insert/update step
-                allPizRecipesUseCases.updateRecipeUseCase(pizRecipe)
+                viewModelScope.launch(Dispatchers.IO) {
+                    // insert/update step
+                    allPizRecipesUseCases.updateRecipeUseCase(pizRecipe)
 
-                // reload data
-                allPizRecipesUseCases.loadPizRecipeWithDetailsUseCase(it)
+                    // reload data
+                    allPizRecipesUseCases.loadPizRecipeWithDetailsUseCase(it)
+                }
+                // dismiss dialog
+                onEvent(PizRecipeDetailEvent.DismissDialog)
+
+            } catch (e: java.lang.NumberFormatException) {
+                // TODO error handling
             }
-            // dismiss dialog
-            onEvent(PizRecipeDetailEvent.DismissDialog)
         }
     }
 
@@ -211,6 +218,12 @@ class PizRecipeDetailViewModel @Inject constructor(
     private fun editInfoFeature(value: String) {
         _editInfoState.value = _editInfoState.value.copy(
             feature = value
+        )
+    }
+
+    private fun editInfoPrepTime(value: String) {
+        _editInfoState.value = _editInfoState.value.copy(
+            prepTime = value
         )
     }
 

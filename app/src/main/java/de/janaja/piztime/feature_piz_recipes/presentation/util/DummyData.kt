@@ -8,7 +8,7 @@ import de.janaja.piztime.feature_piz_recipes.domain.model.PizStepWithIngredients
 
 object DummyData {
     // preview
-    val DummyPizRecipe = PizRecipe("Pizza Neapel", "Fluffiger Rand", R.drawable.bsp_piz, id = 1)
+    val DummyPizRecipe = PizRecipe("Pizza Neapel", "Fluffiger Rand", R.drawable.bsp_piz, 26.0, id = 1)
     val DummyIngredients = listOf(
         PizIngredient("Mehl", 149.0),
         PizIngredient("Water", 97.0),
@@ -58,6 +58,7 @@ object DummyData {
         "Pizza Neapel",
         "Fluffiger Rand",
         R.drawable.bsp_piz,
+        26.0,
         DummyIngredients,
         DummySteps,
         id = 1
@@ -68,13 +69,13 @@ object DummyData {
 
     val DummyRecipeWithDetailsData = listOf(
         PizRecipeWithDetails(
-            DummyPizRecipe.title, DummyPizRecipe.feature, DummyPizRecipe.imageResourceId,
+            DummyPizRecipe.title, DummyPizRecipe.feature, DummyPizRecipe.imageResourceId, 26.0,
             DummyIngredients,
             DummySteps,
             DummyPizRecipe.id
         ),
         PizRecipeWithDetails(
-            "Pizza Rom", "Dünner Boden", R.drawable.bsp_piz,
+            "Pizza Rom", "Dünner Boden", R.drawable.bsp_piz, 26.0,
             listOf(
                 PizIngredient("Mehl", 120.0),
                 PizIngredient("Wasser", 75.0),
@@ -94,7 +95,7 @@ object DummyData {
             id = 2
         ),
         PizRecipeWithDetails(
-            "Pizza New York", "Fett sein", R.drawable.bsp_piz,
+            "Pizza New York", "Fett sein", R.drawable.bsp_piz, 26.0,
             listOf(
                 PizIngredient("1050er Mehl", 148.0),
                 PizIngredient("Roggenmehl", 17.0),
