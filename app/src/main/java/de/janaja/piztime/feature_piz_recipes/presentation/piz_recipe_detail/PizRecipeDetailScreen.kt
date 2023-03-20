@@ -22,6 +22,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import de.janaja.piztime.R
+import de.janaja.piztime.feature_piz_recipes.data.mapper.toPizRecipe
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipeWithDetails
 import de.janaja.piztime.feature_piz_recipes.domain.util.EditDialog
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components.*
@@ -108,9 +109,7 @@ fun PizRecipeDetailView(
             item {
                 HeaderView(
                     modifier = cardModifier.zIndex(1f),
-                    title = pizRecipeWithDetails.title,
-                    feature = pizRecipeWithDetails.feature,
-                    imageResId = pizRecipeWithDetails.imageResourceId,
+                    recipe = pizRecipeWithDetails.toPizRecipe(),
                     contentModifier = Modifier,
                     height = headerHeight,
                     onEvent = onEvent,

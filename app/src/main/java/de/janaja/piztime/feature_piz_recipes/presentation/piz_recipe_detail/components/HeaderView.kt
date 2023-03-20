@@ -22,17 +22,17 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import de.janaja.piztime.R
+import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipe
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.PizRecipeDetailEvent
+import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 import de.janaja.piztime.feature_piz_recipes.presentation.util.TopSheetShape
 import de.janaja.piztime.feature_piz_recipes.presentation.util.bottomElevation
+import de.janaja.piztime.feature_piz_recipes.presentation.util.cut
 
 @Composable
 fun HeaderView(
     modifier: Modifier = Modifier,
-    title: String,
-    feature: String,
-    imageResId: Int,
+    recipe: PizRecipe,
     contentModifier: Modifier = Modifier,
     height: Dp,
     onEvent: (PizRecipeDetailEvent) -> Unit,
@@ -69,6 +69,11 @@ fun HeaderView(
 
 
     // content
+    val title = recipe.title
+    val feature = recipe.feature
+    val imageResId = recipe.imageResourceId
+    val prepTime = recipe.prepTime
+
     // TODO this is only here to fix current preview issue with resource dimen values
     val borderHeight: Dp = 100.dp //dimensionResource(id = R.dimen.topSheetBorderHeight).value // TODO look up how to turn to dp properly
     Surface(
@@ -119,7 +124,7 @@ fun HeaderView(
                     modifier = Modifier.padding(start = 16.dp)
                 )
                 Text(
-                    text = "Start x hours early",
+                    text = "Start ${prepTime.cut()} hours early",
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.padding(start = 16.dp)
                 )
@@ -153,9 +158,7 @@ fun HeaderView(
 @Composable
 fun HeaderViewPreview() {
     HeaderView(
-        title = "Pizza",
-        feature = "ist lecker",
-        imageResId = R.drawable.bsp_piz,
+        recipe = DummyData.DummyPizRecipe,
         height = 200.dp,
         onEvent = {},
         editMode = false
