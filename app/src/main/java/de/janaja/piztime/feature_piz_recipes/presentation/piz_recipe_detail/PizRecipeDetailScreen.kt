@@ -77,14 +77,16 @@ fun PizRecipeDetailView(
                     shape = RoundedCornerShape(size = 10.dp)
                 ) {
                     when (dialogState) {
-                        EditDialog.Header -> {}
+                        EditDialog.Header -> {
+                            EditHeaderView()
+                        }
                         EditDialog.Ingredient -> {
                             EditIngredientView()
                         }
                         EditDialog.Step -> {
                             EditStepView()
                         }
-                        else -> {}
+                        EditDialog.None -> {}
                     }
 
                 }

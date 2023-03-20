@@ -6,6 +6,7 @@ import de.janaja.piztime.feature_piz_recipes.data.local.model.PizRecipeEntity
 import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepEntity
 import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepIngredientEntity
 import de.janaja.piztime.feature_piz_recipes.data.mapper.*
+import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipe
 import de.janaja.piztime.feature_piz_recipes.domain.repository.Repository
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 import kotlinx.coroutines.flow.*
@@ -107,7 +108,10 @@ class RepositoryImpl( // TODO here db bekommen mit dagger hilt
             pizRecipeDao.getAllPizRecipes().map { recipeEntity -> recipeEntity.toRecipe() }
         }
     }
-    // TODO update with null? do nothing??
+
+    override suspend fun getPizRecipe(id: Long): PizRecipe? {
+        return pizRecipeDao.findPizRecipeById(id)?.toRecipe()
+    }
 
 
     override suspend fun updatePizRecipe(pizRecipeEntity: PizRecipeEntity) {

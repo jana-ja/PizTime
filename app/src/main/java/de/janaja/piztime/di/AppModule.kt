@@ -41,12 +41,14 @@ object AppModule {
             deleteStepUseCase = DeleteStepUseCase(repository),
             getAllPizRecipesUseCase = GetAllPizRecipesUseCase(repository),
             getAllPizRecipesFlowUseCase = GetAllPizRecipesFlowUseCase(repository),
-            getPizRecipeWithDetailsUseCase = GetPizRecipeWithDetailsUseCase(repository),
+            loadPizRecipeWithDetailsUseCase = LoadPizRecipeWithDetailsUseCase(repository),
+            getPizRecipeUseCase = GetPizRecipeUseCase(repository) ,
             getPizRecipeWithDetailsFlowUseCase = GetPizRecipeWithDetailsFlowUseCase(repository),
             getIngredientUseCase = GetIngredientUseCase(repository),
             updateIngredientUseCase = UpdateIngredientUseCase(repository),
             getStepWithoutIngredientsUseCase = GetStepWithoutIngredientsUseCase(repository),
-            updateStepUseCase = UpdateStepUseCase(repository)
+            updateStepUseCase = UpdateStepUseCase(repository),
+            updateRecipeUseCase = UpdateRecipeUseCase(repository)
         )
     }
 }

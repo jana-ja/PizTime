@@ -2,7 +2,6 @@ package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.com
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -13,19 +12,18 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.PizRecipeDetailEvent
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.PizRecipeDetailViewModel
-import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 
 @Composable
-fun EditIngredientView(
+fun EditHeaderView(
     modifier: Modifier = Modifier,
     viewModel: PizRecipeDetailViewModel = hiltViewModel()
 ) {
 
-    val state = viewModel.editIngredientState.value
-    EditIngredientViewContent(
+    val state = viewModel.editInfoState.value
+    EditHeaderViewContent(
         modifier = modifier,
-        ingredientName = state.ingredientName,
-        ingredientAmount = state.ingredientAmount,
+        title = state.title,
+        feature = state.feature,
         viewModel::onEvent
     )
 
@@ -34,39 +32,41 @@ fun EditIngredientView(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun EditIngredientViewContent(
+private fun EditHeaderViewContent(
     modifier: Modifier = Modifier,
-    ingredientName: String,
-    ingredientAmount: String,
-    onEvent: (PizRecipeDetailEvent) -> Unit
+    title: String,
+    feature: String,
+    onEvent: (PizRecipeDetailEvent) -> Unit,
 ) {
+
+    // content
 
     Scaffold(
         topBar = {
             SmallTopAppBar(
                 title = {
                     Text(
-                        "Zutat bearbeiten",
+                        "Infos bearbeiten",
                         style = MaterialTheme.typography.headlineMedium
                     )
                 },
-                actions = {
-                    IconButton(
-                        onClick = { onEvent(PizRecipeDetailEvent.ClickDeleteIngredient) },
-                    ) {
-                        Icon(
-                            Icons.Default.Delete,
-                            "delete ingredient",
-                            Modifier.fillMaxHeight()
-                        )
-                    }
-                }
+//                actions = {
+//                    IconButton(
+//                        onClick = { onEvent(PizRecipeDetailEvent.ClickDeleteRecipe) },
+//                    ) {
+//                        Icon(
+//                            Icons.Default.Delete,
+//                            "delete recipe",
+//                            Modifier.fillMaxHeight()
+//                        )
+//                    }
+//                }
             )
 
         },
         bottomBar = {
             Button(
-                onClick = { onEvent(PizRecipeDetailEvent.ClickSaveIngredient) },
+                onClick = { onEvent(PizRecipeDetailEvent.ClickSaveInfo) },
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth()
@@ -88,33 +88,34 @@ private fun EditIngredientViewContent(
             verticalArrangement = Arrangement.spacedBy(8.dp)
 
         ) {
+
             TextField(
-                value = (ingredientName),
-                onValueChange = { onEvent(PizRecipeDetailEvent.IngredientNameChanged(it)) },
+                value = title,
+                onValueChange = { onEvent(PizRecipeDetailEvent.RecipeTitleChanged(it)) },
                 maxLines = 1,
-                modifier = Modifier,
-                label = { Text(text = "Zutat")}
+                modifier = Modifier
+                    .padding(end = 8.dp),
+                label = { Text(text = "Title")}
             )
 
             TextField(
-                value = ingredientAmount,
-                onValueChange = { onEvent(PizRecipeDetailEvent.IngredientAmountChanged(it)) },
+                value = feature,
+                onValueChange = { onEvent(PizRecipeDetailEvent.RecipeFeatureChanged(it)) },
                 maxLines = 1,
                 modifier = Modifier,
-                label = { Text(text = "Menge")}
+                label = { Text(text = "Feature")}
             )
+
         }
     }
 }
 
-
 @Preview
 @Composable
-fun EditIngredientViewPreview() {
-    EditIngredientViewContent(
-        modifier = Modifier,
-        ingredientName = DummyData.DummyIngredients.first().ingredient,
-        ingredientAmount = DummyData.DummyIngredients.first().baseAmount.toString(),
-        onEvent = {}
+fun EditHeaderViewPreview() {
+    EditHeaderViewContent(
+        title = "Pizza",
+        feature = "ist lecker",
+        onEvent = {},
     )
 }

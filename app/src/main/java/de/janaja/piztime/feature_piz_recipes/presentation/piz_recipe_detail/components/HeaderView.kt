@@ -5,13 +5,17 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
@@ -39,7 +43,7 @@ fun HeaderView(
     // animation stuff
     val animDuration = 1100
     var screenVisible by remember {
-        mutableStateOf(true)
+        mutableStateOf(false)
     }
     val transition = updateTransition(targetState = screenVisible, null)
 
@@ -76,19 +80,38 @@ fun HeaderView(
         shape = TopSheetShape(borderHeight.value),
         shadowElevation = 8.dp
     ) {
-
-
+        var clickableModifier = Modifier.padding(0.dp)
+        if (editMode) {
+            clickableModifier =
+                clickableModifier
+                    .clickable {
+                        onEvent(PizRecipeDetailEvent.ClickEditHeader)
+                    }
+        }
         Box(modifier = contentModifier
             .padding(16.dp)
             .height(height)) {
             Column(
-                modifier = Modifier.matchParentSize().padding(bottom = 16.dp),
+                modifier = clickableModifier.matchParentSize().padding(bottom = 16.dp),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.headlineLarge
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (editMode)
+                        Icon(
+                            Icons.Default.Edit,
+                            "edit ingredient",
+                            modifier = Modifier
+                                .padding(end = 16.dp)
+                                .size(30.dp)
+                                .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
+                                .padding(6.dp)
+
+                        )
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.headlineLarge
+                    )
+                }
                 Text(
                     text = feature,
                     style = MaterialTheme.typography.bodyLarge,

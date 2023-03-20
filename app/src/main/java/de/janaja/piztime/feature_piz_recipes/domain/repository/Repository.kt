@@ -22,6 +22,7 @@ interface Repository {
 
     suspend fun getPizStep(id: Long): PizStepEntity
     suspend fun getAllPizRecipes()
+    suspend fun getPizRecipe(id: Long): PizRecipe?
 
     suspend fun updatePizRecipe(pizRecipeEntity: PizRecipeEntity)
 
