@@ -13,6 +13,8 @@ import de.janaja.piztime.feature_piz_recipes.domain.use_case.AllPizRecipeUseCase
 import de.janaja.piztime.feature_piz_recipes.domain.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -46,6 +48,9 @@ class PizRecipeDetailViewModel @Inject constructor(
     private val _editInfoState = mutableStateOf(DetailEditInfoState())
     val editInfoState: State<DetailEditInfoState> = _editInfoState
 
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
+
     private var currentRecipeId: Long? = null
 
     private var getPizRecipeWithdetailsJob: Job? = null
@@ -56,6 +61,10 @@ class PizRecipeDetailViewModel @Inject constructor(
             currentRecipeId = id
             getPizRecipeWithDetails(id)
         }
+    }
+
+    sealed class UiEvent{
+        data class ShowToast(val massage: String): UiEvent()
     }
 
     private fun getPizRecipeWithDetails(id: Long) {
@@ -150,7 +159,9 @@ class PizRecipeDetailViewModel @Inject constructor(
                 onEvent(PizRecipeDetailEvent.DismissDialog)
 
             } catch (e: java.lang.NumberFormatException) {
-                // TODO error handling
+                viewModelScope.launch {
+                    _eventFlow.emit(UiEvent.ShowToast("Gib eine Kommazahl ein."))
+                }
             }
         }
     }
@@ -179,7 +190,9 @@ class PizRecipeDetailViewModel @Inject constructor(
                 onEvent(PizRecipeDetailEvent.DismissDialog)
 
             } catch (e: java.lang.NumberFormatException) {
-                // TODO error handling
+                viewModelScope.launch {
+                    _eventFlow.emit(UiEvent.ShowToast("Gib eine Kommazahl ein."))
+                }
             }
 
         }

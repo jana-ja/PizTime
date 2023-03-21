@@ -1,19 +1,18 @@
 package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -27,6 +26,7 @@ import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipeWithDetails
 import de.janaja.piztime.feature_piz_recipes.domain.util.EditDialog
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components.*
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun PizRecipeDetailScreen(
@@ -38,6 +38,8 @@ fun PizRecipeDetailScreen(
     val dialogState = viewModel.detailEditDialogState.value
     val editState = viewModel.detailEditModeState.value
 
+    val context = LocalContext.current
+
     PizRecipeDetailView(
         modifier = Modifier,//.offset(x = offset.dp),
         recipeState.pizRecipe,
@@ -48,10 +50,22 @@ fun PizRecipeDetailScreen(
         viewModel::onEvent
     )
 
+    // with key1 = true this only gets executed once and not on recomposition!
+    LaunchedEffect(key1 = true) {
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is PizRecipeDetailViewModel.UiEvent.ShowToast -> {
+                    Toast.makeText(context, event.massage, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
 
 }
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PizRecipeDetailView(
     modifier: Modifier,
@@ -142,7 +156,7 @@ fun PizRecipeDetailView(
 
         // edit button
         IconButton(
-            onClick = {onEvent(PizRecipeDetailEvent.ClickEdit)},
+            onClick = { onEvent(PizRecipeDetailEvent.ClickEdit) },
             Modifier
                 .size(36.dp)
                 .align(Alignment.TopEnd)

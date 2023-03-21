@@ -9,8 +9,6 @@ import de.janaja.piztime.feature_piz_recipes.domain.use_case.AllPizRecipeUseCase
 import de.janaja.piztime.feature_piz_recipes.domain.util.HomePizRecipesState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -27,9 +25,6 @@ class PizRecipesViewModel @Inject constructor(
 
     private var getPizRecipesJob: Job? = null
 
-    private val _eventFlow = MutableSharedFlow<UiEvent>()
-    val eventFlow = _eventFlow.asSharedFlow()
-
     init {
         viewModelScope.launch(Dispatchers.IO) {
             allPizRecipesUseCases.initDbIfEmptyUseCase()
@@ -37,15 +32,6 @@ class PizRecipesViewModel @Inject constructor(
         getPizRecipes()
     }
 
-    fun onEvent(event: PizRecipesEvent) {
-        when (event) {
-            is PizRecipesEvent.ClickPizRecipe -> {
-                viewModelScope.launch {
-                    _eventFlow.emit(UiEvent.NavigateToDetail)
-                }
-            }
-        }
-    }
 
     private fun getPizRecipes() {
         getPizRecipesJob?.cancel()
@@ -61,7 +47,4 @@ class PizRecipesViewModel @Inject constructor(
         }
     }
 
-    sealed class UiEvent{
-        object NavigateToDetail: UiEvent()
-    }
 }
