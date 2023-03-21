@@ -183,8 +183,6 @@ class PizRecipeDetailViewModel @Inject constructor(
 
                     // reload data
                     allPizRecipesUseCases.loadPizRecipeWithDetailsUseCase(it)
-
-                    // TODO error handling
                 }
                 // dismiss dialog
                 onEvent(PizRecipeDetailEvent.DismissDialog)
@@ -194,9 +192,10 @@ class PizRecipeDetailViewModel @Inject constructor(
                     _eventFlow.emit(UiEvent.ShowToast("Gib eine Kommazahl ein."))
                 }
             }
-
         }
-
+        viewModelScope.launch {
+            _eventFlow.emit(UiEvent.ShowToast("Unerwarteter Fehler. Bitte öffne das Rezept erneut."))
+        }
     }
 
     private fun saveStep() {
@@ -300,7 +299,9 @@ class PizRecipeDetailViewModel @Inject constructor(
             // dismiss dialog
             onEvent(PizRecipeDetailEvent.DismissDialog)
         }
-        // TODO error
+        viewModelScope.launch {
+            _eventFlow.emit(UiEvent.ShowToast("Unerwarteter Fehler. Bitte öffne das Rezept erneut."))
+        }
     }
 
     private fun editDeleteStep(){
@@ -316,7 +317,9 @@ class PizRecipeDetailViewModel @Inject constructor(
             // dismiss dialog
             onEvent(PizRecipeDetailEvent.DismissDialog)
         }
-        // TODO error
+        viewModelScope.launch {
+            _eventFlow.emit(UiEvent.ShowToast("Unerwarteter Fehler. Bitte öffne das Rezept erneut."))
+        }
     }
 
 
