@@ -4,7 +4,7 @@ data class AllPizRecipeUseCases(
     val initDbIfEmptyUseCase: InitDbIfEmptyUseCase,
     val deleteIngredientUseCase: DeleteIngredientUseCase,
     val deleteStepUseCase: DeleteStepUseCase,
-    val getAllPizRecipesUseCase: GetAllPizRecipesUseCase,
+    val loadAllPizRecipesUseCase: LoadAllPizRecipesUseCase,
     val getAllPizRecipesFlowUseCase: GetAllPizRecipesFlowUseCase,
     val loadPizRecipeWithDetailsUseCase: LoadPizRecipeWithDetailsUseCase,
     val getPizRecipeUseCase: GetPizRecipeUseCase,

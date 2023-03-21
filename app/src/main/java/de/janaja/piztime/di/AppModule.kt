@@ -39,7 +39,7 @@ object AppModule {
             initDbIfEmptyUseCase = InitDbIfEmptyUseCase(repository),
             deleteIngredientUseCase = DeleteIngredientUseCase(repository),
             deleteStepUseCase = DeleteStepUseCase(repository),
-            getAllPizRecipesUseCase = GetAllPizRecipesUseCase(repository),
+            loadAllPizRecipesUseCase = LoadAllPizRecipesUseCase(repository),
             getAllPizRecipesFlowUseCase = GetAllPizRecipesFlowUseCase(repository),
             loadPizRecipeWithDetailsUseCase = LoadPizRecipeWithDetailsUseCase(repository),
             getPizRecipeUseCase = GetPizRecipeUseCase(repository) ,

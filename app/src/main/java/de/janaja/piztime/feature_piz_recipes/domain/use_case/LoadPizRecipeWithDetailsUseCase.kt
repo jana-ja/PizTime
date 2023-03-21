@@ -6,6 +6,6 @@ class LoadPizRecipeWithDetailsUseCase(
     private val repository: Repository
 ) {
     suspend operator fun invoke(id: Long) {
-       repository.findPizRecipeWithDetailsById(id)
+       repository.loadPizRecipeWithDetails(id)
     }
 }

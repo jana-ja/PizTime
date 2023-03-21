@@ -57,7 +57,7 @@ class PizRecipesViewModel @Inject constructor(
             }
             .launchIn(viewModelScope)
         viewModelScope.launch(Dispatchers.IO) {
-            allPizRecipesUseCases.getAllPizRecipesUseCase()
+            allPizRecipesUseCases.loadAllPizRecipesUseCase()
         }
     }
 
