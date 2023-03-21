@@ -1,6 +1,7 @@
 package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components
 
 import android.util.Log
+import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,6 +20,7 @@ import de.janaja.piztime.feature_piz_recipes.domain.model.PizStepWithIngredients
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.PizRecipeDetailEvent
 import de.janaja.piztime.feature_piz_recipes.presentation.util.*
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun StepsView(
     modifier: Modifier = Modifier,
@@ -42,7 +44,7 @@ fun StepsView(
     Box(
         modifier = contentModifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(top = 16.dp, bottom = 16.dp, end = 16.dp)
             .background(MaterialTheme.colorScheme.surface)
     ) {
 
@@ -53,33 +55,34 @@ fun StepsView(
 
             Text(
                 "Rezept:",
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(start = 16.dp)
             )
-
 
             stepsWithIngredients.indices.forEach { stepIndex ->
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp)) {
+                    modifier = Modifier.padding(top = 16.dp, end = 16.dp)) {
                     // step description
                     var rowModifier = Modifier.height(height)
                     if (editMode) rowModifier =
                         rowModifier.clickable { onEvent(PizRecipeDetailEvent.ClickEditStep(stepsWithIngredients[stepIndex].id)) }
 
                     Row(rowModifier, verticalAlignment = Alignment.CenterVertically) {
-                        if (editMode)
+                        AnimatedVisibility (editMode) {
                             Icon(
                                 Icons.Default.Edit,
                                 "edit ingredient",
                                 modifier = Modifier
-                                    .padding(end = 8.dp)
+                                    .padding(start = 32.dp)
                                     .size(height)
                                     .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
                                     .padding(6.dp)
-
                             )
+                        }
                         Text(
                             "${stepIndex + 1}: ",
-                            style = MaterialTheme.typography.titleMedium
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(start = if(editMode) 8.dp else 32.dp)
                         )
                         Text(
                             stepsWithIngredients[stepIndex].description,
@@ -93,7 +96,7 @@ fun StepsView(
                         SimpleFlowRow(
                             verticalGap = 8.dp,
                             horizontalGap = 8.dp,
-                            modifier = Modifier.padding(start = 16.dp)
+                            modifier = Modifier.padding(start = 32.dp)
                         ) {
                             stepsWithIngredients[stepIndex].ingredients.forEach { ingredient ->
                                 var ingredientModifier = Modifier.height(ingredientHeight)
@@ -118,7 +121,11 @@ fun StepsView(
                                     style = MaterialTheme.typography.bodyMedium
                                 )
                             }
-                            if (editMode) {
+                            AnimatedVisibility (
+                                editMode,
+                                enter = scaleIn(),
+                                exit = scaleOut()
+                            ) {
                                 IconButton(
                                     onClick = {
                                         onEvent(PizRecipeDetailEvent.ClickAddIngredient(true, stepsWithIngredients[stepIndex].id))

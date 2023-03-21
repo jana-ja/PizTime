@@ -1,5 +1,6 @@
 package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.tween
@@ -92,7 +93,7 @@ fun HeaderView(
                     }
         }
         Box(modifier = contentModifier
-            .padding(16.dp)
+            .padding(top = 16.dp, bottom = 16.dp, end = 16.dp)
             .height(height)) {
             Column(
                 modifier = clickableModifier
@@ -101,18 +102,20 @@ fun HeaderView(
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    if (editMode)
+                    AnimatedVisibility (editMode) {
                         Icon(
                             Icons.Default.Edit,
                             "edit ingredient",
                             modifier = Modifier
-                                .padding(end = 16.dp)
+                                .padding(start = 16.dp)
                                 .size(30.dp)
                                 .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
                                 .padding(6.dp)
 
                         )
+                    }
                     Text(
+                        modifier = Modifier.padding(start = 16.dp),
                         text = title,
                         style = MaterialTheme.typography.headlineLarge
                     )
@@ -121,12 +124,12 @@ fun HeaderView(
                     text = feature,
                     style = MaterialTheme.typography.bodyLarge,
                     fontStyle = FontStyle.Italic,
-                    modifier = Modifier.padding(start = 16.dp)
+                    modifier = Modifier.padding(start = 32.dp)
                 )
                 Text(
                     text = "Start ${prepTime.cut()} hours early",
                     style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(start = 16.dp)
+                    modifier = Modifier.padding(start = 32.dp)
                 )
             }
 
@@ -143,7 +146,7 @@ fun HeaderView(
                     contentScale = ContentScale.Fit,
                     modifier = Modifier
                         .size(height)
-                        .padding(bottom = 16.dp)
+                        //.padding(bottom = 16.dp)
                         .padding(horizontal = 16.dp)
                         .rotate(pizRotation)
 

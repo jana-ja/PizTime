@@ -1,6 +1,7 @@
 package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components
 
 import android.util.Log
+import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -23,6 +24,7 @@ import de.janaja.piztime.feature_piz_recipes.presentation.util.bottomElevation
 import de.janaja.piztime.feature_piz_recipes.presentation.util.cut
 
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun IngredientsView(
     modifier: Modifier = Modifier,
@@ -50,12 +52,15 @@ fun IngredientsView(
         Box(
             modifier = contentModifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(top = 16.dp, bottom = 16.dp, end = 16.dp)
 
         ) {
             Column(modifier = Modifier.padding(bottom = 16.dp)) {
                 // header
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(start = 16.dp)
+                ) {
                     Text(
                         "Zutaten für", style = MaterialTheme.typography.titleLarge
                     )
@@ -69,11 +74,12 @@ fun IngredientsView(
 
                 // content ingredients
                 Row(
-                    Modifier.padding(PaddingValues(start = 16.dp, top = 16.dp, end = 16.dp))
+                    Modifier.padding(PaddingValues(top = 16.dp, end = 16.dp))
                 ) {
                     val height = 30.dp
-                    var clickableModifier = Modifier.padding(0.dp).height(height)
+                    var clickableModifier = Modifier.height(height)
                     val textStyle = MaterialTheme.typography.bodyLarge
+                    // edit button and amount
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         ingredients.forEach { ingredient ->
                             // edit mode
@@ -86,18 +92,21 @@ fun IngredientsView(
 
                             }
                             Row(modifier = clickableModifier, verticalAlignment = Alignment.CenterVertically) {
-                                if (editMode)
+                                AnimatedVisibility (editMode) {
                                     Icon(
                                         Icons.Default.Edit,
                                         "edit ingredient",
                                         modifier = Modifier
-                                            .padding(end = 16.dp)
+                                            .padding(start = 32.dp)
                                             .size(height)
                                             .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
-                                        .padding(6.dp)
+                                            .padding(6.dp)
 
                                     )
+                                }
                                 Text(
+                                    modifier = Modifier
+                                        .padding(start = (if(editMode) 16.dp else 32.dp)),
                                     text = "${(ingredient.baseAmount * amount).cut()}g",
                                     style = textStyle
                                 )
@@ -105,6 +114,7 @@ fun IngredientsView(
 
                         }
                     }
+                    // names
                     Column(
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         modifier = Modifier.padding(start = 16.dp),
@@ -131,9 +141,9 @@ fun IngredientsView(
                 }
 
                 // optional: add ingredient button
-                if (editMode) {
+                AnimatedVisibility (editMode) {
                     FilledTonalButton(
-                        modifier = Modifier.padding(top = 8.dp, start = 16.dp),
+                        modifier = Modifier.padding(top = 8.dp, start = 32.dp),
                         onClick = { onEvent(PizRecipeDetailEvent.ClickAddIngredient(false)) })
                     {
                         Text(

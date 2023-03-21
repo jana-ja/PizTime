@@ -146,6 +146,7 @@ fun PizRecipeDetailView(
             Modifier
                 .size(36.dp)
                 .align(Alignment.TopEnd)
+                .padding(end = 8.dp, top = 8.dp)
         ) {
             Icon(
                 Icons.Default.Edit,
