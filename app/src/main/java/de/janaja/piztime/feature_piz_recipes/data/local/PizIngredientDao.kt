@@ -14,7 +14,7 @@ interface PizIngredientDao {
 //    suspend fun addAllPizIngredients(pizIngredients: List<PizIngredient>)
 
     @Query("SELECT * FROM PizIngredientEntity WHERE recipeIdMap = :pizRecipeId")
-    suspend fun findPizIngredientsByPizRecipeIdFlow(pizRecipeId: Long): List<PizIngredientEntity> // TODO does flow work on this kind of query???
+    suspend fun findPizIngredientsByPizRecipeIdFlow(pizRecipeId: Long): List<PizIngredientEntity>
 
     @Query("SELECT * FROM PizIngredientEntity WHERE recipeIdMap = :pizRecipeId")
     fun findPizIngredientsByPizRecipeId(pizRecipeId: Long): List<PizIngredientEntity>
