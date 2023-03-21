@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -98,7 +99,7 @@ fun HeaderView(
             Column(
                 modifier = clickableModifier
                     .matchParentSize()
-                    .padding(bottom = 16.dp),
+                    .padding(bottom = 16.dp, end = height - 32.dp), //end padding to not overlap with pizza image
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -117,6 +118,8 @@ fun HeaderView(
                     Text(
                         modifier = Modifier.padding(start = 16.dp),
                         text = title,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.headlineLarge
                     )
                 }
@@ -124,6 +127,8 @@ fun HeaderView(
                     text = feature,
                     style = MaterialTheme.typography.bodyLarge,
                     fontStyle = FontStyle.Italic,
+                    maxLines = 1,
+                    overflow = TextOverflow.Visible,
                     modifier = Modifier.padding(start = 32.dp)
                 )
                 Text(
@@ -147,7 +152,7 @@ fun HeaderView(
                     modifier = Modifier
                         .size(height)
                         //.padding(bottom = 16.dp)
-                        .padding(horizontal = 16.dp)
+                        .padding(start = 16.dp)
                         .rotate(pizRotation)
 
                 )
