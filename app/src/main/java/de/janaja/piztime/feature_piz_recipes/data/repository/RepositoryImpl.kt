@@ -11,12 +11,14 @@ import de.janaja.piztime.feature_piz_recipes.domain.repository.Repository
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 import kotlinx.coroutines.flow.*
 
-class RepositoryImpl( // TODO here db bekommen mit dagger hilt
-    private val pizRecipeDao: PizRecipeDao,
-    private val pizIngredientDao: PizIngredientDao,
-    private val pizStepDao: PizStepDao,
-    private val pizStepIngredientDao: PizStepIngredientDao
+class RepositoryImpl(
+    db: PizRecipeDatabase
 ) : Repository {
+
+    private val pizRecipeDao: PizRecipeDao = db.pizRecipeDao
+    private val pizIngredientDao: PizIngredientDao = db.pizIngredientDao
+    private val pizStepDao: PizStepDao = db.pizStepDao
+    private val pizStepIngredientDao: PizStepIngredientDao = db.pizStepIngredientDao
 
     private val _pizRecipeWithDetailsFlow = MutableStateFlow(DummyData.DummyPizRecipeWithDetails)
     override val pizRecipeWithDetailsFlow = _pizRecipeWithDetailsFlow.asStateFlow()

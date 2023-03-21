@@ -29,7 +29,7 @@ object AppModule {
     @Provides
     @Singleton
     fun providePizRecipeRepository(db: PizRecipeDatabase): Repository {
-        return RepositoryImpl(db.pizRecipeDao, db.pizIngredientDao, db.pizStepDao, db.pizStepIngredientDao)
+        return RepositoryImpl(db)
     }
 
     @Provides
