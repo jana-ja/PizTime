@@ -38,7 +38,7 @@ fun IngredientsView(
 
     // TODO this is only here to fix current preview issue with resource dimen values
     val borderHeight: Dp =
-        100.dp //dimensionResource(id = R.dimen.topSheetBorderHeight).value // TODO look up how to turn to dp properly. roundToPx()?
+        100.dp //dimensionResource(id = R.dimen.topSheetBorderHeight).value
 
 
     Surface(
