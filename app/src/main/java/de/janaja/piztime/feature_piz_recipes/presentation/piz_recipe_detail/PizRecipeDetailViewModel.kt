@@ -27,17 +27,19 @@ class PizRecipeDetailViewModel @Inject constructor(
     private val allPizRecipesUseCases: AllPizRecipeUseCases, savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
+    // standard detail screen states
+    private val _pizRecipeState = mutableStateOf(DetailPizRecipeWithDetailsState())
+    val pizRecipeState: State<DetailPizRecipeWithDetailsState> = _pizRecipeState
+
     private val _detailAmountState = mutableStateOf(DetailAmountState())
     val detailAmountState: State<DetailAmountState> = _detailAmountState
 
+    // edit states
     private val _detailEditDialogState = mutableStateOf(DetailEditDialogState())
     val detailEditDialogState: State<DetailEditDialogState> = _detailEditDialogState
 
     private val _detailEditModeState = mutableStateOf(DetailEditModeState())
     val detailEditModeState: State<DetailEditModeState> = _detailEditModeState
-
-    private val _pizRecipeState = mutableStateOf(DetailPizRecipeWithDetailsState())
-    val pizRecipeState: State<DetailPizRecipeWithDetailsState> = _pizRecipeState
 
     private val _editIngredientState = mutableStateOf(DetailEditIngredientState())
     val editIngredientState: State<DetailEditIngredientState> = _editIngredientState
@@ -48,13 +50,13 @@ class PizRecipeDetailViewModel @Inject constructor(
     private val _editInfoState = mutableStateOf(DetailEditInfoState())
     val editInfoState: State<DetailEditInfoState> = _editInfoState
 
+    // ui event state
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    private var currentRecipeId: Long? = null
-
     private var getPizRecipeWithdetailsJob: Job? = null
 
+    private var currentRecipeId: Long? = null
 
     init {
         savedStateHandle.get<Long>("pizRecipeId")?.let { id ->
@@ -67,6 +69,7 @@ class PizRecipeDetailViewModel @Inject constructor(
         data class ShowToast(val massage: String): UiEvent()
     }
 
+    // standard detail screen
     private fun getPizRecipeWithDetails(id: Long) {
         // observe result
         getPizRecipeWithdetailsJob?.cancel()
@@ -82,11 +85,23 @@ class PizRecipeDetailViewModel @Inject constructor(
         }
     }
 
+    private fun increaseAmount() {
+        _detailAmountState.value = _detailAmountState.value.copy(amount = _detailAmountState.value.amount + 1)
+    }
+
+    private fun decreaseAmount() {
+        if (_detailAmountState.value.amount < 1) return
+        _detailAmountState.value = _detailAmountState.value.copy(amount = _detailAmountState.value.amount - 1)
+    }
+
+    // events
+    // start edit mode
     private fun toggleEditMode() {
         val oldState = _detailEditModeState.value.editMode
         _detailEditModeState.value = _detailEditModeState.value.copy(editMode = !oldState)
     }
 
+    // open edit dialog
     private fun clickEditInfo() {
         _detailEditDialogState.value = _detailEditDialogState.value.copy(editDialogState = EditDialog.Header)
         // load data to edit info state
@@ -139,6 +154,8 @@ class PizRecipeDetailViewModel @Inject constructor(
             }
         }
     }
+
+    // save edit
     private fun saveInfo() {
         val state = _editInfoState.value
         currentRecipeId?.let {
@@ -221,6 +238,7 @@ class PizRecipeDetailViewModel @Inject constructor(
 
     }
 
+    // edit state changed
     private fun editInfoTitle(value: String) {
         _editInfoState.value = _editInfoState.value.copy(
             title = value
@@ -257,6 +275,7 @@ class PizRecipeDetailViewModel @Inject constructor(
         )
     }
 
+    // edit add/delete
     private fun editAddIngredient(isStepIngredient: Boolean, stepId: Long) {
         _detailEditDialogState.value = _detailEditDialogState.value.copy(editDialogState = EditDialog.Ingredient)
         // load correct ingredient to edit ingredient state
@@ -322,7 +341,7 @@ class PizRecipeDetailViewModel @Inject constructor(
         }
     }
 
-
+    // handle events
     fun onEvent(event: PizRecipeDetailEvent) {
         when (event) {
             PizRecipeDetailEvent.DecreaseAmount -> decreaseAmount()
@@ -363,15 +382,6 @@ class PizRecipeDetailViewModel @Inject constructor(
         }
     }
 
-
-    private fun increaseAmount() {
-        _detailAmountState.value = _detailAmountState.value.copy(amount = _detailAmountState.value.amount + 1)
-    }
-
-    private fun decreaseAmount() {
-        if (_detailAmountState.value.amount < 1) return
-        _detailAmountState.value = _detailAmountState.value.copy(amount = _detailAmountState.value.amount - 1)
-    }
 }
 
 
