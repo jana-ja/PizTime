@@ -69,6 +69,7 @@ fun EditImageView(
         imageUri.value = uri
     }
     // if new image gets selected then save its bitmap to bitmap state var
+    // TODO compress image if it has high resolution for better performance!
     if (imageUri.value != null) {
         if (Build.VERSION.SDK_INT < 28) {
             viewModel.onEvent(PizRecipeDetailEvent.ImageChanged(MediaStore.Images
@@ -175,7 +176,6 @@ private fun CropImageDialog(
     onCompletion: (bitmap: ImageBitmap) -> Unit,
     onDismiss: () -> Unit
 ) {
-    // TODO sometimes crop does not work.
 
     val imageBitmap by remember { mutableStateOf(currentImage) }
     // TODO maybe change style?
@@ -238,6 +238,8 @@ private fun CropImageDialog(
             }
         }
     ) { paddingValues ->
+
+        // TODO sometimes crop does not work. maybe its taking too long? need to do sth in onCrpoStart?
 
         ImageCropper(
             modifier = Modifier
