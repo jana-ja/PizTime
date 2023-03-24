@@ -1,7 +1,9 @@
 package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -41,14 +43,18 @@ class PizRecipeDetailViewModel @Inject constructor(
     private val _detailEditModeState = mutableStateOf(DetailEditModeState())
     val detailEditModeState: State<DetailEditModeState> = _detailEditModeState
 
+    private val _editInfoState = mutableStateOf(DetailEditInfoState())
+    val editInfoState: State<DetailEditInfoState> = _editInfoState
+
+    private val _editImageState = mutableStateOf(DetailEditImageState())
+    val editImageState: State<DetailEditImageState> = _editImageState
+
     private val _editIngredientState = mutableStateOf(DetailEditIngredientState())
     val editIngredientState: State<DetailEditIngredientState> = _editIngredientState
 
     private val _editStepState = mutableStateOf(DetailEditStepState())
     val editStepState: State<DetailEditStepState> = _editStepState
 
-    private val _editInfoState = mutableStateOf(DetailEditInfoState())
-    val editInfoState: State<DetailEditInfoState> = _editInfoState
 
     // ui event state
     private val _eventFlow = MutableSharedFlow<UiEvent>()
@@ -65,8 +71,8 @@ class PizRecipeDetailViewModel @Inject constructor(
         }
     }
 
-    sealed class UiEvent{
-        data class ShowToast(val massage: String): UiEvent()
+    sealed class UiEvent {
+        data class ShowToast(val massage: String) : UiEvent()
     }
 
     // standard detail screen
@@ -75,7 +81,8 @@ class PizRecipeDetailViewModel @Inject constructor(
         getPizRecipeWithdetailsJob?.cancel()
         getPizRecipeWithdetailsJob = allPizRecipesUseCases.getPizRecipeWithDetailsFlowUseCase().onEach {
             _pizRecipeState.value = _pizRecipeState.value.copy(
-                pizRecipe = it
+                pizRecipe = it,
+                imageBitmap = allPizRecipesUseCases.getRecipeImageUseCase(it.imageName)
             )
         }.launchIn(viewModelScope)
 
@@ -112,7 +119,7 @@ class PizRecipeDetailViewModel @Inject constructor(
                     _editInfoState.value = _editInfoState.value.copy(
                         title = recipe.title,
                         feature = recipe.feature,
-                        imageResId = recipe.imageResourceId,
+                        image = recipe.imageName,
                         prepTime = recipe.prepTime.toString()
                     )
                 }
@@ -122,7 +129,18 @@ class PizRecipeDetailViewModel @Inject constructor(
 
     private fun clickEditImage() {
         _detailEditDialogState.value = _detailEditDialogState.value.copy(editDialogState = EditDialog.Image)
-        // TODO state anlegen der das aktuelle bild hat
+        // get image from repo
+        currentRecipeId?.let {
+            viewModelScope.launch(Dispatchers.IO) {
+                val recipe = allPizRecipesUseCases.getPizRecipeUseCase(it)
+                if (recipe != null) {
+                    _editImageState.value = _editImageState.value.copy(
+                        bitmap = allPizRecipesUseCases.getRecipeImageUseCase(recipe.imageName),
+                        imageName = recipe.imageName
+                    )
+                }
+            }
+        }
     }
 
     private fun clickEditIngredient(id: Long, isStepIngredient: Boolean, stepId: Long) {
@@ -167,7 +185,7 @@ class PizRecipeDetailViewModel @Inject constructor(
             try {
                 val prepTime = state.prepTime.toDouble()
                 val pizRecipe = PizRecipe(
-                    state.title, state.feature, state.imageResId, prepTime, currentRecipeId!!
+                    state.title, state.feature, state.image, prepTime, currentRecipeId!!
                 )
 
                 viewModelScope.launch(Dispatchers.IO) {
@@ -186,6 +204,36 @@ class PizRecipeDetailViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun saveImage() {
+        val state = _editImageState.value
+        Log.e("hoho",state.imageName)
+        viewModelScope.launch(Dispatchers.IO) {
+            if (state.bitmap != null) {
+                // save image bitmap
+                allPizRecipesUseCases.saveRecipeImageUseCase(state.imageName, state.bitmap)
+
+                //save image ref to recipe
+                val recipe = _pizRecipeState.value.pizRecipe
+                allPizRecipesUseCases.updateRecipeUseCase(
+                    PizRecipe(recipe.title, recipe.feature, state.imageName, recipe.prepTime, recipe.id)
+                )
+                currentRecipeId?.let {
+                    // reload data
+                    allPizRecipesUseCases.loadPizRecipeWithDetailsUseCase(it)
+//                    // (only pass data, don't reload from repo TODO in other places i reload..)
+//                    _pizRecipeState.value = _pizRecipeState.value.copy(
+//                        imageBitmap = state.bitmap
+//                    )
+                }
+            } else {
+                _eventFlow.emit(UiEvent.ShowToast("Wähle ein Bild aus oder bearbeite es um zu speichern."))
+            }
+        }
+        // dismiss dialog
+        onEvent(PizRecipeDetailEvent.DismissDialog)
+
     }
 
     private fun saveIngredient() {
@@ -273,7 +321,12 @@ class PizRecipeDetailViewModel @Inject constructor(
             ingredientAmount = value
         )
     }
-
+    private fun editImage(bitmap: ImageBitmap, urlOrWhatever: String) {
+        _editImageState.value = _editImageState.value.copy(
+            bitmap = bitmap,
+            imageName = urlOrWhatever
+        )
+    }
     private fun editStepDescription(value: String) {
         _editStepState.value = _editStepState.value.copy(
             description = value
@@ -308,7 +361,7 @@ class PizRecipeDetailViewModel @Inject constructor(
 
     }
 
-    private fun editDeleteIngredient(){
+    private fun editDeleteIngredient() {
         currentRecipeId?.let {
             // delete
             val state = _editIngredientState.value
@@ -328,7 +381,7 @@ class PizRecipeDetailViewModel @Inject constructor(
         }
     }
 
-    private fun editDeleteStep(){
+    private fun editDeleteStep() {
         currentRecipeId?.let {
             // delete
             viewModelScope.launch(Dispatchers.IO) {
@@ -349,43 +402,52 @@ class PizRecipeDetailViewModel @Inject constructor(
     // handle events
     fun onEvent(event: PizRecipeDetailEvent) {
         when (event) {
-            PizRecipeDetailEvent.DecreaseAmount -> decreaseAmount()
-            PizRecipeDetailEvent.IncreaseAmount -> increaseAmount()
+            PizRecipeDetailEvent.LaunchAnimation -> {
+                _pizRecipeState.value = _pizRecipeState.value.copy(
+                    firstLaunch = false
+                )
+            }
 
-            PizRecipeDetailEvent.ClickEdit -> toggleEditMode()
-            PizRecipeDetailEvent.ClickEditHeader -> clickEditInfo()
+            PizRecipeDetailEvent.IncreaseAmount -> increaseAmount()
+            PizRecipeDetailEvent.DecreaseAmount -> decreaseAmount()
+
+            PizRecipeDetailEvent.ToggleEditMode -> toggleEditMode()
+
+            PizRecipeDetailEvent.ClickEditInfo -> clickEditInfo()
+            PizRecipeDetailEvent.ClickEditImage -> { clickEditImage() }
             is PizRecipeDetailEvent.ClickEditIngredient -> clickEditIngredient(
                 event.id,
                 event.isStepIngredient,
                 event.stepId
             )
             is PizRecipeDetailEvent.ClickEditStep -> clickEditStep(event.id)
-            PizRecipeDetailEvent.DismissDialog -> {
-                _detailEditDialogState.value = _detailEditDialogState.value.copy(editDialogState = EditDialog.None)
-            }
+
+            PizRecipeDetailEvent.ClickSaveInfo -> saveInfo()
+            PizRecipeDetailEvent.ClickSaveImage -> { saveImage() }
             PizRecipeDetailEvent.ClickSaveIngredient -> saveIngredient()
-            is PizRecipeDetailEvent.IngredientAmountChanged -> editIngredientAmount(event.value)
-            is PizRecipeDetailEvent.IngredientNameChanged -> editIngredientName(event.value)
             PizRecipeDetailEvent.ClickSaveStep -> saveStep()
+
+            is PizRecipeDetailEvent.RecipeTitleChanged -> editInfoTitle(event.value)
+            is PizRecipeDetailEvent.RecipeFeatureChanged -> editInfoFeature(event.value)
+            is PizRecipeDetailEvent.RecipePrepTimeChanged -> {
+                editInfoPrepTime(event.value)
+            }
+            is PizRecipeDetailEvent.IngredientNameChanged -> editIngredientName(event.value)
+            is PizRecipeDetailEvent.IngredientAmountChanged -> editIngredientAmount(event.value)
+            is PizRecipeDetailEvent.ImageChanged -> editImage(event.bitmap, event.urlOrWhatever)
             is PizRecipeDetailEvent.StepDescriptionChanged -> editStepDescription(event.value)
+
             is PizRecipeDetailEvent.ClickAddIngredient -> editAddIngredient(
                 event.isStepIngredient,
                 event.stepId
             )
             PizRecipeDetailEvent.ClickAddStep -> editAddStep()
+
             PizRecipeDetailEvent.ClickDeleteIngredient -> editDeleteIngredient()
             PizRecipeDetailEvent.ClickDeleteStep -> editDeleteStep()
-            PizRecipeDetailEvent.ClickSaveInfo -> saveInfo()
-            is PizRecipeDetailEvent.RecipeFeatureChanged -> editInfoFeature(event.value)
-            is PizRecipeDetailEvent.RecipeTitleChanged -> editInfoTitle(event.value)
-            is PizRecipeDetailEvent.RecipePrepTimeChanged -> { editInfoPrepTime(event.value) }
-            PizRecipeDetailEvent.LaunchAnimation -> {
-                _pizRecipeState.value = _pizRecipeState.value.copy(
-                    firstLaunch = false
-                )
-            }
-            PizRecipeDetailEvent.ClickEditImage -> {
-                clickEditImage()
+
+            PizRecipeDetailEvent.DismissDialog -> {
+                _detailEditDialogState.value = _detailEditDialogState.value.copy(editDialogState = EditDialog.None)
             }
         }
     }

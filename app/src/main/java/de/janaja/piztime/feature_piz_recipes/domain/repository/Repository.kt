@@ -1,5 +1,6 @@
 package de.janaja.piztime.feature_piz_recipes.domain.repository
 
+import androidx.compose.ui.graphics.ImageBitmap
 import de.janaja.piztime.feature_piz_recipes.data.local.model.PizIngredientEntity
 import de.janaja.piztime.feature_piz_recipes.data.local.model.PizRecipeEntity
 import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepEntity
@@ -10,6 +11,8 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface Repository {
 
+    // using flow so i can trigger data updates from multiple sources, which will get observed
+    // f.e. reloading data after saving change to backend from edit dialog
     val pizRecipeWithDetailsFlow: StateFlow<PizRecipeWithDetails>
     val allPizRecipesFlow: StateFlow<List<PizRecipe>>
 
@@ -30,6 +33,7 @@ interface Repository {
     // get
     suspend fun getPizStep(id: Long): PizStepEntity
     suspend fun getPizRecipe(id: Long): PizRecipe?
+    suspend fun getRecipeImage(urlOrWhatever: String): ImageBitmap?
     suspend fun getPizIngredient(id: Long): PizIngredientEntity
     suspend fun getPizStepIngredient(id: Long): PizStepIngredientEntity
 
@@ -53,7 +57,9 @@ interface Repository {
     suspend fun insertPizStep(pizStepEntity: PizStepEntity)
     suspend fun insertPizStepIngredients(pizStepIngredientEntities: List<PizStepIngredientEntity>)
 
+    // save
+    suspend fun saveRecipeImage(urlOrWhatever: String, bitmap: ImageBitmap)
+
     // update
     suspend fun updatePizRecipe(pizRecipeEntity: PizRecipeEntity)
-
 }

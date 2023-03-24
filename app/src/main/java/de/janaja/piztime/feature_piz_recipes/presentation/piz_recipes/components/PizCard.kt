@@ -11,13 +11,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import de.janaja.piztime.feature_piz_recipes.data.local.model.PizRecipeEntity
+import de.janaja.piztime.R
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipe
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 import de.janaja.piztime.ui.theme.PizTimeTheme
@@ -32,6 +34,7 @@ enum class PizVisibility {
 @Composable
 fun PizCard(
     pizRecipeEntity: PizRecipe,
+    recipeImage: ImageBitmap?,
     onClick: () -> Unit,
     index: Int
 ) {
@@ -130,19 +133,28 @@ fun PizCard(
                     .offset(pizOffset.dp)
                     .align(Alignment.CenterHorizontally)
             ) {
-                Image(
-                    painter = painterResource(id = pizRecipeEntity.imageResourceId),
-                    contentDescription = "Image of ${pizRecipeEntity.title}",//stringResource(id = ),
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier
-                        .size(150.dp)
+                if (recipeImage != null) {
+                    Image(
+                        bitmap = recipeImage,
+                        contentDescription = "Image of ${pizRecipeEntity.title}",
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier
+                            .size(150.dp)
+                            .rotate(pizRotation)
+                    )
+                } else {
+                    Image(
+                        painter = painterResource(id = R.drawable.bsp_piz),
+                        contentDescription = "Image of ${pizRecipeEntity.title}",
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier
+                            .size(150.dp)
+                            .rotate(pizRotation)
+                    )
+                }
 
-                        .rotate(pizRotation)
-
-                )
             }
 
-//            AnimatedVisibility(visible = isVisible) {
             Text(
                 text = pizRecipeEntity.feature,
                 style = MaterialTheme.typography.bodyMedium,
@@ -151,11 +163,7 @@ fun PizCard(
                     .align(Alignment.End)
                     .alpha(alpha)
             )
-//            }
-
-
         }
-
     }
 }
 
@@ -163,6 +171,14 @@ fun PizCard(
 @Composable
 fun PizCardPreview() {
     PizTimeTheme {
-        PizCard(DummyData.DummyPizRecipe, {}, 0)
+        PizCard(
+            pizRecipeEntity = DummyData.DummyPizRecipe,
+            recipeImage = ImageBitmap.imageResource(
+                LocalContext.current.resources,
+                R.drawable.test
+            ),
+            onClick = {},
+            index = 0
+        )
     }
 }

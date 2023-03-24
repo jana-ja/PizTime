@@ -1,6 +1,5 @@
 package de.janaja.piztime.feature_piz_recipes.presentation.util
 
-import de.janaja.piztime.R
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipe
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipeWithDetails
@@ -8,7 +7,7 @@ import de.janaja.piztime.feature_piz_recipes.domain.model.PizStepWithIngredients
 
 object DummyData {
     // preview
-    val DummyPizRecipe = PizRecipe("Pizza Neapel", "Fluffiger Rand", R.drawable.bsp_piz, 26.0, id = 1)
+    val DummyPizRecipe = PizRecipe("Pizza Neapel", "Fluffiger Rand", "neapel_image", 26.0, id = 1)
     val DummyIngredients = listOf(
         PizIngredient("Mehl", 149.0),
         PizIngredient("Water", 97.0),
@@ -57,7 +56,7 @@ object DummyData {
     val DummyPizRecipeWithDetails = PizRecipeWithDetails(
         "Pizza Neapel",
         "Fluffiger Rand",
-        R.drawable.bsp_piz,
+        "",
         26.0,
         DummyIngredients,
         DummySteps,
@@ -69,13 +68,13 @@ object DummyData {
 
     val DummyRecipeWithDetailsData = listOf(
         PizRecipeWithDetails(
-            DummyPizRecipe.title, DummyPizRecipe.feature, DummyPizRecipe.imageResourceId, 26.0,
+            DummyPizRecipe.title, DummyPizRecipe.feature, DummyPizRecipe.imageName, 26.0,
             DummyIngredients,
             DummySteps,
             DummyPizRecipe.id
         ),
         PizRecipeWithDetails(
-            "Pizza Rom", "Dünner Boden", R.drawable.bsp_piz, 26.0,
+            "Pizza Rom", "Dünner Boden", "rom_image", 26.0,
             listOf(
                 PizIngredient("Mehl", 120.0),
                 PizIngredient("Wasser", 75.0),
@@ -95,7 +94,7 @@ object DummyData {
             id = 2
         ),
         PizRecipeWithDetails(
-            "Pizza New York", "Fett sein", R.drawable.bsp_piz, 26.0,
+            "Pizza New York", "Fett sein", "new_york_image", 26.0,
             listOf(
                 PizIngredient("1050er Mehl", 148.0),
                 PizIngredient("Roggenmehl", 17.0),

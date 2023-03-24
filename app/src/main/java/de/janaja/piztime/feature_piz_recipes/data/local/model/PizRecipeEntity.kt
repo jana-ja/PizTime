@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class PizRecipeEntity(
     var title: String,
     var feature: String,
-    var imageResourceId: Int,
+    var imageName: String,
     var prepTime: Double,
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name="recipeId")

@@ -19,6 +19,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
@@ -32,6 +33,7 @@ import com.smarttoolfactory.cropper.settings.CropDefaults
 import com.smarttoolfactory.cropper.settings.CropOutlineProperty
 import com.smarttoolfactory.cropper.settings.CropType
 import de.janaja.piztime.R
+import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.PizRecipeDetailEvent
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.PizRecipeDetailViewModel
 
 
@@ -41,17 +43,20 @@ fun EditImageView(
     viewModel: PizRecipeDetailViewModel = hiltViewModel()
 ) {
 
+    val state = viewModel.editImageState.value
     val context = LocalContext.current
 
-    // current image
-    // TODO get current image bitmap from viewmodel instead
-    val currentImageBitmap = ImageBitmap.imageResource(
-        LocalContext.current.resources,
-        R.drawable.test
-    )
-    val bitmap = remember {
-        mutableStateOf(currentImageBitmap)
-    }
+    // get current image bitmap from state, if null show default image
+    val bitmap: ImageBitmap =
+        state.bitmap
+            ?: ImageBitmap.imageResource(
+                LocalContext.current.resources,
+                R.drawable.bsp_piz
+            )
+
+//    val bitmap = remember {
+//        mutableStateOf(currentImageBitmap)
+//    }
 
     // select image
     val imageUri = remember {
@@ -66,13 +71,13 @@ fun EditImageView(
     // if new image gets selected then save its bitmap to bitmap state var
     if (imageUri.value != null) {
         if (Build.VERSION.SDK_INT < 28) {
-            bitmap.value = MediaStore.Images
-                .Media.getBitmap(context.contentResolver, imageUri.value).asImageBitmap()
+            viewModel.onEvent(PizRecipeDetailEvent.ImageChanged(MediaStore.Images
+                .Media.getBitmap(context.contentResolver, imageUri.value).asImageBitmap(), state.imageName))
 
         } else {
             val source = ImageDecoder
                 .createSource(context.contentResolver, imageUri.value!!)
-            bitmap.value = ImageDecoder.decodeBitmap(source).asImageBitmap()
+            viewModel.onEvent(PizRecipeDetailEvent.ImageChanged(ImageDecoder.decodeBitmap(source).asImageBitmap(), state.imageName))
         }
     }
 
@@ -118,7 +123,7 @@ fun EditImageView(
                 Spacer(modifier = Modifier.weight(1.0f))
 
                 Button(
-                    onClick = { /* TODO onEvent(PizRecipeDetailEvent.ClickSaveImage)*/ },
+                    onClick = { viewModel.onEvent(PizRecipeDetailEvent.ClickSaveImage) },
                     modifier = Modifier
                         .padding(vertical = 16.dp)
                 ) {
@@ -142,15 +147,15 @@ fun EditImageView(
                 )
             ) {
                 CropImageDialog(
-                    currentImage = bitmap.value,
-                    onCompletion = { croppedBitmap -> bitmap.value = croppedBitmap; isCropDialogShown = false },
+                    currentImage = bitmap,
+                    onCompletion = { croppedBitmap -> viewModel.onEvent(PizRecipeDetailEvent.ImageChanged(croppedBitmap, state.imageName)); isCropDialogShown = false },
                     onDismiss = { isCropDialogShown = false })
             }
         }
 
         // edit image view content
         Image(
-            bitmap = bitmap.value,
+            bitmap = bitmap.asAndroidBitmap().asImageBitmap(),
             contentDescription = null,
             modifier = Modifier
                 .padding(paddingValues)

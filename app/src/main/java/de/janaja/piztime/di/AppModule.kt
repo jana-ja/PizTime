@@ -28,8 +28,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun providePizRecipeRepository(db: PizRecipeDatabase): Repository {
-        return RepositoryImpl(db)
+    fun providePizRecipeRepository(db: PizRecipeDatabase, app: Application): Repository {
+        return RepositoryImpl(db, app)
     }
 
     @Provides
@@ -37,18 +37,21 @@ object AppModule {
     fun providePizrecipeUseCase(repository: Repository): AllPizRecipeUseCases {
         return AllPizRecipeUseCases(
             initDbIfEmptyUseCase = InitDbIfEmptyUseCase(repository),
+            loadAllPizRecipesUseCase = LoadAllPizRecipesUseCase(repository),
+            loadPizRecipeWithDetailsUseCase = LoadPizRecipeWithDetailsUseCase(repository),
+            getAllPizRecipesFlowUseCase = GetAllPizRecipesFlowUseCase(repository),
+            getPizRecipeWithDetailsFlowUseCase = GetPizRecipeWithDetailsFlowUseCase(repository),
+            getPizRecipeUseCase = GetPizRecipeUseCase(repository) ,
+            getRecipeImageUseCase = GetRecipeImageUseCase(repository),
+            getIngredientUseCase = GetIngredientUseCase(repository),
+            getStepWithoutIngredientsUseCase = GetStepWithoutIngredientsUseCase(repository),
             deleteIngredientUseCase = DeleteIngredientUseCase(repository),
             deleteStepUseCase = DeleteStepUseCase(repository),
-            loadAllPizRecipesUseCase = LoadAllPizRecipesUseCase(repository),
-            getAllPizRecipesFlowUseCase = GetAllPizRecipesFlowUseCase(repository),
-            loadPizRecipeWithDetailsUseCase = LoadPizRecipeWithDetailsUseCase(repository),
-            getPizRecipeUseCase = GetPizRecipeUseCase(repository) ,
-            getPizRecipeWithDetailsFlowUseCase = GetPizRecipeWithDetailsFlowUseCase(repository),
-            getIngredientUseCase = GetIngredientUseCase(repository),
             updateIngredientUseCase = UpdateIngredientUseCase(repository),
-            getStepWithoutIngredientsUseCase = GetStepWithoutIngredientsUseCase(repository),
             updateStepUseCase = UpdateStepUseCase(repository),
-            updateRecipeUseCase = UpdateRecipeUseCase(repository)
+            updateRecipeUseCase = UpdateRecipeUseCase(repository),
+            saveRecipeImageUseCase = SaveRecipeImageUseCase(repository)
+
         )
     }
 }

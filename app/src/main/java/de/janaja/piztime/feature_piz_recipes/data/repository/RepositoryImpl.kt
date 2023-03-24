@@ -1,18 +1,35 @@
 package de.janaja.piztime.feature_piz_recipes.data.repository
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Log
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import de.janaja.piztime.feature_piz_recipes.data.local.*
 import de.janaja.piztime.feature_piz_recipes.data.local.model.PizIngredientEntity
 import de.janaja.piztime.feature_piz_recipes.data.local.model.PizRecipeEntity
 import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepEntity
 import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepIngredientEntity
-import de.janaja.piztime.feature_piz_recipes.data.mapper.*
+import de.janaja.piztime.feature_piz_recipes.data.mapper.EntityCollection
+import de.janaja.piztime.feature_piz_recipes.data.mapper.toEntityCollection
+import de.janaja.piztime.feature_piz_recipes.data.mapper.toPizRecipeWithDetails
+import de.janaja.piztime.feature_piz_recipes.data.mapper.toRecipe
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipe
 import de.janaja.piztime.feature_piz_recipes.domain.repository.Repository
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.withContext
+import java.io.*
+
 
 class RepositoryImpl(
-    db: PizRecipeDatabase
+    db: PizRecipeDatabase,
+    private val context: Context
 ) : Repository {
 
     private val pizRecipeDao: PizRecipeDao = db.pizRecipeDao
@@ -82,6 +99,22 @@ class RepositoryImpl(
     // get
     override suspend fun getPizRecipe(id: Long): PizRecipe? {
         return pizRecipeDao.findPizRecipeById(id)?.toRecipe()
+    }
+
+    override suspend fun getRecipeImage(urlOrWhatever: String): ImageBitmap? {
+        Log.e("Repo","Get Image")
+        if(urlOrWhatever == "")
+            return null
+        try {
+            val f = File(context.filesDir, "$urlOrWhatever.png")
+            return withContext(Dispatchers.IO) {
+                BitmapFactory.decodeStream(FileInputStream(f))
+            }.asImageBitmap()
+
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        }
+        return null
     }
 
     override suspend fun getPizIngredient(id: Long): PizIngredientEntity {
@@ -157,6 +190,38 @@ class RepositoryImpl(
 
     override suspend fun insertPizStepIngredients(pizStepIngredientEntities: List<PizStepIngredientEntity>) {
         pizStepIngredientDao.insertPizStepIngredients(pizStepIngredientEntities)
+    }
+
+
+    // save
+    override suspend fun saveRecipeImage(urlOrWhatever: String, bitmap: ImageBitmap){
+        Log.e("Repo","Save Image")
+        val f = File(context.filesDir, "$urlOrWhatever.png")
+        withContext(Dispatchers.IO) {
+            if (!f.exists()) {
+
+                f.createNewFile()
+            }
+
+            var fos: FileOutputStream? = null
+            try {
+                fos = FileOutputStream(f)
+
+                val androidBitmap = bitmap.asAndroidBitmap()
+                androidBitmap.setHasAlpha(true) // important for saving transparent background
+                androidBitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+
+            } catch (e: FileNotFoundException) {
+                e.printStackTrace()
+                Log.e("ARRRRR", "EHOFIH")
+            } finally {
+                try {
+                    fos?.let { fos.close() }
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+        }
     }
 
 

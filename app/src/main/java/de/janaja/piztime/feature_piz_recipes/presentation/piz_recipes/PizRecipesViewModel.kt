@@ -29,22 +29,29 @@ class PizRecipesViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             allPizRecipesUseCases.initDbIfEmptyUseCase()
         }
-        getPizRecipes()
+        observePizRecipes()
+//        loadPizRecipes()
     }
 
 
-    private fun getPizRecipes() {
+    private fun observePizRecipes() {
         getPizRecipesJob?.cancel()
         getPizRecipesJob = allPizRecipesUseCases.getAllPizRecipesFlowUseCase()
             .onEach {
                 _state.value = _state.value.copy(
-                    pizRecipes = it
+                    pizRecipes = it,
+                    recipeImages = it.map { recipe -> allPizRecipesUseCases.getRecipeImageUseCase(recipe.imageName) }
                 )
             }
             .launchIn(viewModelScope)
+    }
+
+    fun loadPizRecipes(){
         viewModelScope.launch(Dispatchers.IO) {
             allPizRecipesUseCases.loadAllPizRecipesUseCase()
         }
     }
+
+
 
 }

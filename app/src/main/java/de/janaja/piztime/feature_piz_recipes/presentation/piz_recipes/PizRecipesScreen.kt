@@ -18,6 +18,10 @@ fun PizRecipesScreen(
 ){
     val state = viewModel.state.value
 
+    LaunchedEffect(key1 = true, block = {
+        viewModel.loadPizRecipes()
+    })
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -29,6 +33,7 @@ fun PizRecipesScreen(
         state.pizRecipes.forEachIndexed() { index, pizRecipe ->
                 PizCard(
                     pizRecipeEntity = pizRecipe,
+                    recipeImage = state.recipeImages[index],
                     onClick = {
                         navController.navigate(Screen.PizRecipeDetailScreen.route + "pizRecipeId=${pizRecipe.id}")
                     },
