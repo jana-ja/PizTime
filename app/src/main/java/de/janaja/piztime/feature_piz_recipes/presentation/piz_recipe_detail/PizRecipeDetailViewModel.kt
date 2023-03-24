@@ -120,6 +120,11 @@ class PizRecipeDetailViewModel @Inject constructor(
         }
     }
 
+    private fun clickEditImage() {
+        _detailEditDialogState.value = _detailEditDialogState.value.copy(editDialogState = EditDialog.Image)
+        // TODO state anlegen der das aktuelle bild hat
+    }
+
     private fun clickEditIngredient(id: Long, isStepIngredient: Boolean, stepId: Long) {
         _detailEditDialogState.value = _detailEditDialogState.value.copy(editDialogState = EditDialog.Ingredient)
         // load correct ingredient to edit ingredient state
@@ -379,9 +384,11 @@ class PizRecipeDetailViewModel @Inject constructor(
                     firstLaunch = false
                 )
             }
+            PizRecipeDetailEvent.ClickEditImage -> {
+                clickEditImage()
+            }
         }
     }
-
 }
 
 

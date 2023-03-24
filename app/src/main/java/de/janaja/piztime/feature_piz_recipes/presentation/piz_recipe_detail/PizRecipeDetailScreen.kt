@@ -97,6 +97,9 @@ fun PizRecipeDetailView(
                         EditDialog.Header -> {
                             EditHeaderView()
                         }
+                        EditDialog.Image -> {
+                            EditImageView()
+                        }
                         EditDialog.Ingredient -> {
                             EditIngredientView()
                         }

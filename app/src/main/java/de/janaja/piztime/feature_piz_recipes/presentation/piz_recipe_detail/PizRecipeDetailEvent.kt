@@ -13,6 +13,8 @@ sealed class PizRecipeDetailEvent{
     object DismissDialog: PizRecipeDetailEvent()
     object ClickEdit: PizRecipeDetailEvent()
 
+    object ClickEditImage: PizRecipeDetailEvent()
+
 
     object ClickSaveIngredient : PizRecipeDetailEvent()
     object ClickSaveStep : PizRecipeDetailEvent()

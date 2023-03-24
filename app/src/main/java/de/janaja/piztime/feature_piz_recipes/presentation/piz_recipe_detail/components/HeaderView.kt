@@ -154,6 +154,9 @@ fun HeaderView(
                         //.padding(bottom = 16.dp)
                         .padding(start = 16.dp)
                         .rotate(pizRotation)
+                        .clickable {
+                            onEvent(PizRecipeDetailEvent.ClickEditImage)
+                        }
 
                 )
             }
