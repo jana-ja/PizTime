@@ -175,6 +175,7 @@ private fun CropImageDialog(
     onCompletion: (bitmap: ImageBitmap) -> Unit,
     onDismiss: () -> Unit
 ) {
+    // TODO sometimes crop does not work.
 
     val imageBitmap by remember { mutableStateOf(currentImage) }
     // TODO maybe change style?
