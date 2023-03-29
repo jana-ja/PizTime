@@ -67,18 +67,27 @@ fun EditImageView(
         ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         imageUri.value = uri
-    }
-    // if new image gets selected then save its bitmap to bitmap state var
-    // TODO compress image if it has high resolution for better performance!
-    if (imageUri.value != null) {
-        if (Build.VERSION.SDK_INT < 28) {
-            viewModel.onEvent(PizRecipeDetailEvent.ImageChanged(MediaStore.Images
-                .Media.getBitmap(context.contentResolver, imageUri.value).asImageBitmap(), state.imageName))
+        // if new image gets selected then save its bitmap to bitmap state var
+        // TODO compress image if it has high resolution for better performance!
+        if (imageUri.value != null) {
+            if (Build.VERSION.SDK_INT < 28) {
+                viewModel.onEvent(
+                    PizRecipeDetailEvent.ImageChanged(
+                        MediaStore.Images
+                            .Media.getBitmap(context.contentResolver, imageUri.value).asImageBitmap(), state.imageName
+                    )
+                )
 
-        } else {
-            val source = ImageDecoder
-                .createSource(context.contentResolver, imageUri.value!!)
-            viewModel.onEvent(PizRecipeDetailEvent.ImageChanged(ImageDecoder.decodeBitmap(source).asImageBitmap(), state.imageName))
+            } else {
+                val source = ImageDecoder
+                    .createSource(context.contentResolver, imageUri.value!!)
+                viewModel.onEvent(
+                    PizRecipeDetailEvent.ImageChanged(
+                        ImageDecoder.decodeBitmap(source).asImageBitmap(),
+                        state.imageName
+                    )
+                )
+            }
         }
     }
 
