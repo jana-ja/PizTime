@@ -1,5 +1,6 @@
 package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components
 
+import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -68,26 +69,40 @@ fun EditImageView(
     ) { uri: Uri? ->
         imageUri.value = uri
         // if new image gets selected then save its bitmap to bitmap state var
-        // TODO compress image if it has high resolution for better performance!
         if (imageUri.value != null) {
-            if (Build.VERSION.SDK_INT < 28) {
-                viewModel.onEvent(
-                    PizRecipeDetailEvent.ImageChanged(
-                        MediaStore.Images
-                            .Media.getBitmap(context.contentResolver, imageUri.value).asImageBitmap(), state.imageName
-                    )
-                )
+            val newBitmap =
+                if (Build.VERSION.SDK_INT < 28) {
+                    MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri.value).asImageBitmap()
 
+                } else {
+                    val source = ImageDecoder.createSource(context.contentResolver, imageUri.value!!)
+                    ImageDecoder.decodeBitmap(source).asImageBitmap()
+                }
+
+            // resize image
+            val inputRatio = newBitmap.width.toFloat() / newBitmap.height.toFloat()
+            val smallerSide = 860
+            val resizeWidth: Int
+            val resizeHeight: Int
+            if(newBitmap.width < newBitmap.height){
+                // portrait - ratio < 1
+                resizeWidth = smallerSide
+                resizeHeight = (resizeWidth / inputRatio).toInt()
             } else {
-                val source = ImageDecoder
-                    .createSource(context.contentResolver, imageUri.value!!)
-                viewModel.onEvent(
-                    PizRecipeDetailEvent.ImageChanged(
-                        ImageDecoder.decodeBitmap(source).asImageBitmap(),
-                        state.imageName
-                    )
-                )
+                // landscape - ratio >= 1
+                resizeHeight = smallerSide
+                resizeWidth = (inputRatio * resizeHeight).toInt()
             }
+            // Resize the image to the desired resolution
+            val resizedBitmap = Bitmap.createScaledBitmap(newBitmap.asAndroidBitmap(), resizeWidth, resizeHeight, true).asImageBitmap()
+
+            // update image state
+            viewModel.onEvent(
+                PizRecipeDetailEvent.ImageChanged(
+                    resizedBitmap,
+                    state.imageName
+                )
+            )
         }
     }
 
@@ -158,7 +173,14 @@ fun EditImageView(
             ) {
                 CropImageDialog(
                     currentImage = bitmap,
-                    onCompletion = { croppedBitmap -> viewModel.onEvent(PizRecipeDetailEvent.ImageChanged(croppedBitmap, state.imageName)); isCropDialogShown = false },
+                    onCompletion = { croppedBitmap ->
+                        viewModel.onEvent(
+                            PizRecipeDetailEvent.ImageChanged(
+                                croppedBitmap,
+                                state.imageName
+                            )
+                        ); isCropDialogShown = false
+                    },
                     onDismiss = { isCropDialogShown = false })
             }
         }

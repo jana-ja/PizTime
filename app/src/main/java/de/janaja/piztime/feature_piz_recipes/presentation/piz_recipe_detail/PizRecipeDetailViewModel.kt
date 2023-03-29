@@ -23,6 +23,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+
 // in clean architecture viewmodel calls use cases or changes things in state (that ui observes)
 @HiltViewModel
 class PizRecipeDetailViewModel @Inject constructor(
@@ -326,6 +327,34 @@ class PizRecipeDetailViewModel @Inject constructor(
             bitmap = bitmap,
             imageName = urlOrWhatever
         )
+
+        Log.i("edit image", "saving three images now")
+        // for testing: save full image, resized image and compressed image
+        viewModelScope.launch(Dispatchers.IO) {
+            allPizRecipesUseCases.saveRecipeImageUseCase(imageName = urlOrWhatever + "full", imageBitmap = bitmap)
+
+//            // testing resize and compression
+//            // ratio
+//            val width: Int = bitmap.width
+//            val height: Int = bitmap.height
+//            val ratioBitmap = width.toFloat() / height.toFloat()
+//
+//            val resizeWidth = 640
+//            val resizeHeight = (resizeWidth / ratioBitmap).toInt()
+//
+//            // Resize the image to the desired resolution
+//            val resizedBitmap = Bitmap.createScaledBitmap(bitmap.asAndroidBitmap(), resizeWidth, resizeHeight, true)
+//            allPizRecipesUseCases.saveRecipeImageUseCase(imageName = urlOrWhatever + "resized", imageBitmap = resizedBitmap.asImageBitmap())
+//
+//            // Compress the resized image
+//            val baos = ByteArrayOutputStream()
+//            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos)
+//            val imageBytes: ByteArray = baos.toByteArray()
+//            val inputStream = ByteArrayInputStream(imageBytes)
+//            val resizedCompressedBitmap = BitmapFactory.decodeStream(inputStream)
+//            allPizRecipesUseCases.saveRecipeImageUseCase(imageName = urlOrWhatever + "resized_compressed", imageBitmap = resizedCompressedBitmap.asImageBitmap())
+
+        }
     }
     private fun editStepDescription(value: String) {
         _editStepState.value = _editStepState.value.copy(
