@@ -16,7 +16,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -151,32 +154,48 @@ fun HeaderView(
                     .align(Alignment.TopEnd)
                 //.padding(top = 16.dp, end = 8.dp, bottom = 16.dp)
             ) {
-                if(recipeImage != null){
+                val imageModifier = Modifier
+                    .size(height)
+                    .padding(start = 16.dp)
+                    .rotate(pizRotation)
+                if (recipeImage != null) {
                     Image(
                         bitmap = recipeImage,
                         contentDescription = "Image of $title",
                         contentScale = ContentScale.Fit,
-                        modifier = Modifier
-                            .size(height)
-                            .padding(start = 16.dp)
-                            .rotate(pizRotation)
-                            .clickable {
-                                onEvent(PizRecipeDetailEvent.ClickEditImage)
-                            }
-
+                        modifier = imageModifier
                     )
                 } else {
                     Image(
                         painter = painterResource(id = R.drawable.bsp_piz),
                         contentDescription = "Image of $title",
                         contentScale = ContentScale.Fit,
+                        modifier = imageModifier
+                    )
+                }
+                // TODO animated visibility but keep alignment
+                if (editMode) {
+                    Box(modifier = Modifier
+                        .padding(start = 16.dp, top = 8.dp)
+                        .size(height-16.dp).clip(CircleShape)
+                        .alpha(0.5f)
+                        .background(Color.DarkGray)
+                        .clickable {
+                            onEvent(PizRecipeDetailEvent.ClickEditImage)
+                        }
+                    )
+                    Icon(
+                        Icons.Default.Edit,
+                        "edit ingredient",
                         modifier = Modifier
-                            .size(height)
                             .padding(start = 16.dp)
-                            .rotate(pizRotation)
+                            .size(30.dp)
+                            .background(MaterialTheme.colorScheme.secondaryContainer, CircleShape)
+                            .padding(6.dp)
                             .clickable {
                                 onEvent(PizRecipeDetailEvent.ClickEditImage)
                             }
+                            .align(Alignment.Center)
 
                     )
                 }
