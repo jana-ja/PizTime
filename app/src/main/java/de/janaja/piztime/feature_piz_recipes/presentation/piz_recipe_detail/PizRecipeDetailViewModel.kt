@@ -223,10 +223,6 @@ class PizRecipeDetailViewModel @Inject constructor(
                 currentRecipeId?.let {
                     // reload data
                     allPizRecipesUseCases.loadPizRecipeWithDetailsUseCase(it)
-//                    // (only pass data, don't reload from repo TODO in other places i reload..)
-//                    _pizRecipeState.value = _pizRecipeState.value.copy(
-//                        imageBitmap = state.bitmap
-//                    )
                 }
             } else {
                 _eventFlow.emit(UiEvent.ShowToast("Wähle ein Bild aus oder bearbeite es um zu speichern."))

@@ -101,12 +101,12 @@ class RepositoryImpl(
         return pizRecipeDao.findPizRecipeById(id)?.toRecipe()
     }
 
-    override suspend fun getRecipeImage(urlOrWhatever: String): ImageBitmap? {
+    override suspend fun getRecipeImage(imageName: String): ImageBitmap? {
         Log.e("Repo","Get Image")
-        if(urlOrWhatever == "")
+        if(imageName == "")
             return null
         try {
-            val f = File(context.filesDir, "$urlOrWhatever.png")
+            val f = File(context.filesDir, "$imageName.png")
             return withContext(Dispatchers.IO) {
                 BitmapFactory.decodeStream(FileInputStream(f))
             }.asImageBitmap()
