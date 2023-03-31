@@ -270,8 +270,6 @@ private fun CropImageDialog(
         }
     ) { paddingValues ->
 
-        // TODO sometimes crop does not work. maybe its taking too long? need to do sth in onCrpoStart?
-
         ImageCropper(
             modifier = Modifier
                 .padding(paddingValues)

@@ -33,7 +33,7 @@ interface Repository {
     // get
     suspend fun getPizStep(id: Long): PizStepEntity
     suspend fun getPizRecipe(id: Long): PizRecipe?
-    suspend fun getRecipeImage(urlOrWhatever: String): ImageBitmap?
+    suspend fun getRecipeImage(imageName: String): ImageBitmap?
     suspend fun getPizIngredient(id: Long): PizIngredientEntity
     suspend fun getPizStepIngredient(id: Long): PizStepIngredientEntity
 
