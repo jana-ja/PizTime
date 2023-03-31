@@ -30,6 +30,7 @@ import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipeWithDetails
 import de.janaja.piztime.feature_piz_recipes.domain.util.EditDialog
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components.*
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
+import de.janaja.piztime.feature_piz_recipes.presentation.util.Screen
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -45,11 +46,12 @@ fun PizRecipeDetailScreen(
 
     val context = LocalContext.current
     BackHandler {
-        // TODO reload data when navigating up
-        navController.popBackStack()
-//        navController.navigate(Screen.PizRecipesScreen.route)
-        //.navigateUp() // launched effect in piz recipe screen is not triggered with navigate up
+        // navigate to home screen to trigger launched effect to reload data, but without it being in the route two times
+        navController.navigate( Screen.PizRecipesScreen.route) {
+            popUpTo(Screen.PizRecipesScreen.route) { inclusive = true }
+        }
     }
+
     PizRecipeDetailView(
         modifier = Modifier,//.offset(x = offset.dp),
         recipeState.pizRecipe,
