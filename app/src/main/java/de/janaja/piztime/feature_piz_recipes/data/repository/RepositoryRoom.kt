@@ -120,7 +120,7 @@ class RepositoryRoom(
         return pizIngredientDao.getPizIngredient(id).toPizIngredient()
     }
 
-    override suspend fun getPizStepWithoutIngredients(id: String): PizStepWithIngredients {
+    override suspend fun getPizStepWithoutIngredients(id: String, recipeId: String): PizStepWithIngredients {
         return pizStepDao.getStep(id).toPizStepWithoutIngredients()
     }
 

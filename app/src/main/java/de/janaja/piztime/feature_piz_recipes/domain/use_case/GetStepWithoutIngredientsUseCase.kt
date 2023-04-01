@@ -6,7 +6,7 @@ import de.janaja.piztime.feature_piz_recipes.domain.repository.Repository
 class GetStepWithoutIngredientsUseCase (
     private val repository: Repository
 ){
-    suspend operator fun invoke(id: String): PizStepWithIngredients? {
-        return repository.getPizStepWithoutIngredients(id)
+    suspend operator fun invoke(id: String, recipeId: String): PizStepWithIngredients? {
+        return repository.getPizStepWithoutIngredients(id, recipeId)
     }
 }

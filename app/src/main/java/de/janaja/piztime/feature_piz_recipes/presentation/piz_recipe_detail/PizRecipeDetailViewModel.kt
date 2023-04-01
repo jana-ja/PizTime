@@ -173,19 +173,21 @@ class PizRecipeDetailViewModel @Inject constructor(
     }
 
     private fun clickEditStep(id: String) {
-        _detailEditDialogState.value = _detailEditDialogState.value.copy(editDialogState = EditDialog.Step)
-        viewModelScope.launch(Dispatchers.IO) {
-            val stepWithoutIngredients = allPizRecipesUseCases.getStepWithoutIngredientsUseCase(id)
-            if(stepWithoutIngredients != null) {
-                withContext(Dispatchers.Main) {
-                    _editStepState.value = _editStepState.value.copy(
-                        id = id,
-                        description = stepWithoutIngredients.description
-                    )
-                }
-            } else {
-                viewModelScope.launch {
-                    _eventFlow.emit(UiEvent.ShowToast("Der Schritt wurde nicht gefunden."))
+        currentRecipeId?.let {
+            _detailEditDialogState.value = _detailEditDialogState.value.copy(editDialogState = EditDialog.Step)
+            viewModelScope.launch(Dispatchers.IO) {
+                val stepWithoutIngredients = allPizRecipesUseCases.getStepWithoutIngredientsUseCase(id, it)
+                if (stepWithoutIngredients != null) {
+                    withContext(Dispatchers.Main) {
+                        _editStepState.value = _editStepState.value.copy(
+                            id = id,
+                            description = stepWithoutIngredients.description
+                        )
+                    }
+                } else {
+                    viewModelScope.launch {
+                        _eventFlow.emit(UiEvent.ShowToast("Der Schritt wurde nicht gefunden."))
+                    }
                 }
             }
         }
