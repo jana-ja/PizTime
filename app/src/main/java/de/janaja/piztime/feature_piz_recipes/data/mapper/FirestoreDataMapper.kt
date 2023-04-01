@@ -19,6 +19,16 @@ fun PizRecipe.toHashMap(): HashMap<String, Any> {
     )
 }
 
+fun PizRecipeWithDetails.toHashMap(): HashMap<String, Any> {
+    return hashMapOf(
+        "title" to title,
+        "feature" to feature,
+        "imageName" to imageName,
+        "prepTime" to prepTime,
+        "id" to id
+    )
+}
+
 fun PizIngredient.toHashMap(): Map<String, Any> {
     return hashMapOf(
         "ingredient" to ingredient,

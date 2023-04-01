@@ -33,7 +33,28 @@ class RepositoryFirestore : Repository {
     override val allPizRecipesFlow = _allPizRecipesFlow.asStateFlow()
 
     override suspend fun initDbIfEmpty() {
-        // TODO "Not yet implemented"
+        // executed this once, don't need to do it again
+        return
+
+
+        DummyData.DummyRecipeWithDetailsData.forEach { recipe ->
+            // insert piz recipe
+            val recipesRef = db.collection(recipesPath)
+            recipesRef.document(recipe.id)
+                .set(recipe.toHashMap())
+                .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+                .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+
+            // insert ingredients
+            insertPizIngredients(recipe.ingredients, recipe.id)
+
+            // insert steps with ingredients
+            recipe.steps.forEach { stepWithIngredients ->
+                insertPizStep(stepWithIngredients, recipe.id)
+                insertPizStepIngredients(stepWithIngredients.ingredients, recipe.id, stepWithIngredients.id)
+            }
+        }
+        loadAllPizRecipes()
     }
 
     // load
@@ -146,7 +167,8 @@ class RepositoryFirestore : Repository {
     }
 
     override suspend fun getPizStepWithoutIngredients(id: String, recipeId: String): PizStepWithIngredients? {
-        val stepDocument = db.collection(recipesPath).document(recipeId).collection(stepsPath).document(id).get().await()
+        val stepDocument =
+            db.collection(recipesPath).document(recipeId).collection(stepsPath).document(id).get().await()
         return if (stepDocument.data != null) {
             try {
                 stepDocument.toPizStepWithoutIngredients()
@@ -243,7 +265,8 @@ class RepositoryFirestore : Repository {
     }
 
     override suspend fun insertPizStepIngredient(pizStepIngredient: PizIngredient, recipeId: String, stepId: String) {
-        val stepIngredientsRef = db.collection(recipesPath).document(recipeId).collection(stepsPath).document(stepId).collection(ingredientsPath)
+        val stepIngredientsRef = db.collection(recipesPath).document(recipeId).collection(stepsPath).document(stepId)
+            .collection(ingredientsPath)
         stepIngredientsRef.document(pizStepIngredient.id)
             .set(pizStepIngredient.toHashMap())
             .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
@@ -264,8 +287,13 @@ class RepositoryFirestore : Repository {
             .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
     }
 
-    override suspend fun insertPizStepIngredients(pizStepIngredients: List<PizIngredient>, recipeId: String, stepId: String) {
-        val stepIngredientsRef = db.collection(recipesPath).document(recipeId).collection(stepsPath).document(stepId).collection(ingredientsPath)
+    override suspend fun insertPizStepIngredients(
+        pizStepIngredients: List<PizIngredient>,
+        recipeId: String,
+        stepId: String
+    ) {
+        val stepIngredientsRef = db.collection(recipesPath).document(recipeId).collection(stepsPath).document(stepId)
+            .collection(ingredientsPath)
         pizStepIngredients.forEach {
             stepIngredientsRef.document(it.id)
                 .set(it.toHashMap())
