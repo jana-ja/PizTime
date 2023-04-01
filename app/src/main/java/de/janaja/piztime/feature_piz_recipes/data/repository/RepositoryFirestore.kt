@@ -187,22 +187,6 @@ class RepositoryFirestore : Repository {
         }
     }
 
-    // TODO wird das benutzt?
-    override suspend fun deletePizStepsForRecipeId(recipeId: String) {
-        // delete steps with their ingredients
-        val stepCollectionRef = db.collection(recipesPath).document(recipeId).collection(stepsPath)
-        val stepResult = stepCollectionRef.get().await()
-        for (stepDocument in stepResult) {
-//            // delete step ingredients
-//            deletePizStepIngredientsForStepId(stepDocument.id)
-            // delete step
-            stepCollectionRef.document(stepDocument.id)
-                .delete()
-                .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully deleted!") }
-                .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
-        }
-    }
-
     override suspend fun deletePizStepIngredientsForStepId(stepId: String, recipeId: String) {
         val stepIngredientCollection =
             db.collection(recipesPath).document(recipeId).collection(stepsPath).document(stepId)

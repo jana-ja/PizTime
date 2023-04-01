@@ -146,10 +146,6 @@ class RepositoryRoom(
         pizIngredientDao.deletePizIngredientsForRecipeId(recipeId)
     }
 
-    override suspend fun deletePizStepsForRecipeId(recipeId: String) {
-        pizStepDao.deletePizStepsForRecipeId(recipeId)
-    }
-
     override suspend fun deletePizStepIngredientsForStepId(stepId: String, recipeId: String) {
         pizStepIngredientDao.deletePizStepIngredientsForRecipeId(stepId)
     }
