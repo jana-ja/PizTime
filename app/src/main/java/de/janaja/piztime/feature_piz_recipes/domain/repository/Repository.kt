@@ -35,10 +35,6 @@ interface Repository {
     suspend fun getPizStepWithoutIngredients(id: Long): PizStepWithIngredients
     suspend fun getPizStepIngredient(id: Long): PizIngredient
 
-//    // find by
-//    suspend fun findPizIngredientsByPizRecipeId(pizRecipeId: Long): List<PizIngredient>
-//    fun findPizStepsWithIngredientsByPizRecipeId(pizRecipeId: Long): PizStepWithIngredients
-
     // delete
     suspend fun deletePizIngredientsForRecipeId(recipeId: Long)
     suspend fun deletePizStepsForRecipeId(recipeId: Long)

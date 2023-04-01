@@ -128,17 +128,6 @@ class RepositoryRoom(
         return pizStepIngredientDao.getPizStepIngredient(id).toPizIngredient()
     }
 
-
-//    // find by
-//    override suspend fun findPizIngredientsByPizRecipeId(pizRecipeId: Long): List<PizIngredient> {
-//        return pizIngredientDao.findPizIngredientsByPizRecipeIdFlow(pizRecipeId)
-//    }
-//
-//    override fun findPizStepsWithIngredientsByPizRecipeId(pizRecipeId: Long): Map<PizStepEntity, List<PizStepIngredientEntity>> {
-//        return pizStepDao.findPizStepsWithPizStepIngredientsByPizRecipeIdFlow(pizRecipeId)
-//    }
-
-
     // delete
     override suspend fun deletePizStepWithIngredients(id: Long) {
         pizStepDao.deletePizStep(id)
