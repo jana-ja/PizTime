@@ -6,10 +6,10 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import de.janaja.piztime.feature_piz_recipes.data.repository.RepositoryRoom
 import de.janaja.piztime.feature_piz_recipes.domain.repository.Repository
 import de.janaja.piztime.feature_piz_recipes.domain.use_case.*
 import de.janaja.piztime.feature_piz_recipes.data.local.PizRecipeDatabase
+import de.janaja.piztime.feature_piz_recipes.data.repository.RepositoryFirestore
 import javax.inject.Singleton
 
 // wenn man mehrere features hat könnte man auch pro feature ein di ding machen
@@ -29,7 +29,7 @@ object AppModule {
     @Provides
     @Singleton
     fun providePizRecipeRepository(db: PizRecipeDatabase, app: Application): Repository {
-        return /*RepositoryFirestore()*/RepositoryRoom(db, app)
+        return RepositoryFirestore()//RepositoryRoom(db, app)
     }
 
     @Provides
