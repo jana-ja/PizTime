@@ -14,10 +14,10 @@ interface PizIngredientDao {
 //    suspend fun addAllPizIngredients(pizIngredients: List<PizIngredient>)
 
     @Query("SELECT * FROM PizIngredientEntity WHERE recipeIdMap = :pizRecipeId")
-    suspend fun findPizIngredientsByPizRecipeIdFlow(pizRecipeId: Long): List<PizIngredientEntity>
+    suspend fun findPizIngredientsByPizRecipeIdFlow(pizRecipeId: String): List<PizIngredientEntity>
 
     @Query("SELECT * FROM PizIngredientEntity WHERE recipeIdMap = :pizRecipeId")
-    fun findPizIngredientsByPizRecipeId(pizRecipeId: Long): List<PizIngredientEntity>
+    fun findPizIngredientsByPizRecipeId(pizRecipeId: String): List<PizIngredientEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPizIngredients(pizIngredientEntities: List<PizIngredientEntity>)
@@ -26,11 +26,11 @@ interface PizIngredientDao {
     suspend fun insertPizIngredient(pizIngredientEntitiy: PizIngredientEntity)
 
     @Query("SELECT * FROM PizIngredientEntity WHERE ingredientId = :id")
-    suspend fun getPizIngredient(id: Long): PizIngredientEntity
+    suspend fun getPizIngredient(id: String): PizIngredientEntity
 
     @Query("DELETE FROM PizIngredientEntity WHERE recipeIdMap = :recipeId")
-    suspend fun deletePizIngredientsForRecipeId(recipeId: Long)
+    suspend fun deletePizIngredientsForRecipeId(recipeId: String)
 
     @Query("DELETE FROM PizIngredientEntity WHERE ingredientId = :id")
-    suspend fun deletePizIngredient(id: Long)
+    suspend fun deletePizIngredient(id: String)
 }

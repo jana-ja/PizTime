@@ -34,7 +34,7 @@ fun PizRecipeWithDetails.toEntityCollection(): EntityCollection {
     val pizStepWithIngredientEntities: List<Pair<PizStepEntity, List<PizStepIngredientEntity>>> =
         steps.map { stepWithIngredient ->
             Pair(
-                PizStepEntity(stepWithIngredient.description, recipeId),
+                PizStepEntity(stepWithIngredient.description, recipeId, stepWithIngredient.id),
                 stepWithIngredient.ingredients.map { ingredient ->
                     PizStepIngredientEntity(
                         ingredient.ingredient,
@@ -52,15 +52,15 @@ fun PizRecipeWithDetails.toEntityCollection(): EntityCollection {
     )
 }
 
-fun PizIngredient.toPizIngredientEntity(recipeId: Long): PizIngredientEntity {
+fun PizIngredient.toPizIngredientEntity(recipeId: String): PizIngredientEntity {
     return PizIngredientEntity(this.ingredient, this.baseAmount, recipeId, this.id)
 }
 
-fun PizIngredient.toPizStepIngredientEntity(stepId: Long): PizStepIngredientEntity {
+fun PizIngredient.toPizStepIngredientEntity(stepId: String): PizStepIngredientEntity {
     return PizStepIngredientEntity(this.ingredient, this.baseAmount, stepId, this.id)
 }
 
-fun PizStepWithIngredients.toPizStepEntity(recipeId: Long): PizStepEntity {
+fun PizStepWithIngredients.toPizStepEntity(recipeId: String): PizStepEntity {
     return PizStepEntity(this.description, recipeId, this.id)
 }
 

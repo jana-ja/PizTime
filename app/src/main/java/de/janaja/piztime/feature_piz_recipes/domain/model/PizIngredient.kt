@@ -1,9 +1,11 @@
 package de.janaja.piztime.feature_piz_recipes.domain.model
 
+import java.util.UUID
 
-class PizIngredient(
+
+data class PizIngredient(
     var ingredient: String,
     var baseAmount: Double,
-    var id: Long = 0
+    var id: String = UUID.randomUUID().toString()
 ) {
 }

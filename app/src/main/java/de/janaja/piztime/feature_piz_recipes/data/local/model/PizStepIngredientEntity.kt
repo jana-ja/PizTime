@@ -9,9 +9,9 @@ class PizStepIngredientEntity(
     var ingredient: String,
     var baseStepAmount: Double,
     @ColumnInfo(name="stepidMap")
-    var stepId: Long = 0,
-    @PrimaryKey(autoGenerate = true)
+    var stepId: String,
+    @PrimaryKey()
     @ColumnInfo(name="stepIngredientId")
-    var id: Long = 0
+    var id: String
 ) {
 }

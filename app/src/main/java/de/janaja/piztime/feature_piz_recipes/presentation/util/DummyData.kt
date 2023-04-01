@@ -7,7 +7,7 @@ import de.janaja.piztime.feature_piz_recipes.domain.model.PizStepWithIngredients
 
 object DummyData {
     // preview
-    val DummyPizRecipe = PizRecipe("Pizza Neapel", "Fluffiger Rand", "neapel_image", 26.0, id = 1)
+    val DummyPizRecipe = PizRecipe("Pizza Neapel", "Fluffiger Rand", "neapel_image", 26.0, id = "1")
     val DummyIngredients = listOf(
         PizIngredient("Mehl", 149.0),
         PizIngredient("Water", 97.0),
@@ -60,7 +60,7 @@ object DummyData {
         26.0,
         DummyIngredients,
         DummySteps,
-        id = 1
+        id = "1"
     )
 
 
@@ -91,7 +91,7 @@ object DummyData {
                     )
                 )
             ),
-            id = 2
+            id = "2"
         ),
         PizRecipeWithDetails(
             "Pizza New York", "Fett sein", "new_york_image", 26.0,
@@ -104,7 +104,7 @@ object DummyData {
                 PizIngredient("Trockenhefe", 0.8)
             ),
             listOf(PizStepWithIngredients("back die piz", listOf())),
-            id = 3
+            id = "3"
         )
     )
 

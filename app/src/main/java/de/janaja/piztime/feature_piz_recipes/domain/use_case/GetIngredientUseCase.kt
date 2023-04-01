@@ -6,7 +6,7 @@ import de.janaja.piztime.feature_piz_recipes.domain.repository.Repository
 class GetIngredientUseCase (
     private val repository: Repository
 ){
-    suspend operator fun invoke(id: Long, isStepIngredient: Boolean): PizIngredient {
+    suspend operator fun invoke(id: String, isStepIngredient: Boolean): PizIngredient {
         if(isStepIngredient) {
             return repository.getPizStepIngredient(id)
         } else {

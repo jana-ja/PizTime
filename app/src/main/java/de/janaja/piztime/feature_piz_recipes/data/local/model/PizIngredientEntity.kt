@@ -9,10 +9,9 @@ class PizIngredientEntity(
     var ingredient: String,
     var baseAmount: Double,
     @ColumnInfo(name="recipeIdMap")
-    var recipeId: Long = 0,
-
-    @PrimaryKey(autoGenerate = true)
+    var recipeId: String,
+    @PrimaryKey
     @ColumnInfo(name="ingredientId")
-    var id: Long = 0
+    var id: String
 ) {
 }

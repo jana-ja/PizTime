@@ -87,7 +87,7 @@ fun IngredientsView(
                                 clickableModifier =
                                     clickableModifier
                                         .clickable {
-                                            onEvent(PizRecipeDetailEvent.ClickEditIngredient(ingredient.id))
+                                            onEvent(PizRecipeDetailEvent.ClickEditIngredient(id = ingredient.id, stepId = null))
                                         }
 
                             }
@@ -125,7 +125,8 @@ fun IngredientsView(
                                 clickableModifier.clickable {
                                     onEvent(
                                         PizRecipeDetailEvent.ClickEditIngredient(
-                                            ingredient.id
+                                            ingredient.id,
+                                            stepId = null
                                         )
                                     )
                                 }
@@ -144,7 +145,7 @@ fun IngredientsView(
                 AnimatedVisibility (editMode) {
                     FilledTonalButton(
                         modifier = Modifier.padding(top = 8.dp, start = 32.dp),
-                        onClick = { onEvent(PizRecipeDetailEvent.ClickAddIngredient(false)) })
+                        onClick = { onEvent(PizRecipeDetailEvent.ClickAddIngredient(false, null)) })
                     {
                         Text(
                             "add Ingredient",

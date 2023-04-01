@@ -26,30 +26,30 @@ interface Repository {
      * Try to load Recipe With Ingredients and Steps from db and update into Flow member.
      * Observe the Flow variable to retrieve the data.
      */
-    suspend fun loadPizRecipeWithDetails(id: Long)
+    suspend fun loadPizRecipeWithDetails(id: String)
 
     // get
-    suspend fun getPizRecipe(id: Long): PizRecipe?
+    suspend fun getPizRecipe(id: String): PizRecipe?
     suspend fun getRecipeImage(imageName: String): ImageBitmap?
-    suspend fun getPizIngredient(id: Long): PizIngredient
-    suspend fun getPizStepWithoutIngredients(id: Long): PizStepWithIngredients
-    suspend fun getPizStepIngredient(id: Long): PizIngredient
+    suspend fun getPizIngredient(id: String): PizIngredient
+    suspend fun getPizStepWithoutIngredients(id: String): PizStepWithIngredients
+    suspend fun getPizStepIngredient(id: String): PizIngredient
 
     // delete
-    suspend fun deletePizIngredientsForRecipeId(recipeId: Long)
-    suspend fun deletePizStepsForRecipeId(recipeId: Long)
-    suspend fun deletePizStepIngredientsForStepId(stepId: Long)
-    suspend fun deletePizStepWithIngredients(id: Long)
-    suspend fun deletePizStepIngredient(id: Long)
-    suspend fun deletePizIngredient(id: Long)
+    suspend fun deletePizIngredientsForRecipeId(recipeId: String)
+    suspend fun deletePizStepsForRecipeId(recipeId: String)
+    suspend fun deletePizStepIngredientsForStepId(stepId: String)
+    suspend fun deletePizStepWithIngredients(id: String)
+    suspend fun deletePizStepIngredient(id: String)
+    suspend fun deletePizIngredient(id: String)
 
     // insert
-    suspend fun insertPizIngredients(pizIngredients: List<PizIngredient>, recipeId: Long)
-    suspend fun insertPizIngredient(pizIngredient: PizIngredient, mapId: Long)
-    suspend fun insertPizStepIngredient(pizStepIngredient: PizIngredient, mapId: Long)
-    suspend fun insertPizSteps(pizSteps: List<PizStepWithIngredients>, recipeId: Long)
-    suspend fun insertPizStep(pizStep: PizStepWithIngredients, recipeId: Long)
-    suspend fun insertPizStepIngredients(pizStepIngredients: List<PizIngredient>, stepId: Long)
+    suspend fun insertPizIngredients(pizIngredients: List<PizIngredient>, recipeId: String)
+    suspend fun insertPizIngredient(pizIngredient: PizIngredient, mapId: String)
+    suspend fun insertPizStepIngredient(pizStepIngredient: PizIngredient, mapId: String)
+    suspend fun insertPizSteps(pizSteps: List<PizStepWithIngredients>, recipeId: String)
+    suspend fun insertPizStep(pizStep: PizStepWithIngredients, recipeId: String)
+    suspend fun insertPizStepIngredients(pizStepIngredients: List<PizIngredient>, stepId: String)
 
     // save
     suspend fun saveRecipeImage(urlOrWhatever: String, bitmap: ImageBitmap)

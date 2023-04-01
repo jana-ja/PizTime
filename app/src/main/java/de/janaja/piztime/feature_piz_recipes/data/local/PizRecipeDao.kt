@@ -14,10 +14,10 @@ interface PizRecipeDao {
     suspend fun addPizRecipe(pizRecipeEntity: PizRecipeEntity)
 
     @Query("SELECT * FROM PizRecipeEntity WHERE recipeId = :id")
-    fun findPizRecipeByIdFlow(id: Long): Flow<PizRecipeEntity?>
+    fun findPizRecipeByIdFlow(id: String): Flow<PizRecipeEntity?>
 
     @Query("SELECT * FROM PizRecipeEntity WHERE recipeId = :id")
-    fun findPizRecipeById(id: Long): PizRecipeEntity?
+    fun findPizRecipeById(id: String): PizRecipeEntity?
 
     @Query("SELECT * FROM PizRecipeEntity")
     fun getAllPizRecipes(): List<PizRecipeEntity>
@@ -29,5 +29,5 @@ interface PizRecipeDao {
     suspend fun isEmpty(): Boolean
 
     @Query("DELETE FROM PizRecipeEntity WHERE recipeId = :id")
-    suspend fun deletePizRecipe(id: Long)
+    suspend fun deletePizRecipe(id: String)
 }

@@ -8,10 +8,10 @@ import androidx.room.PrimaryKey
 data class PizStepEntity(
     var description: String,
     @ColumnInfo(name="recipeIdMap")
-    var recipeId: Long = 0,
-    @PrimaryKey(autoGenerate = true)
+    var recipeId: String,
+    @PrimaryKey()
     @ColumnInfo(name="stepid")
-    var id: Long = 0
+    var id: String
 ) {
 
 }

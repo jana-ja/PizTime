@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.UUID
 import javax.inject.Inject
 
 
@@ -63,10 +64,10 @@ class PizRecipeDetailViewModel @Inject constructor(
 
     private var getPizRecipeWithdetailsJob: Job? = null
 
-    private var currentRecipeId: Long? = null
+    private var currentRecipeId: String? = null
 
     init {
-        savedStateHandle.get<Long>("pizRecipeId")?.let { id ->
+        savedStateHandle.get<String>("pizRecipeId")?.let { id ->
             currentRecipeId = id
             getPizRecipeWithDetails(id)
         }
@@ -77,7 +78,7 @@ class PizRecipeDetailViewModel @Inject constructor(
     }
 
     // standard detail screen
-    private fun getPizRecipeWithDetails(id: Long) {
+    private fun getPizRecipeWithDetails(id: String) {
         // observe result
         getPizRecipeWithdetailsJob?.cancel()
         getPizRecipeWithdetailsJob = allPizRecipesUseCases.getPizRecipeWithDetailsFlowUseCase().onEach {
@@ -144,13 +145,13 @@ class PizRecipeDetailViewModel @Inject constructor(
         }
     }
 
-    private fun clickEditIngredient(id: Long, isStepIngredient: Boolean, stepId: Long) {
+    private fun clickEditIngredient(id: String, isStepIngredient: Boolean, stepId: String?) {
         _detailEditDialogState.value = _detailEditDialogState.value.copy(editDialogState = EditDialog.Ingredient)
         // load correct ingredient to edit ingredient state
-        if (isStepIngredient && currentRecipeId == null) {
+        if (stepId == null && currentRecipeId == null) {
             return
         }
-        val mapId = if (isStepIngredient) stepId else currentRecipeId!!
+        val mapId = if (isStepIngredient && stepId != null) stepId else currentRecipeId!!
 
         viewModelScope.launch(Dispatchers.IO) {
             val ingredient = allPizRecipesUseCases.getIngredientUseCase(id, isStepIngredient)
@@ -166,7 +167,7 @@ class PizRecipeDetailViewModel @Inject constructor(
         }
     }
 
-    private fun clickEditStep(id: Long) {
+    private fun clickEditStep(id: String) {
         _detailEditDialogState.value = _detailEditDialogState.value.copy(editDialogState = EditDialog.Step)
         viewModelScope.launch(Dispatchers.IO) {
             val stepWithoutIngredients = allPizRecipesUseCases.getStepWithoutIngredientsUseCase(id)
@@ -360,16 +361,16 @@ class PizRecipeDetailViewModel @Inject constructor(
     }
 
     // edit add/delete
-    private fun editAddIngredient(isStepIngredient: Boolean, stepId: Long) {
+    private fun editAddIngredient(isStepIngredient: Boolean, stepId: String?) {
         _detailEditDialogState.value = _detailEditDialogState.value.copy(editDialogState = EditDialog.Ingredient)
         // load correct ingredient to edit ingredient state
         if (isStepIngredient && currentRecipeId == null) {
             return
         }
-        val mapId = if (isStepIngredient) stepId else currentRecipeId!!
+        val mapId = if (isStepIngredient && stepId != null) stepId else currentRecipeId!!
 
         _editIngredientState.value = _editIngredientState.value.copy(
-            id = 0,
+            id = UUID.randomUUID().toString(),
             ingredientName = "",
             ingredientAmount = "",
             isStepIngredient = isStepIngredient,
@@ -381,7 +382,7 @@ class PizRecipeDetailViewModel @Inject constructor(
         _detailEditDialogState.value = _detailEditDialogState.value.copy(editDialogState = EditDialog.Step)
         // load correct step to edit ingredient state
         _editStepState.value = _editStepState.value.copy(
-            id = 0,
+            id = UUID.randomUUID().toString(),
             description = ""
         )
 

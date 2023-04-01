@@ -53,9 +53,9 @@ class RepositoryRoom(
                 }
                 bla.pizStepWithIngredientEntities.forEach { stepWithIngredients ->
                     val step = stepWithIngredients.first
-                    val newId = pizStepDao.addPizStep(step)
+                    pizStepDao.addPizStep(step)
                     stepWithIngredients.second.forEach { ingredient ->
-                        ingredient.stepId = newId
+                        ingredient.stepId = step.id
                         pizStepIngredientDao.addPizStepIngredient(ingredient)
                     }
                 }
@@ -73,7 +73,7 @@ class RepositoryRoom(
         }
     }
 
-    override suspend fun loadPizRecipeWithDetails(id: Long) {
+    override suspend fun loadPizRecipeWithDetails(id: String) {
 
         pizRecipeDao.findPizRecipeById(id)?.let {
             val pizRecipeEntity: PizRecipeEntity = it
@@ -96,7 +96,7 @@ class RepositoryRoom(
 
 
     // get
-    override suspend fun getPizRecipe(id: Long): PizRecipe? {
+    override suspend fun getPizRecipe(id: String): PizRecipe? {
         return pizRecipeDao.findPizRecipeById(id)?.toRecipe()
     }
 
@@ -116,67 +116,67 @@ class RepositoryRoom(
         return null
     }
 
-    override suspend fun getPizIngredient(id: Long): PizIngredient {
+    override suspend fun getPizIngredient(id: String): PizIngredient {
         return pizIngredientDao.getPizIngredient(id).toPizIngredient()
     }
 
-    override suspend fun getPizStepWithoutIngredients(id: Long): PizStepWithIngredients {
+    override suspend fun getPizStepWithoutIngredients(id: String): PizStepWithIngredients {
         return pizStepDao.getStep(id).toPizStepWithoutIngredients()
     }
 
-    override suspend fun getPizStepIngredient(id: Long): PizIngredient {
+    override suspend fun getPizStepIngredient(id: String): PizIngredient {
         return pizStepIngredientDao.getPizStepIngredient(id).toPizIngredient()
     }
 
     // delete
-    override suspend fun deletePizStepWithIngredients(id: Long) {
+    override suspend fun deletePizStepWithIngredients(id: String) {
         pizStepDao.deletePizStep(id)
         pizStepIngredientDao.deletePizStepIngredientsForStepId(id)
     }
 
-    override suspend fun deletePizStepIngredient(id: Long) {
+    override suspend fun deletePizStepIngredient(id: String) {
         pizStepIngredientDao.deletePizStepIngredient(id)
     }
 
-    override suspend fun deletePizIngredient(id: Long) {
+    override suspend fun deletePizIngredient(id: String) {
         pizIngredientDao.deletePizIngredient(id)
     }
 
-    override suspend fun deletePizIngredientsForRecipeId(recipeId: Long) {
+    override suspend fun deletePizIngredientsForRecipeId(recipeId: String) {
         pizIngredientDao.deletePizIngredientsForRecipeId(recipeId)
     }
 
-    override suspend fun deletePizStepsForRecipeId(recipeId: Long) {
+    override suspend fun deletePizStepsForRecipeId(recipeId: String) {
         pizStepDao.deletePizStepsForRecipeId(recipeId)
     }
 
-    override suspend fun deletePizStepIngredientsForStepId(stepId: Long) {
+    override suspend fun deletePizStepIngredientsForStepId(stepId: String) {
         pizStepIngredientDao.deletePizStepIngredientsForRecipeId(stepId)
     }
 
 
     // insert
-    override suspend fun insertPizIngredients(pizIngredients: List<PizIngredient>, recipeId: Long) {
+    override suspend fun insertPizIngredients(pizIngredients: List<PizIngredient>, recipeId: String) {
         pizIngredientDao.insertPizIngredients(pizIngredients.map { pizIngredient -> pizIngredient.toPizIngredientEntity(recipeId) })
     }
 
-    override suspend fun insertPizIngredient(pizIngredient: PizIngredient, mapId: Long) {
+    override suspend fun insertPizIngredient(pizIngredient: PizIngredient, mapId: String) {
         pizIngredientDao.insertPizIngredient(pizIngredient.toPizIngredientEntity(mapId))
     }
 
-    override suspend fun insertPizStepIngredient(pizStepIngredient: PizIngredient, mapId: Long) {
+    override suspend fun insertPizStepIngredient(pizStepIngredient: PizIngredient, mapId: String) {
         pizStepIngredientDao.insertPizStepIngredient(pizStepIngredient.toPizStepIngredientEntity(mapId))
     }
 
-    override suspend fun insertPizSteps(pizSteps: List<PizStepWithIngredients>, recipeId: Long) {
+    override suspend fun insertPizSteps(pizSteps: List<PizStepWithIngredients>, recipeId: String) {
         pizStepDao.insertPizSteps(pizSteps.map { pizStepWithIngredients -> pizStepWithIngredients.toPizStepEntity(recipeId) })
     }
 
-    override suspend fun insertPizStep(pizStep: PizStepWithIngredients, recipeId: Long) {
+    override suspend fun insertPizStep(pizStep: PizStepWithIngredients, recipeId: String) {
         pizStepDao.insertPizStep(pizStep.toPizStepEntity(recipeId))
     }
 
-    override suspend fun insertPizStepIngredients(pizStepIngredients: List<PizIngredient>, stepId: Long) {
+    override suspend fun insertPizStepIngredients(pizStepIngredients: List<PizIngredient>, stepId: String) {
         pizStepIngredientDao.insertPizStepIngredients(pizStepIngredients.map { pizIngredient -> pizIngredient.toPizStepIngredientEntity(stepId) })
     }
 

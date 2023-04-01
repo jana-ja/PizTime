@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
                             route = Screen.PizRecipeDetailScreen.route + "pizRecipeId={pizRecipeId}",
                             arguments = listOf(
                                 navArgument("pizRecipeId") {
-                                    type = NavType.LongType
+                                    type = NavType.StringType
                                 })
                         ) {
                             // TODO how to handle non optional arguments

@@ -13,9 +13,12 @@ sealed class PizRecipeDetailEvent{
     object ToggleEditMode: PizRecipeDetailEvent()
 
     object ClickEditInfo: PizRecipeDetailEvent()
-    data class ClickEditIngredient(val id: Long, val isStepIngredient: Boolean = false, val stepId: Long = -1): PizRecipeDetailEvent()
+    /**
+     * Can be used for Ingredient (param stepId = null) and StepIngredient (param stepId = id_of_step).
+     */
+    data class ClickEditIngredient(val id: String, val isStepIngredient: Boolean = false, val stepId: String?): PizRecipeDetailEvent()
     object ClickEditImage: PizRecipeDetailEvent()
-    data class ClickEditStep(val id: Long): PizRecipeDetailEvent()
+    data class ClickEditStep(val id: String): PizRecipeDetailEvent()
 
     object ClickSaveInfo : PizRecipeDetailEvent()
     object ClickSaveIngredient : PizRecipeDetailEvent()
@@ -30,7 +33,10 @@ sealed class PizRecipeDetailEvent{
     data class IngredientAmountChanged(val value: String): PizRecipeDetailEvent()
     data class StepDescriptionChanged(val value: String): PizRecipeDetailEvent()
 
-    data class ClickAddIngredient(val isStepIngredient: Boolean = false, val stepId: Long = -1): PizRecipeDetailEvent()
+    /**
+     * Can be used for Ingredient (param stepId = null) and StepIngredient (param stepId = id_of_step).
+     */
+    data class ClickAddIngredient(val isStepIngredient: Boolean = false, val stepId: String?): PizRecipeDetailEvent()
     object ClickAddStep: PizRecipeDetailEvent()
 
     object ClickDeleteIngredient: PizRecipeDetailEvent()
