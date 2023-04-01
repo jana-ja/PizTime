@@ -111,6 +111,10 @@ fun PizStepIngredientEntity.toPizIngredient(): PizIngredient {
     return PizIngredient(this.ingredient, this.baseStepAmount, this.id)
 }
 
+fun PizStepEntity.toPizStepWithoutIngredients() : PizStepWithIngredients{
+    return PizStepWithIngredients(this.description, listOf(), this.id)
+}
+
 fun stepWithIngredientEntitiesToStepWithIngredients(entities: Map<PizStepEntity, List<PizStepIngredientEntity>>): List<PizStepWithIngredients> {
 
     return entities.map { entry ->

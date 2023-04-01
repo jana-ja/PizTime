@@ -1,12 +1,10 @@
 package de.janaja.piztime.feature_piz_recipes.domain.repository
 
 import androidx.compose.ui.graphics.ImageBitmap
-import de.janaja.piztime.feature_piz_recipes.data.local.model.PizIngredientEntity
-import de.janaja.piztime.feature_piz_recipes.data.local.model.PizRecipeEntity
-import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepEntity
-import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepIngredientEntity
+import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipe
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipeWithDetails
+import de.janaja.piztime.feature_piz_recipes.domain.model.PizStepWithIngredients
 import kotlinx.coroutines.flow.StateFlow
 
 interface Repository {
@@ -31,15 +29,15 @@ interface Repository {
     suspend fun loadPizRecipeWithDetails(id: Long)
 
     // get
-    suspend fun getPizStep(id: Long): PizStepEntity
     suspend fun getPizRecipe(id: Long): PizRecipe?
     suspend fun getRecipeImage(imageName: String): ImageBitmap?
-    suspend fun getPizIngredient(id: Long): PizIngredientEntity
-    suspend fun getPizStepIngredient(id: Long): PizStepIngredientEntity
+    suspend fun getPizIngredient(id: Long): PizIngredient
+    suspend fun getPizStepWithoutIngredients(id: Long): PizStepWithIngredients
+    suspend fun getPizStepIngredient(id: Long): PizIngredient
 
-    // find by
-    suspend fun findPizIngredientsByPizRecipeId(pizRecipeId: Long): List<PizIngredientEntity>
-    fun findPizStepsWithIngredientsByPizRecipeId(pizRecipeId: Long): Map<PizStepEntity, List<PizStepIngredientEntity>>
+//    // find by
+//    suspend fun findPizIngredientsByPizRecipeId(pizRecipeId: Long): List<PizIngredient>
+//    fun findPizStepsWithIngredientsByPizRecipeId(pizRecipeId: Long): PizStepWithIngredients
 
     // delete
     suspend fun deletePizIngredientsForRecipeId(recipeId: Long)
@@ -50,16 +48,16 @@ interface Repository {
     suspend fun deletePizIngredient(id: Long)
 
     // insert
-    suspend fun insertPizIngredients(pizIngredientEntities: List<PizIngredientEntity>)
-    suspend fun insertPizIngredient(pizIngredientEntity: PizIngredientEntity)
-    suspend fun insertPizStepIngredient(pizStepIngredientEntity: PizStepIngredientEntity)
-    suspend fun insertPizSteps(pizStepEntities: List<PizStepEntity>)
-    suspend fun insertPizStep(pizStepEntity: PizStepEntity)
-    suspend fun insertPizStepIngredients(pizStepIngredientEntities: List<PizStepIngredientEntity>)
+    suspend fun insertPizIngredients(pizIngredients: List<PizIngredient>, recipeId: Long)
+    suspend fun insertPizIngredient(pizIngredient: PizIngredient, mapId: Long)
+    suspend fun insertPizStepIngredient(pizStepIngredient: PizIngredient, mapId: Long)
+    suspend fun insertPizSteps(pizSteps: List<PizStepWithIngredients>, recipeId: Long)
+    suspend fun insertPizStep(pizStep: PizStepWithIngredients, recipeId: Long)
+    suspend fun insertPizStepIngredients(pizStepIngredients: List<PizIngredient>, stepId: Long)
 
     // save
     suspend fun saveRecipeImage(urlOrWhatever: String, bitmap: ImageBitmap)
 
     // update
-    suspend fun updatePizRecipe(pizRecipeEntity: PizRecipeEntity)
+    suspend fun updatePizRecipe(pizRecipe: PizRecipe)
 }

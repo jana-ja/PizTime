@@ -6,7 +6,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import de.janaja.piztime.feature_piz_recipes.data.repository.RepositoryImpl
+import de.janaja.piztime.feature_piz_recipes.data.repository.RepositoryRoom
 import de.janaja.piztime.feature_piz_recipes.domain.repository.Repository
 import de.janaja.piztime.feature_piz_recipes.domain.use_case.*
 import de.janaja.piztime.feature_piz_recipes.data.local.PizRecipeDatabase
@@ -29,7 +29,7 @@ object AppModule {
     @Provides
     @Singleton
     fun providePizRecipeRepository(db: PizRecipeDatabase, app: Application): Repository {
-        return RepositoryImpl(db, app)
+        return /*RepositoryFirestore()*/RepositoryRoom(db, app)
     }
 
     @Provides
