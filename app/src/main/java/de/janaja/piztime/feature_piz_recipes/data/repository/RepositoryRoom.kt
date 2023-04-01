@@ -116,29 +116,29 @@ class RepositoryRoom(
         return null
     }
 
-    override suspend fun getPizIngredient(id: String): PizIngredient? {
+    override suspend fun getPizIngredient(id: String, recipeId: String): PizIngredient {
         return pizIngredientDao.getPizIngredient(id).toPizIngredient()
     }
 
-    override suspend fun getPizStepWithoutIngredients(id: String): PizStepWithIngredients? {
+    override suspend fun getPizStepWithoutIngredients(id: String): PizStepWithIngredients {
         return pizStepDao.getStep(id).toPizStepWithoutIngredients()
     }
 
-    override suspend fun getPizStepIngredient(id: String): PizIngredient? {
+    override suspend fun getPizStepIngredient(id: String, recipeId: String, stepId: String): PizIngredient {
         return pizStepIngredientDao.getPizStepIngredient(id).toPizIngredient()
     }
 
     // delete
-    override suspend fun deletePizStepWithIngredients(id: String) {
+    override suspend fun deletePizStepWithIngredients(id: String, recipeId: String) {
         pizStepDao.deletePizStep(id)
         pizStepIngredientDao.deletePizStepIngredientsForStepId(id)
     }
 
-    override suspend fun deletePizStepIngredient(id: String) {
+    override suspend fun deletePizStepIngredient(id: String, recipeId: String, stepId: String) {
         pizStepIngredientDao.deletePizStepIngredient(id)
     }
 
-    override suspend fun deletePizIngredient(id: String) {
+    override suspend fun deletePizIngredient(id: String, recipeId: String) {
         pizIngredientDao.deletePizIngredient(id)
     }
 
@@ -150,7 +150,7 @@ class RepositoryRoom(
         pizStepDao.deletePizStepsForRecipeId(recipeId)
     }
 
-    override suspend fun deletePizStepIngredientsForStepId(stepId: String) {
+    override suspend fun deletePizStepIngredientsForStepId(stepId: String, recipeId: String) {
         pizStepIngredientDao.deletePizStepIngredientsForRecipeId(stepId)
     }
 
@@ -160,12 +160,12 @@ class RepositoryRoom(
         pizIngredientDao.insertPizIngredients(pizIngredients.map { pizIngredient -> pizIngredient.toPizIngredientEntity(recipeId) })
     }
 
-    override suspend fun insertPizIngredient(pizIngredient: PizIngredient, mapId: String) {
-        pizIngredientDao.insertPizIngredient(pizIngredient.toPizIngredientEntity(mapId))
+    override suspend fun insertPizIngredient(pizIngredient: PizIngredient, recipeId: String) {
+        pizIngredientDao.insertPizIngredient(pizIngredient.toPizIngredientEntity(recipeId))
     }
 
-    override suspend fun insertPizStepIngredient(pizStepIngredient: PizIngredient, mapId: String) {
-        pizStepIngredientDao.insertPizStepIngredient(pizStepIngredient.toPizStepIngredientEntity(mapId))
+    override suspend fun insertPizStepIngredient(pizStepIngredient: PizIngredient, recipeId: String, stepId: String) {
+        pizStepIngredientDao.insertPizStepIngredient(pizStepIngredient.toPizStepIngredientEntity(stepId))
     }
 
     override suspend fun insertPizSteps(pizSteps: List<PizStepWithIngredients>, recipeId: String) {
@@ -176,7 +176,11 @@ class RepositoryRoom(
         pizStepDao.insertPizStep(pizStep.toPizStepEntity(recipeId))
     }
 
-    override suspend fun insertPizStepIngredients(pizStepIngredients: List<PizIngredient>, stepId: String) {
+    override suspend fun insertPizStepIngredients(
+        pizStepIngredients: List<PizIngredient>,
+        recipeId: String,
+        stepId: String
+    ) {
         pizStepIngredientDao.insertPizStepIngredients(pizStepIngredients.map { pizIngredient -> pizIngredient.toPizStepIngredientEntity(stepId) })
     }
 

@@ -6,11 +6,14 @@ import de.janaja.piztime.feature_piz_recipes.domain.repository.Repository
 class UpdateIngredientUseCase(
     private val repository: Repository
 ) {
-    suspend operator fun invoke(pizIngredient: PizIngredient, isStepIngredient: Boolean, mapId: String) {
+    suspend operator fun invoke(pizIngredient: PizIngredient, recipeId: String, stepId: String?, isStepIngredient: Boolean) {
         if(isStepIngredient){
-            repository.insertPizStepIngredient(pizIngredient, mapId)
+            if (stepId != null)
+                repository.insertPizStepIngredient(pizIngredient, recipeId, stepId)
+            //else
+                // TODO error
         } else {
-            repository.insertPizIngredient(pizIngredient, mapId)
+            repository.insertPizIngredient(pizIngredient, recipeId)
         }
     }
 }

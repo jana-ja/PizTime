@@ -5,11 +5,14 @@ import de.janaja.piztime.feature_piz_recipes.domain.repository.Repository
 class DeleteIngredientUseCase(
     private val repository: Repository
 ) {
-    suspend operator fun invoke(id: String, isStepIngredient: Boolean) {
+    suspend operator fun invoke(id: String, recipeId: String, stepId: String?, isStepIngredient: Boolean) {
         if(isStepIngredient){
-            repository.deletePizStepIngredient(id)
+            if(stepId != null)
+                repository.deletePizStepIngredient(id, recipeId, stepId)
+            //else
+                // TODO error
         } else {
-            repository.deletePizIngredient(id)
+            repository.deletePizIngredient(id, recipeId)
         }
     }
 }

@@ -5,5 +5,5 @@ data class DetailEditIngredientState (
     val ingredientName: String = "",
     val ingredientAmount: String = "",
     val isStepIngredient: Boolean = false,
-    val mapId: String = ""
+    val stepId: String? = ""
 )

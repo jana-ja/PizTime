@@ -5,8 +5,8 @@ import de.janaja.piztime.feature_piz_recipes.domain.repository.Repository
 class DeleteStepUseCase(
     private val repository: Repository
 ) {
-    suspend operator fun invoke(id: String){
+    suspend operator fun invoke(id: String, recipeId: String){
 
-        repository.deletePizStepWithIngredients(id)
+        repository.deletePizStepWithIngredients(id, recipeId)
     }
 }

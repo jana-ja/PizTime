@@ -151,10 +151,9 @@ class PizRecipeDetailViewModel @Inject constructor(
         if (stepId == null && currentRecipeId == null) {
             return
         }
-        val mapId = if (isStepIngredient && stepId != null) stepId else currentRecipeId!!
 
         viewModelScope.launch(Dispatchers.IO) {
-            val ingredient = allPizRecipesUseCases.getIngredientUseCase(id, isStepIngredient)
+            val ingredient = allPizRecipesUseCases.getIngredientUseCase(id, currentRecipeId!!, stepId, isStepIngredient)
             if(ingredient != null) {
                 withContext(Dispatchers.Main) {
                     _editIngredientState.value = _editIngredientState.value.copy(
@@ -162,7 +161,7 @@ class PizRecipeDetailViewModel @Inject constructor(
                         ingredientName = ingredient.ingredient,
                         ingredientAmount = ingredient.baseAmount.toString(),
                         isStepIngredient = isStepIngredient,
-                        mapId = mapId,
+                        stepId = stepId,
                     )
                 }
             } else {
@@ -260,7 +259,7 @@ class PizRecipeDetailViewModel @Inject constructor(
 
                 viewModelScope.launch(Dispatchers.IO) {
                     // insert/update ingredient
-                    allPizRecipesUseCases.updateIngredientUseCase(pizIngredient, state.isStepIngredient, state.mapId)
+                    allPizRecipesUseCases.updateIngredientUseCase.invoke(pizIngredient, it, state.stepId, state.isStepIngredient)
 
                     // reload data
                     allPizRecipesUseCases.loadPizRecipeWithDetailsUseCase(it)
@@ -387,7 +386,7 @@ class PizRecipeDetailViewModel @Inject constructor(
             ingredientName = "",
             ingredientAmount = "",
             isStepIngredient = isStepIngredient,
-            mapId = mapId,
+            stepId = mapId,
         )
     }
 
@@ -406,8 +405,10 @@ class PizRecipeDetailViewModel @Inject constructor(
             // delete
             val state = _editIngredientState.value
             viewModelScope.launch(Dispatchers.IO) {
-                allPizRecipesUseCases.deleteIngredientUseCase(
+                allPizRecipesUseCases.deleteIngredientUseCase.invoke(
                     state.id,
+                    it,
+                    state.stepId,
                     state.isStepIngredient
                 )
                 // reload data
@@ -427,7 +428,8 @@ class PizRecipeDetailViewModel @Inject constructor(
             // delete
             viewModelScope.launch(Dispatchers.IO) {
                 allPizRecipesUseCases.deleteStepUseCase(
-                    _editStepState.value.id
+                    _editStepState.value.id,
+                    it
                 )
                 // reload data
                 allPizRecipesUseCases.loadPizRecipeWithDetailsUseCase(it)
