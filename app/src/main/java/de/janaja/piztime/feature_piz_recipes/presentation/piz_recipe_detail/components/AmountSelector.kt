@@ -1,6 +1,5 @@
 package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
@@ -21,7 +20,7 @@ fun AmountSelector(
     amount: Int,
     onEvent: (PizRecipeDetailEvent) -> Unit
 ) {
-    Log.i("AmountSelector", "I got recomposed!")
+//    Log.i("AmountSelector", "I got recomposed!")
 
     Row {
         CompositionLocalProvider(LocalMinimumTouchTargetEnforcement provides false) {

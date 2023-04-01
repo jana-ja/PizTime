@@ -1,6 +1,5 @@
 package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components
 
-import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,7 +33,7 @@ fun IngredientsView(
     contentModifier: Modifier = Modifier,
     editMode: Boolean
 ) {
-    Log.i("IngredientsView", "I got recomposed!")
+//    Log.i("IngredientsView", "I got recomposed!")
 
     // TODO this is only here to fix current preview issue with resource dimen values
     val borderHeight: Dp =

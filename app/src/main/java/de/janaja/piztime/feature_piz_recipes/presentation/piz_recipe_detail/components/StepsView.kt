@@ -1,6 +1,5 @@
 package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components
 
-import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -51,7 +50,7 @@ fun StepsView(
         Column(
             modifier = Modifier.padding(bottom = 16.dp, end = 16.dp)
         ) {
-            Log.i("StepsView", "I got recomposed!")
+//            Log.i("StepsView", "I got recomposed!")
 
             Text(
                 "Rezept:",
