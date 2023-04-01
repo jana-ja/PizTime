@@ -31,9 +31,9 @@ interface Repository {
     // get
     suspend fun getPizRecipe(id: String): PizRecipe?
     suspend fun getRecipeImage(imageName: String): ImageBitmap?
-    suspend fun getPizIngredient(id: String): PizIngredient
-    suspend fun getPizStepWithoutIngredients(id: String): PizStepWithIngredients
-    suspend fun getPizStepIngredient(id: String): PizIngredient
+    suspend fun getPizIngredient(id: String): PizIngredient?
+    suspend fun getPizStepWithoutIngredients(id: String): PizStepWithIngredients?
+    suspend fun getPizStepIngredient(id: String): PizIngredient?
 
     // delete
     suspend fun deletePizIngredientsForRecipeId(recipeId: String)

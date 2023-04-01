@@ -155,14 +155,20 @@ class PizRecipeDetailViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             val ingredient = allPizRecipesUseCases.getIngredientUseCase(id, isStepIngredient)
-            withContext(Dispatchers.Main) {
-                _editIngredientState.value = _editIngredientState.value.copy(
-                    id = id,
-                    ingredientName = ingredient.ingredient,
-                    ingredientAmount = ingredient.baseAmount.toString(),
-                    isStepIngredient = isStepIngredient,
-                    mapId = mapId,
-                )
+            if(ingredient != null) {
+                withContext(Dispatchers.Main) {
+                    _editIngredientState.value = _editIngredientState.value.copy(
+                        id = id,
+                        ingredientName = ingredient.ingredient,
+                        ingredientAmount = ingredient.baseAmount.toString(),
+                        isStepIngredient = isStepIngredient,
+                        mapId = mapId,
+                    )
+                }
+            } else {
+                viewModelScope.launch {
+                    _eventFlow.emit(UiEvent.ShowToast("Die Zutat wurde nicht gefunden."))
+                }
             }
         }
     }
@@ -171,11 +177,17 @@ class PizRecipeDetailViewModel @Inject constructor(
         _detailEditDialogState.value = _detailEditDialogState.value.copy(editDialogState = EditDialog.Step)
         viewModelScope.launch(Dispatchers.IO) {
             val stepWithoutIngredients = allPizRecipesUseCases.getStepWithoutIngredientsUseCase(id)
-            withContext(Dispatchers.Main) {
-                _editStepState.value = _editStepState.value.copy(
-                    id = id,
-                    description = stepWithoutIngredients.description
-                )
+            if(stepWithoutIngredients != null) {
+                withContext(Dispatchers.Main) {
+                    _editStepState.value = _editStepState.value.copy(
+                        id = id,
+                        description = stepWithoutIngredients.description
+                    )
+                }
+            } else {
+                viewModelScope.launch {
+                    _eventFlow.emit(UiEvent.ShowToast("Der Schritt wurde nicht gefunden."))
+                }
             }
         }
     }
