@@ -237,7 +237,7 @@ class PizRecipeDetailViewModel @Inject constructor(
 
         val state = _editIngredientState.value
 
-        currentRecipeId?.let {
+        currentRecipeId?.also {
             try {
                 val amount = state.ingredientAmount.toDouble()
                 val pizIngredient = PizIngredient(
@@ -259,9 +259,10 @@ class PizRecipeDetailViewModel @Inject constructor(
                     _eventFlow.emit(UiEvent.ShowToast("Gib eine Kommazahl ein."))
                 }
             }
-        }
-        viewModelScope.launch {
-            _eventFlow.emit(UiEvent.ShowToast("Unerwarteter Fehler. Bitte öffne das Rezept erneut."))
+        } ?: run {
+            viewModelScope.launch {
+                _eventFlow.emit(UiEvent.ShowToast("Unerwarteter Fehler. Bitte öffne das Rezept erneut."))
+            }
         }
     }
 
@@ -400,9 +401,10 @@ class PizRecipeDetailViewModel @Inject constructor(
             }
             // dismiss dialog
             onEvent(PizRecipeDetailEvent.DismissDialog)
-        }
-        viewModelScope.launch {
-            _eventFlow.emit(UiEvent.ShowToast("Unerwarteter Fehler. Bitte öffne das Rezept erneut."))
+        } ?: run {
+            viewModelScope.launch {
+                _eventFlow.emit(UiEvent.ShowToast("Unerwarteter Fehler. Bitte öffne das Rezept erneut."))
+            }
         }
     }
 
@@ -418,9 +420,10 @@ class PizRecipeDetailViewModel @Inject constructor(
             }
             // dismiss dialog
             onEvent(PizRecipeDetailEvent.DismissDialog)
-        }
-        viewModelScope.launch {
-            _eventFlow.emit(UiEvent.ShowToast("Unerwarteter Fehler. Bitte öffne das Rezept erneut."))
+        } ?: run {
+            viewModelScope.launch {
+                _eventFlow.emit(UiEvent.ShowToast("Unerwarteter Fehler. Bitte öffne das Rezept erneut."))
+            }
         }
     }
 
