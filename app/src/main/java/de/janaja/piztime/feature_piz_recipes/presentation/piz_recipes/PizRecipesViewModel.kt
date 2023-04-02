@@ -33,8 +33,7 @@ class PizRecipesViewModel @Inject constructor(
     private val _loginDialogState = mutableStateOf(HomeLogInDialogState())
     val loginDialogState: State<HomeLogInDialogState> = _loginDialogState
 
-    private var _hasUser = mutableStateOf(false)
-    val hasUser: State<Boolean> = _hasUser
+    val hasUser: State<Boolean> = authService.hasUser
 
     // ui event state
     private val _eventFlow = MutableSharedFlow<UiEvent>()
@@ -88,7 +87,6 @@ class PizRecipesViewModel @Inject constructor(
                         }
                         is Resource.Loading -> {}
                         is Resource.Success -> {
-                            _hasUser.value = true
                             dismissDialog()
                         }
                     }
@@ -113,7 +111,7 @@ class PizRecipesViewModel @Inject constructor(
                         }
                     }
                     is Resource.Loading -> {}
-                    is Resource.Success -> _hasUser.value = false
+                    is Resource.Success -> {}
                 }
             }
         }
