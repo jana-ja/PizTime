@@ -20,5 +20,7 @@ data class AllPizRecipeUseCases(
     val updateStepUseCase: UpdateStepUseCase,
     val updateRecipeUseCase: UpdateRecipeUseCase,
 
-    val saveRecipeImageUseCase: SaveRecipeImageUseCase
+    val saveRecipeImageUseCase: SaveRecipeImageUseCase,
+
+    val resetPizRecipeWithDetailsFlowUseCase: ResetPizRecipeWithDetailsFlowUseCase
 )

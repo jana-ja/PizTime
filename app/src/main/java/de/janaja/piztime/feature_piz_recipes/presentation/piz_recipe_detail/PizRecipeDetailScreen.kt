@@ -52,17 +52,21 @@ fun PizRecipeDetailScreen(
         }
     }
 
-    PizRecipeDetailView(
-        modifier = Modifier,//.offset(x = offset.dp),
-        recipeState.pizRecipe,
-        recipeState.imageBitmap,
-        recipeState.firstLaunch,
-        amountState.amount,
-        dialogState.editDialogState,
-        editState.editMode,
-        viewModel.hasUser.value,
-        viewModel::onEvent
-    )
+    if(recipeState.pizRecipe != null) {
+        PizRecipeDetailView(
+            modifier = Modifier,//.offset(x = offset.dp),
+            recipeState.pizRecipe,
+            recipeState.imageBitmap,
+            recipeState.firstLaunch,
+            amountState.amount,
+            dialogState.editDialogState,
+            editState.editMode,
+            viewModel.hasUser.value,
+            viewModel::onEvent
+        )
+    } else {
+        Text("loading")
+    }
 
     // with key1 = true this only gets executed once and not on recomposition!
     LaunchedEffect(key1 = true) {

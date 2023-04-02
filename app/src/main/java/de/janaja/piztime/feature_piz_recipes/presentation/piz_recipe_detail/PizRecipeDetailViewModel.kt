@@ -73,6 +73,7 @@ class PizRecipeDetailViewModel @Inject constructor(
     private var currentRecipeId: String? = null
 
     init {
+        resetRecipeWithDetails()
         savedStateHandle.get<String>("pizRecipeId")?.let { id ->
             currentRecipeId = id
             getPizRecipeWithDetails(id)
@@ -90,7 +91,8 @@ class PizRecipeDetailViewModel @Inject constructor(
         getPizRecipeWithdetailsJob = allPizRecipesUseCases.getPizRecipeWithDetailsFlowUseCase().onEach {
             _pizRecipeState.value = _pizRecipeState.value.copy(
                 pizRecipe = it,
-                imageBitmap = allPizRecipesUseCases.getRecipeImageUseCase(it.imageName)
+                imageBitmap = it?.let { allPizRecipesUseCases.getRecipeImageUseCase(it.imageName) },
+                firstLaunch = true
             )
         }.launchIn(viewModelScope)
 
@@ -229,22 +231,26 @@ class PizRecipeDetailViewModel @Inject constructor(
 
     private fun saveImage() {
         val state = _editImageState.value
-        Log.e("hoho",state.imageName)
+        val recipe = _pizRecipeState.value.pizRecipe
         viewModelScope.launch(Dispatchers.IO) {
-            if (state.bitmap != null) {
-                // save image bitmap
-                allPizRecipesUseCases.saveRecipeImageUseCase(state.imageName, state.bitmap)
+            if (state.bitmap != null ) {
+                if(recipe != null) {
 
-                //save image ref to recipe
-                val recipe = _pizRecipeState.value.pizRecipe
-                allPizRecipesUseCases.updateRecipeUseCase(
-                    PizRecipe(recipe.title, recipe.feature, state.imageName, recipe.prepTime, recipe.id)
-                )
+                    // save image bitmap
+                    allPizRecipesUseCases.saveRecipeImageUseCase(state.imageName, state.bitmap)
 
-                // reload data
-                _pizRecipeState.value = _pizRecipeState.value.copy(
-                    imageBitmap = allPizRecipesUseCases.getRecipeImageUseCase(state.imageName)
-                )
+                    //save image ref to recipe
+                    allPizRecipesUseCases.updateRecipeUseCase(
+                        PizRecipe(recipe.title, recipe.feature, state.imageName, recipe.prepTime, recipe.id)
+                    )
+
+                    // reload data
+                    _pizRecipeState.value = _pizRecipeState.value.copy(
+                        imageBitmap = allPizRecipesUseCases.getRecipeImageUseCase(state.imageName)
+                    )
+                } else {
+                    _eventFlow.emit(UiEvent.ShowToast("Unerwarteter Fehler. Bitte öffne das Rezept erneut"))
+                }
             } else {
                 _eventFlow.emit(UiEvent.ShowToast("Wähle ein Bild aus oder bearbeite es um zu speichern."))
             }
@@ -502,6 +508,10 @@ class PizRecipeDetailViewModel @Inject constructor(
                 _detailEditDialogState.value = _detailEditDialogState.value.copy(editDialogState = EditDialog.None)
             }
         }
+    }
+
+    private fun resetRecipeWithDetails() {
+        allPizRecipesUseCases.resetPizRecipeWithDetailsFlowUseCase()
     }
 }
 

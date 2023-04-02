@@ -7,13 +7,12 @@ import com.google.firebase.ktx.Firebase
 import de.janaja.piztime.feature_piz_recipes.data.mapper.*
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipe
+import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipeWithDetails
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizStepWithIngredients
 import de.janaja.piztime.feature_piz_recipes.domain.repository.Repository
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 import de.janaja.piztime.feature_piz_recipes.presentation.util.TAG
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.tasks.await
 
 class RepositoryFirestore : Repository {
@@ -26,7 +25,7 @@ class RepositoryFirestore : Repository {
     private val db = Firebase.firestore // TODO dependency inject?
 
 
-    private val _pizRecipeWithDetailsFlow = MutableStateFlow(DummyData.DummyPizRecipeWithDetails)
+    private val _pizRecipeWithDetailsFlow: MutableStateFlow<PizRecipeWithDetails?> = MutableStateFlow(null)
     override val pizRecipeWithDetailsFlow = _pizRecipeWithDetailsFlow.asStateFlow()
 
     private val _allPizRecipesFlow = MutableStateFlow(listOf(DummyData.DummyPizRecipe))
@@ -123,6 +122,10 @@ class RepositoryFirestore : Repository {
                 recipeDocument.toPizRecipeWithDetails(ingredients, steps)
             }
         }
+    }
+
+    override fun resetRecipeWithDetailsFlow() {
+        _pizRecipeWithDetailsFlow.update { null }
     }
 
     override suspend fun getPizRecipe(id: String): PizRecipe? {

@@ -58,7 +58,8 @@ object AppModule {
             updateIngredientUseCase = UpdateIngredientUseCase(repository),
             updateStepUseCase = UpdateStepUseCase(repository),
             updateRecipeUseCase = UpdateRecipeUseCase(repository),
-            saveRecipeImageUseCase = SaveRecipeImageUseCase(repository)
+            saveRecipeImageUseCase = SaveRecipeImageUseCase(repository),
+            resetPizRecipeWithDetailsFlowUseCase = ResetPizRecipeWithDetailsFlowUseCase(repository)
 
         )
     }

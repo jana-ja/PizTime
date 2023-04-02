@@ -15,6 +15,7 @@ import de.janaja.piztime.feature_piz_recipes.data.local.model.PizStepIngredientE
 import de.janaja.piztime.feature_piz_recipes.data.mapper.*
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipe
+import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipeWithDetails
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizStepWithIngredients
 import de.janaja.piztime.feature_piz_recipes.domain.repository.Repository
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
@@ -36,7 +37,7 @@ class RepositoryRoom(
     private val pizStepDao: PizStepDao = db.pizStepDao
     private val pizStepIngredientDao: PizStepIngredientDao = db.pizStepIngredientDao
 
-    private val _pizRecipeWithDetailsFlow = MutableStateFlow(DummyData.DummyPizRecipeWithDetails)
+    private val _pizRecipeWithDetailsFlow: MutableStateFlow<PizRecipeWithDetails?> = MutableStateFlow(null)
     override val pizRecipeWithDetailsFlow = _pizRecipeWithDetailsFlow.asStateFlow()
 
     private val _allPizRecipesFlow = MutableStateFlow(listOf(DummyData.DummyPizRecipe))
@@ -92,6 +93,10 @@ class RepositoryRoom(
         }
         // TODO update with null? do nothing??
         //return null
+    }
+
+    override fun resetRecipeWithDetailsFlow() {
+        _pizRecipeWithDetailsFlow.update { null }
     }
 
 

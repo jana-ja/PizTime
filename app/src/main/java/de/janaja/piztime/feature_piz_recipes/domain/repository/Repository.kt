@@ -11,7 +11,7 @@ interface Repository {
 
     // using flow so i can trigger data updates from multiple sources, which will get observed
     // f.e. reloading data after saving change to backend from edit dialog
-    val pizRecipeWithDetailsFlow: StateFlow<PizRecipeWithDetails>
+    val pizRecipeWithDetailsFlow: StateFlow<PizRecipeWithDetails?>
     val allPizRecipesFlow: StateFlow<List<PizRecipe>>
 
     suspend fun initDbIfEmpty()
@@ -27,6 +27,7 @@ interface Repository {
      * Observe the Flow variable to retrieve the data.
      */
     suspend fun loadPizRecipeWithDetails(id: String)
+    fun resetRecipeWithDetailsFlow()
 
     // get
     suspend fun getPizRecipe(id: String): PizRecipe?
