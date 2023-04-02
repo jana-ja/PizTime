@@ -87,6 +87,9 @@ class PizRecipesViewModel @Inject constructor(
                         }
                         is Resource.Loading -> {}
                         is Resource.Success -> {
+                            viewModelScope.launch {
+                                _eventFlow.emit(UiEvent.ShowToast("Erfolgreich eingeloggt"))
+                            }
                             dismissDialog()
                         }
                     }

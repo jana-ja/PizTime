@@ -101,7 +101,6 @@ fun PizRecipesScreen(
                     painter = painterResource(id = R.drawable.baseline_logout_24),
                     contentDescription = "logout"
                 )
-
             }
         } else {
             IconButton(
@@ -114,7 +113,6 @@ fun PizRecipesScreen(
                     painter = painterResource(id = R.drawable.baseline_login_24),
                     contentDescription = "login"
                 )
-
             }
         }
 

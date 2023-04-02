@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.Flow
 interface AuthService {
 
     val hasUser: State<Boolean>
-    suspend fun logIn(email: String, password: String): Flow<Resource<Boolean>>
-
-    suspend fun logOut(): Flow<Resource<Boolean>>
+    suspend fun logIn(email: String, password: String): Flow<Resource<Unit>>
+    suspend fun logOut(): Flow<Resource<Unit>>
 }

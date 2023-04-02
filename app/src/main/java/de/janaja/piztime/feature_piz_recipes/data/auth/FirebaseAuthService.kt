@@ -22,25 +22,25 @@ class FirebaseAuthService : AuthService {
     override val hasUser: State<Boolean> = _hasUser
 
 
-    override suspend fun logIn(email: String, password: String): Flow<Resource<Boolean>> {
+    override suspend fun logIn(email: String, password: String): Flow<Resource<Unit>> {
         return flow {
             emit(Resource.Loading())
             val authResult = auth.signInWithEmailAndPassword(email, password).await()
             _hasUser.value = true
             Log.d(TAG, "signInWithEmail:success")
-            emit(Resource.Success(true))
+            emit(Resource.Success(Unit))
         }.catch {
             Log.w(TAG, "signInWithEmail:failure", it)
             emit(Resource.Error(it.message.toString()))
         }
     }
 
-    override suspend fun logOut(): Flow<Resource<Boolean>> {
+    override suspend fun logOut(): Flow<Resource<Unit>> {
         return flow {
             emit(Resource.Loading())
             auth.signOut()
             _hasUser.value = false
-            emit(Resource.Success(false))
+            emit(Resource.Success(Unit))
         }.catch {
             Log.w(TAG, "signInWithEmail:failure", it)
             emit(Resource.Error(it.message.toString()))
