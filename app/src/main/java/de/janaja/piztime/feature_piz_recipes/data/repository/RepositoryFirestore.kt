@@ -59,6 +59,7 @@ class RepositoryFirestore : Repository {
 
     // load
     override suspend fun loadAllPizRecipes() {
+        // TODO add toast or something to show when data is loaded from cache
         db.collection(recipesPath)
             .get()
             .addOnSuccessListener { result ->

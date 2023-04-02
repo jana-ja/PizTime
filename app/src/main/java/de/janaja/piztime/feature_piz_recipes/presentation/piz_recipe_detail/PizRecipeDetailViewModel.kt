@@ -8,6 +8,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import de.janaja.piztime.feature_piz_recipes.domain.auth.AuthService
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipe
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizStepWithIngredients
@@ -28,7 +29,9 @@ import javax.inject.Inject
 // in clean architecture viewmodel calls use cases or changes things in state (that ui observes)
 @HiltViewModel
 class PizRecipeDetailViewModel @Inject constructor(
-    private val allPizRecipesUseCases: AllPizRecipeUseCases, savedStateHandle: SavedStateHandle
+    private val allPizRecipesUseCases: AllPizRecipeUseCases,
+    private val authService: AuthService,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     // standard detail screen states
