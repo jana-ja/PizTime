@@ -24,7 +24,7 @@ fun LoginView(
 
     Scaffold(
         topBar = {
-            SmallTopAppBar(
+            TopAppBar(
                 title = {
                     Text(
                         "LogIn",
@@ -42,7 +42,7 @@ fun LoginView(
                     .wrapContentWidth(align = Alignment.End),
             ) {
                 Icon(
-                    Icons.Rounded.Check, // TODO login sign
+                    Icons.Rounded.Check,
                     "add ingredient",
                 )
             }

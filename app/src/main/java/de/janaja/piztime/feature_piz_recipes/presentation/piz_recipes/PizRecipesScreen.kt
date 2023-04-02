@@ -4,9 +4,6 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -15,10 +12,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import de.janaja.piztime.R
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipes.components.LoginView
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipes.components.PizCard
 import de.janaja.piztime.feature_piz_recipes.presentation.util.Screen
@@ -99,7 +98,7 @@ fun PizRecipesScreen(
                 modifier = buttonModifier
             ) {
                 Icon(
-                    imageVector = Icons.Default.ArrowBack ,
+                    painter = painterResource(id = R.drawable.baseline_logout_24),
                     contentDescription = "logout"
                 )
 
@@ -112,7 +111,7 @@ fun PizRecipesScreen(
                 modifier = buttonModifier
             ) {
                 Icon(
-                    imageVector = Icons.Default.ArrowForward,
+                    painter = painterResource(id = R.drawable.baseline_login_24),
                     contentDescription = "login"
                 )
 
