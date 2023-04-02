@@ -60,6 +60,7 @@ fun PizRecipeDetailScreen(
         amountState.amount,
         dialogState.editDialogState,
         editState.editMode,
+        viewModel.hasUser.value,
         viewModel::onEvent
     )
 
@@ -88,6 +89,7 @@ fun PizRecipeDetailView(
     amount: Int,
     dialogState: EditDialog,
     editMode: Boolean,
+    hasUser: Boolean,
     onEvent: (PizRecipeDetailEvent) -> Unit
 ) {
 
@@ -173,19 +175,21 @@ fun PizRecipeDetailView(
         }
 
         // edit button
-        IconButton(
-            onClick = { onEvent(PizRecipeDetailEvent.ToggleEditMode) },
-            Modifier
-                .size(36.dp)
-                .align(Alignment.TopEnd)
-                .padding(end = 8.dp, top = 8.dp)
-        ) {
-            Icon(
-                Icons.Default.Edit,
-                "edit recipe",
-                Modifier.fillMaxHeight()
-            )
+        if(hasUser) {
+            IconButton(
+                onClick = { onEvent(PizRecipeDetailEvent.ToggleEditMode) },
+                Modifier
+                    .size(36.dp)
+                    .align(Alignment.TopEnd)
+                    .padding(end = 8.dp, top = 8.dp)
+            ) {
+                Icon(
+                    Icons.Default.Edit,
+                    "edit recipe",
+                    Modifier.fillMaxHeight()
+                )
 
+            }
         }
     }
 }
@@ -204,7 +208,8 @@ fun PizRecipeDetailViewPreview() {
         true,
         amount = 4,
         dialogState = EditDialog.None,
-        editMode = false
+        editMode = false,
+        true
     ) { }
 }
 

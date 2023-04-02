@@ -30,9 +30,12 @@ import javax.inject.Inject
 @HiltViewModel
 class PizRecipeDetailViewModel @Inject constructor(
     private val allPizRecipesUseCases: AllPizRecipeUseCases,
-    private val authService: AuthService,
+    authService: AuthService,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    // auth
+    val hasUser: State<Boolean> = authService.hasUser
 
     // standard detail screen states
     private val _pizRecipeState = mutableStateOf(DetailPizRecipeWithDetailsState())
