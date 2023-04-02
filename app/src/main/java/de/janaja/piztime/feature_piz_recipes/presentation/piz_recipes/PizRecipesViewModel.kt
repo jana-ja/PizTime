@@ -87,7 +87,10 @@ class PizRecipesViewModel @Inject constructor(
                             }
                         }
                         is Resource.Loading -> {}
-                        is Resource.Success -> _hasUser.value = true
+                        is Resource.Success -> {
+                            _hasUser.value = true
+                            dismissDialog()
+                        }
                     }
                 }
             }
