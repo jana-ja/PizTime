@@ -26,7 +26,7 @@ import java.util.UUID
 import javax.inject.Inject
 
 
-// in clean architecture viewmodel calls use cases or changes things in state (that ui observes)
+// in clean architecture view model calls use cases or changes things in state (that ui observes)
 @HiltViewModel
 class PizRecipeDetailViewModel @Inject constructor(
     private val allPizRecipesUseCases: AllPizRecipeUseCases,
@@ -346,16 +346,16 @@ class PizRecipeDetailViewModel @Inject constructor(
             ingredientAmount = value
         )
     }
-    private fun editImage(bitmap: ImageBitmap, urlOrWhatever: String) {
+    private fun editImage(bitmap: ImageBitmap, imageName: String) {
         _editImageState.value = _editImageState.value.copy(
             bitmap = bitmap,
-            imageName = urlOrWhatever
+            imageName = imageName
         )
 
-        Log.i("edit image", "saving three images now")
+//        Log.i("edit image", "saving three images now")
         // for testing: save full image, resized image and compressed image
-        viewModelScope.launch(Dispatchers.IO) {
-            allPizRecipesUseCases.saveRecipeImageUseCase(imageName = urlOrWhatever + "full", imageBitmap = bitmap)
+//        viewModelScope.launch(Dispatchers.IO) {
+//            allPizRecipesUseCases.saveRecipeImageUseCase(imageName = imageName + "full", imageBitmap = bitmap)
 
 //            // testing resize and compression
 //            // ratio
@@ -378,7 +378,7 @@ class PizRecipeDetailViewModel @Inject constructor(
 //            val resizedCompressedBitmap = BitmapFactory.decodeStream(inputStream)
 //            allPizRecipesUseCases.saveRecipeImageUseCase(imageName = urlOrWhatever + "resized_compressed", imageBitmap = resizedCompressedBitmap.asImageBitmap())
 
-        }
+//        }
     }
     private fun editStepDescription(value: String) {
         _editStepState.value = _editStepState.value.copy(
