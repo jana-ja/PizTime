@@ -18,7 +18,7 @@ class FirebaseAuthService : AuthService {
 
 //    private var user = auth.currentUser
 
-    private var _hasUser = mutableStateOf(false)
+    private var _hasUser = mutableStateOf(auth.currentUser != null)
     override val hasUser: State<Boolean> = _hasUser
 
 
