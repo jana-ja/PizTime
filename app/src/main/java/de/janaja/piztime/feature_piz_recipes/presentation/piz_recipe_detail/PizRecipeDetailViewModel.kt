@@ -1,6 +1,5 @@
 package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.ImageBitmap
@@ -33,6 +32,8 @@ class PizRecipeDetailViewModel @Inject constructor(
     authService: AuthService,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    // TODO dont reload data for every edit thing
 
     // auth
     val hasUser: State<Boolean> = authService.hasUser
@@ -236,17 +237,20 @@ class PizRecipeDetailViewModel @Inject constructor(
             if (state.bitmap != null ) {
                 if(recipe != null) {
 
-                    // save image bitmap
-                    allPizRecipesUseCases.saveRecipeImageUseCase(state.imageName, state.bitmap)
+                    // if recipe has no image name yet, set it to the recipe id
+                    val imageName = if(state.imageName == "") recipe.id else state.imageName
 
-                    //save image ref to recipe
+                    // save image bitmap
+                    allPizRecipesUseCases.saveRecipeImageUseCase(imageName, state.bitmap)
+
+                    // save image ref to recipe
                     allPizRecipesUseCases.updateRecipeUseCase(
-                        PizRecipe(recipe.title, recipe.feature, state.imageName, recipe.prepTime, recipe.id)
+                        PizRecipe(recipe.title, recipe.feature, imageName, recipe.prepTime, recipe.id)
                     )
 
                     // reload data
                     _pizRecipeState.value = _pizRecipeState.value.copy(
-                        imageBitmap = allPizRecipesUseCases.getRecipeImageUseCase(state.imageName)
+                        imageBitmap = state.bitmap //allPizRecipesUseCases.getRecipeImageUseCase(imageName) // TODO currently not reloading from data source here
                     )
                 } else {
                     _eventFlow.emit(UiEvent.ShowToast("Unerwarteter Fehler. Bitte öffne das Rezept erneut"))
@@ -346,10 +350,9 @@ class PizRecipeDetailViewModel @Inject constructor(
             ingredientAmount = value
         )
     }
-    private fun editImage(bitmap: ImageBitmap, imageName: String) {
+    private fun editImage(bitmap: ImageBitmap) {
         _editImageState.value = _editImageState.value.copy(
-            bitmap = bitmap,
-            imageName = imageName
+            bitmap = bitmap
         )
 
 //        Log.i("edit image", "saving three images now")
@@ -492,7 +495,7 @@ class PizRecipeDetailViewModel @Inject constructor(
             }
             is PizRecipeDetailEvent.IngredientNameChanged -> editIngredientName(event.value)
             is PizRecipeDetailEvent.IngredientAmountChanged -> editIngredientAmount(event.value)
-            is PizRecipeDetailEvent.ImageChanged -> editImage(event.bitmap, event.urlOrWhatever)
+            is PizRecipeDetailEvent.ImageChanged -> editImage(event.bitmap)
             is PizRecipeDetailEvent.StepDescriptionChanged -> editStepDescription(event.value)
 
             is PizRecipeDetailEvent.ClickAddIngredient -> editAddIngredient(

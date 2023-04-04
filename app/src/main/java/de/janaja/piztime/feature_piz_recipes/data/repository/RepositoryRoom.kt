@@ -187,9 +187,9 @@ class RepositoryRoom(
 
 
     // save
-    override suspend fun saveRecipeImage(urlOrWhatever: String, bitmap: ImageBitmap){
+    override suspend fun saveRecipeImage(imageName: String, bitmap: ImageBitmap){
         Log.e("Repo","Save Image")
-        val f = File(context.filesDir, "$urlOrWhatever.png")
+        val f = File(context.filesDir, "$imageName.png")
         withContext(Dispatchers.IO) {
             if (!f.exists()) {
 

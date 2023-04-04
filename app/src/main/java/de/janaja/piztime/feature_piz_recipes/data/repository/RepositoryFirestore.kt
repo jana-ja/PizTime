@@ -1,9 +1,15 @@
 package de.janaja.piztime.feature_piz_recipes.data.repository
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
+import com.google.firebase.storage.ktx.storageMetadata
 import de.janaja.piztime.feature_piz_recipes.data.mapper.*
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipe
@@ -14,21 +20,25 @@ import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 import de.janaja.piztime.feature_piz_recipes.presentation.util.TAG
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.tasks.await
+import java.io.ByteArrayOutputStream
+
 
 class RepositoryFirestore : Repository {
 
     private val recipesPath = "recipes"
     private val ingredientsPath = "ingredients"
     private val stepsPath = "steps"
+    private val imagePath = "recipeImages"
 
 
     private val db = Firebase.firestore // TODO dependency inject?
+    private val storage = Firebase.storage
 
 
     private val _pizRecipeWithDetailsFlow: MutableStateFlow<PizRecipeWithDetails?> = MutableStateFlow(null)
     override val pizRecipeWithDetailsFlow = _pizRecipeWithDetailsFlow.asStateFlow()
 
-    private val _allPizRecipesFlow = MutableStateFlow(listOf(DummyData.DummyPizRecipe))
+    private val _allPizRecipesFlow: MutableStateFlow<List<PizRecipe>> = MutableStateFlow(listOf())
     override val allPizRecipesFlow = _allPizRecipesFlow.asStateFlow()
 
     override suspend fun initDbIfEmpty() {
@@ -145,7 +155,27 @@ class RepositoryFirestore : Repository {
 
 
     override suspend fun getRecipeImage(imageName: String): ImageBitmap? {
-        // TODO("Not yet implemented")
+
+        if(imageName == "")
+            return null
+
+        val storageRef = storage.reference
+        val recipeImgRef = storageRef.child("$imagePath/$imageName.png")
+        // TODO try if exists
+        val ONE_MEGABYTE: Long = 1024 * 1024 // TODO enough?
+        val byteArray: ByteArray? = recipeImgRef.getBytes(ONE_MEGABYTE).await()
+        if (byteArray != null){
+            val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+            return bitmap.asImageBitmap()
+        }
+//            .addOnSuccessListener {
+//            // Data for "images/island.jpg" is returned, use this as needed
+//            val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+//            return bitmap.asImageBitmap()
+//        }.addOnFailureListener {
+//// catch not found excpetion
+//            // Handle any errors
+//        }
         return null
     }
 
@@ -306,8 +336,31 @@ class RepositoryFirestore : Repository {
         }
     }
 
-    override suspend fun saveRecipeImage(urlOrWhatever: String, bitmap: ImageBitmap) {
-        //TODO("Not yet implemented")
+    override suspend fun saveRecipeImage(imageName: String, bitmap: ImageBitmap) {
+
+        val storageRef = storage.reference
+
+        val recipeImgRef = storageRef.child("$imagePath/$imageName.png")
+
+        val androidBitmap = bitmap.asAndroidBitmap()
+        androidBitmap.setHasAlpha(true) // important for saving transparent background
+        val baos = ByteArrayOutputStream()
+        androidBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos)
+        val data = baos.toByteArray()
+
+//        var metadata = storageMetadata {
+//            contentType = "image/png"
+//        }
+
+        val uploadTask = recipeImgRef.putBytes(data)
+        uploadTask.addOnFailureListener {
+            // Handle unsuccessful uploads
+            // TODO
+        }.addOnSuccessListener { taskSnapshot ->
+            // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
+            // ...
+            // TODO
+        }
     }
 
     override suspend fun updatePizRecipe(pizRecipe: PizRecipe) {

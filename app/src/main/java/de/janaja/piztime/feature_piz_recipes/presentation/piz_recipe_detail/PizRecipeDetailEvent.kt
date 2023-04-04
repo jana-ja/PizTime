@@ -29,7 +29,7 @@ sealed class PizRecipeDetailEvent{
     data class RecipeFeatureChanged(val value: String): PizRecipeDetailEvent()
     data class RecipePrepTimeChanged(val value: String): PizRecipeDetailEvent()
     data class IngredientNameChanged(val value: String): PizRecipeDetailEvent()
-    data class ImageChanged(val bitmap: ImageBitmap, val urlOrWhatever: String): PizRecipeDetailEvent()
+    data class ImageChanged(val bitmap: ImageBitmap): PizRecipeDetailEvent()
     data class IngredientAmountChanged(val value: String): PizRecipeDetailEvent()
     data class StepDescriptionChanged(val value: String): PizRecipeDetailEvent()
 

@@ -52,7 +52,7 @@ interface Repository {
     suspend fun insertPizStepIngredients(pizStepIngredients: List<PizIngredient>, recipeId: String, stepId: String)
 
     // save
-    suspend fun saveRecipeImage(urlOrWhatever: String, bitmap: ImageBitmap)
+    suspend fun saveRecipeImage(imageName: String, bitmap: ImageBitmap)
 
     // update
     suspend fun updatePizRecipe(pizRecipe: PizRecipe)

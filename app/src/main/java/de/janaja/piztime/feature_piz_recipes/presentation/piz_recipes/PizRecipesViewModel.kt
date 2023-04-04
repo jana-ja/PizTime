@@ -58,6 +58,7 @@ class PizRecipesViewModel @Inject constructor(
         getPizRecipesJob?.cancel()
         getPizRecipesJob = allPizRecipesUseCases.getAllPizRecipesFlowUseCase()
             .onEach {
+                // TODO wenn empty oder null oder so loading anzeigen?
                 _state.value = _state.value.copy(
                     pizRecipes = it,
                     recipeImages = it.map { recipe -> allPizRecipesUseCases.getRecipeImageUseCase(recipe.imageName) }

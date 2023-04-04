@@ -99,8 +99,7 @@ fun EditImageView(
             // update image state
             viewModel.onEvent(
                 PizRecipeDetailEvent.ImageChanged(
-                    resizedBitmap,
-                    state.imageName
+                    resizedBitmap
                 )
             )
         }
@@ -176,8 +175,7 @@ fun EditImageView(
                     onCompletion = { croppedBitmap ->
                         viewModel.onEvent(
                             PizRecipeDetailEvent.ImageChanged(
-                                croppedBitmap,
-                                state.imageName
+                                croppedBitmap
                             )
                         ); isCropDialogShown = false
                     },
