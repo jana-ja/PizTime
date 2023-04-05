@@ -65,6 +65,7 @@ fun PizRecipeDetailScreen(
             viewModel::onEvent
         )
     } else {
+        // TODO beim laden schon die 3 sections mit Überschriften anzeigen
         Text("loading")
     }
 

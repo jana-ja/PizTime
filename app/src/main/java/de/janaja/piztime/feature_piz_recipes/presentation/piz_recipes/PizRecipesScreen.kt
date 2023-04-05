@@ -34,6 +34,8 @@ fun PizRecipesScreen(
 
     val context = LocalContext.current
 
+    // TODO beim laden vllt schon so 3 blasse placeholder anzeigen
+
     // with key1 = true this only gets executed once and not on recomposition!
     LaunchedEffect(key1 = true) {
         viewModel.loadPizRecipes()
