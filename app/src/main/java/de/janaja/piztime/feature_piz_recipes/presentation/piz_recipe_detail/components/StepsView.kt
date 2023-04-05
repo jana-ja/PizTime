@@ -59,14 +59,16 @@ fun StepsView(
             )
 
             stepsWithIngredients.indices.forEach { stepIndex ->
+                // maybe place edit button outside of this column??
+
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.padding(top = 16.dp, end = 16.dp)) {
                     // step description
-                    var rowModifier = Modifier.height(height)
+                    var rowModifier = Modifier.padding(0.dp)//.height(height)
                     if (editMode) rowModifier =
                         rowModifier.clickable { onEvent(PizRecipeDetailEvent.ClickEditStep(stepsWithIngredients[stepIndex].id)) }
 
-                    Row(rowModifier, verticalAlignment = Alignment.CenterVertically) {
+                    Row(rowModifier, verticalAlignment = Alignment.Top) {
                         AnimatedVisibility (editMode) {
                             Icon(
                                 Icons.Default.Edit,
@@ -81,11 +83,12 @@ fun StepsView(
                         Text(
                             "${stepIndex + 1}: ",
                             style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier.padding(start = if(editMode) 8.dp else 32.dp)
+                            modifier = Modifier.padding(start = if(editMode) 8.dp else 32.dp)//.align(Alignment.Top)
                         )
                         Text(
                             stepsWithIngredients[stepIndex].description,
-                            style = MaterialTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodyLarge,
+
                         )
                     }
 
@@ -95,7 +98,7 @@ fun StepsView(
                         SimpleFlowRow(
                             verticalGap = 8.dp,
                             horizontalGap = 8.dp,
-                            modifier = Modifier.padding(start = 32.dp)
+                            modifier = Modifier.padding(start = if(editMode) 40.dp + height else 32.dp)
                         ) {
                             stepsWithIngredients[stepIndex].ingredients.forEach { ingredient ->
                                 var ingredientModifier = Modifier.height(ingredientHeight)
@@ -174,6 +177,6 @@ fun StepsView(
 @Preview
 @Composable
 fun DescriptionViewPreview() {
-    StepsView(stepsWithIngredients = DummyData.DummySteps, amount = 4, onEvent = {}, editMode = false)
+    StepsView(stepsWithIngredients = DummyData.DummySteps, amount = 4, onEvent = {}, editMode = true)
 }
 
