@@ -245,6 +245,21 @@ class RepositoryFirestore : Repository {
             .delete()
             .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully deleted!") }
             .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
+        // image
+        deletePizRecipeImage(recipeId)
+    }
+
+    override suspend fun deletePizRecipeImage(imageName: String){
+
+        val storageRef = storage.reference
+
+        val recipeImgRef = storageRef.child("$imagePath/$imageName.png")
+        recipeImgRef.delete()
+            .addOnFailureListener {
+                // TODO
+            }.addOnSuccessListener {
+                // TODO
+            }
     }
 
     override suspend fun deletePizIngredientsForRecipeId(recipeId: String) {

@@ -38,6 +38,7 @@ interface Repository {
 
     // delete
     suspend fun deletePizRecipeWithDetails(recipeId: String)
+    suspend fun deletePizRecipeImage(imageName: String)
     suspend fun deletePizIngredientsForRecipeId(recipeId: String)
     suspend fun deletePizStepIngredientsForStepId(stepId: String, recipeId: String)
     suspend fun deletePizStepWithIngredients(id: String, recipeId: String)

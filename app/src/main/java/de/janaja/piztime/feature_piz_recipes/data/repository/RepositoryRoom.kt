@@ -148,6 +148,19 @@ class RepositoryRoom(
         pizRecipeDao.deletePizRecipe(recipeId)
     }
 
+    override suspend fun deletePizRecipeImage(imageName: String){
+        if (imageName == "")
+            return
+        try {
+            val f = File(context.filesDir, "$imageName.png")
+            if (f.exists()){
+                f.delete()
+            }
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        }
+    }
+
     override suspend fun deletePizStepWithIngredients(id: String, recipeId: String) {
         pizStepDao.deletePizStep(id)
         pizStepIngredientDao.deletePizStepIngredientsForStepId(id)

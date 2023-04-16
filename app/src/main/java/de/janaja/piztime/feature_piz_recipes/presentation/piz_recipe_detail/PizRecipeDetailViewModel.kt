@@ -426,7 +426,7 @@ class PizRecipeDetailViewModel @Inject constructor(
         currentRecipeId?.let {
             // delete
             viewModelScope.launch(Dispatchers.IO) {
-                allPizRecipesUseCases.deleteRecipeUseCase(it)
+                allPizRecipesUseCases.deleteRecipeUseCase(it, _editImageState.value.imageName)
                 // navigate back // TODO async?
                 _eventFlow.emit(UiEvent.NavigateBack)
             }
