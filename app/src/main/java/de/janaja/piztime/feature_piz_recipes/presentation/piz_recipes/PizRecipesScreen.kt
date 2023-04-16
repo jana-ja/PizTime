@@ -71,11 +71,14 @@ fun PizRecipesScreen(
                     )
                 }
             }
-            item{
-                Button(onClick = {
-                    viewModel.onEvent(PizRecipesEvent.NewRecipe)
-                }) {
-                    Text(text = "Rezept hinzufügen")
+            if (hasUser) {
+                // TODO styling
+                item {
+                    Button(onClick = {
+                        viewModel.onEvent(PizRecipesEvent.NewRecipe)
+                    }) {
+                        Text(text = "Rezept hinzufügen")
+                    }
                 }
             }
         }
