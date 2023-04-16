@@ -3,11 +3,9 @@ package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipes
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,23 +48,30 @@ fun PizRecipesScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {
 
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
                 .background(MaterialTheme.colorScheme.background),
-            verticalArrangement = Arrangement.SpaceBetween,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
 
             state.pizRecipes.forEachIndexed() { index, pizRecipe ->
-                PizCard(
-                    pizRecipeEntity = pizRecipe,
-                    recipeImage = state.recipeImages[index],
-                    onClick = {
-                        navController.navigate(Screen.PizRecipeDetailScreen.route + "pizRecipeId=${pizRecipe.id}")
-                    },
-                    index = index
-                )
+                item {
+                    PizCard(
+                        pizRecipeEntity = pizRecipe,
+                        recipeImage = state.recipeImages[index],
+                        onClick = {
+                            navController.navigate(Screen.PizRecipeDetailScreen.route + "pizRecipeId=${pizRecipe.id}")
+                        },
+                        index = index
+                    )
+                }
+            }
+            item{
+                Button(onClick = {viewModel.onEvent(PizRecipesEvent.NewRecipe)}) {
+                    Text(text = "Rezept hinzufügen")
+                }
             }
         }
 

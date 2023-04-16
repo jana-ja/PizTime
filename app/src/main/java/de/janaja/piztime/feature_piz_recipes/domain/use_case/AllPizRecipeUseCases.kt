@@ -3,6 +3,8 @@ package de.janaja.piztime.feature_piz_recipes.domain.use_case
 data class AllPizRecipeUseCases(
     val initDbIfEmptyUseCase: InitDbIfEmptyUseCase,
 
+    val addPizRecipeUseCase: AddPizRecipeUseCase,
+
     val loadAllPizRecipesUseCase: LoadAllPizRecipesUseCase,
     val loadPizRecipeWithDetailsUseCase: LoadPizRecipeWithDetailsUseCase,
 

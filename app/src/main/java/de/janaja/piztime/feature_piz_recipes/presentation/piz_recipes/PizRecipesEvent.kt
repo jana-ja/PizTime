@@ -11,4 +11,6 @@ sealed class PizRecipesEvent{
     object LogIn: PizRecipesEvent()
     object LogOut: PizRecipesEvent()
 
+    object NewRecipe: PizRecipesEvent()
+
 }

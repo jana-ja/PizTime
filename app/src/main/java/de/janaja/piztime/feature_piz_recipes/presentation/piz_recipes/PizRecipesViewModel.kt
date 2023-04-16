@@ -150,6 +150,12 @@ class PizRecipesViewModel @Inject constructor(
         )
     }
 
+    private fun newRecipe(){
+        viewModelScope.launch(Dispatchers.IO) {
+            allPizRecipesUseCases.addPizRecipeUseCase()
+        }
+    }
+
     // handle events
     fun onEvent(event: PizRecipesEvent) {
         when (event) {
@@ -159,6 +165,7 @@ class PizRecipesViewModel @Inject constructor(
             PizRecipesEvent.ShowDialog -> showDialog()
             PizRecipesEvent.LogIn -> logIn()
             PizRecipesEvent.LogOut -> logOut()
+            PizRecipesEvent.NewRecipe -> newRecipe()
         }
     }
 

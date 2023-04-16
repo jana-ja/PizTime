@@ -45,6 +45,7 @@ object AppModule {
     fun providePizrecipeUseCase(repository: Repository): AllPizRecipeUseCases {
         return AllPizRecipeUseCases(
             initDbIfEmptyUseCase = InitDbIfEmptyUseCase(repository),
+            addPizRecipeUseCase = AddPizRecipeUseCase(repository),
             loadAllPizRecipesUseCase = LoadAllPizRecipesUseCase(repository),
             loadPizRecipeWithDetailsUseCase = LoadPizRecipeWithDetailsUseCase(repository),
             getAllPizRecipesFlowUseCase = GetAllPizRecipesFlowUseCase(repository),
