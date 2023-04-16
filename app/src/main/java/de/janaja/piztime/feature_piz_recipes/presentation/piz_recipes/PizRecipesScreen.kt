@@ -42,6 +42,9 @@ fun PizRecipesScreen(
                 is PizRecipesViewModel.UiEvent.ShowToast -> {
                     Toast.makeText(context, event.massage, Toast.LENGTH_LONG).show()
                 }
+                is PizRecipesViewModel.UiEvent.Navigate -> {
+                    navigateToDetail(navController, event.recipeId)
+                }
             }
         }
     }
@@ -62,14 +65,16 @@ fun PizRecipesScreen(
                         pizRecipeEntity = pizRecipe,
                         recipeImage = state.recipeImages[index],
                         onClick = {
-                            navController.navigate(Screen.PizRecipeDetailScreen.route + "pizRecipeId=${pizRecipe.id}")
+                            navigateToDetail(navController, pizRecipe.id)
                         },
                         index = index
                     )
                 }
             }
             item{
-                Button(onClick = {viewModel.onEvent(PizRecipesEvent.NewRecipe)}) {
+                Button(onClick = {
+                    viewModel.onEvent(PizRecipesEvent.NewRecipe)
+                }) {
                     Text(text = "Rezept hinzufügen")
                 }
             }
@@ -124,6 +129,10 @@ fun PizRecipesScreen(
         }
 
     }
+}
+
+private fun navigateToDetail(navController: NavController, recipeId: String){
+    navController.navigate(Screen.PizRecipeDetailScreen.route + "pizRecipeId=${recipeId}")
 }
 
 

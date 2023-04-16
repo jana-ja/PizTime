@@ -51,6 +51,7 @@ class PizRecipesViewModel @Inject constructor(
 
     sealed class UiEvent {
         data class ShowToast(val massage: String) : UiEvent()
+        data class Navigate(val recipeId: String): UiEvent()
     }
 
     // data
@@ -152,7 +153,8 @@ class PizRecipesViewModel @Inject constructor(
 
     private fun newRecipe(){
         viewModelScope.launch(Dispatchers.IO) {
-            allPizRecipesUseCases.addPizRecipeUseCase()
+            val newId = allPizRecipesUseCases.addPizRecipeUseCase()
+            _eventFlow.emit(UiEvent.Navigate(newId))
         }
     }
 

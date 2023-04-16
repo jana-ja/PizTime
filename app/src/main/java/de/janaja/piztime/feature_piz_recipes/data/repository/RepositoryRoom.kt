@@ -157,6 +157,10 @@ class RepositoryRoom(
 
 
     // insert
+    override suspend fun insertPizRecipe(pizRecipe: PizRecipe) {
+        pizRecipeDao.addPizRecipe(pizRecipe.toRecipeEntity())
+    }
+
     override suspend fun insertPizIngredients(pizIngredients: List<PizIngredient>, recipeId: String) {
         pizIngredientDao.insertPizIngredients(pizIngredients.map { pizIngredient -> pizIngredient.toPizIngredientEntity(recipeId) })
     }

@@ -44,6 +44,7 @@ interface Repository {
     suspend fun deletePizIngredient(id: String, recipeId: String)
 
     // insert
+    suspend fun insertPizRecipe(pizRecipe: PizRecipe)
     suspend fun insertPizIngredients(pizIngredients: List<PizIngredient>, recipeId: String)
     suspend fun insertPizIngredient(pizIngredient: PizIngredient, recipeId: String)
     suspend fun insertPizStepIngredient(pizStepIngredient: PizIngredient, recipeId: String, stepId: String)

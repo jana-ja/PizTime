@@ -9,7 +9,6 @@ import androidx.compose.ui.graphics.asImageBitmap
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import com.google.firebase.storage.ktx.storageMetadata
 import de.janaja.piztime.feature_piz_recipes.data.mapper.*
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizIngredient
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipe
@@ -127,7 +126,7 @@ class RepositoryFirestore : Repository {
         // recipe
         val recipeDocument = documentRef.get().await()
         val data = recipeDocument.data
-        if (data != null && ingredients.isNotEmpty() && steps.isNotEmpty()) {
+        if (data != null) {
             _pizRecipeWithDetailsFlow.update {
                 recipeDocument.toPizRecipeWithDetails(ingredients, steps)
             }
@@ -156,7 +155,7 @@ class RepositoryFirestore : Repository {
 
     override suspend fun getRecipeImage(imageName: String): ImageBitmap? {
 
-        if(imageName == "")
+        if (imageName == "")
             return null
 
         val storageRef = storage.reference
@@ -164,7 +163,7 @@ class RepositoryFirestore : Repository {
         // TODO try if exists
         val ONE_MEGABYTE: Long = 1024 * 1024 // TODO enough?
         val byteArray: ByteArray? = recipeImgRef.getBytes(ONE_MEGABYTE).await()
-        if (byteArray != null){
+        if (byteArray != null) {
             val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
             return bitmap.asImageBitmap()
         }
@@ -282,6 +281,16 @@ class RepositoryFirestore : Repository {
             .delete()
             .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully deleted!") }
             .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
+    }
+
+    override suspend fun insertPizRecipe(pizRecipe: PizRecipe) {
+        val recipeRef = db.collection(recipesPath).document(pizRecipe.id)
+        // base recipe
+        recipeRef
+            .set(pizRecipe.toHashMap())
+            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
+            .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
+        // don't need to add empty collections
     }
 
     override suspend fun insertPizIngredients(pizIngredients: List<PizIngredient>, recipeId: String) {
