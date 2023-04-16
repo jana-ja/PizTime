@@ -7,7 +7,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,12 +30,19 @@ import androidx.navigation.NavController
 import de.janaja.piztime.R
 import de.janaja.piztime.feature_piz_recipes.data.mapper.toPizRecipe
 import de.janaja.piztime.feature_piz_recipes.domain.model.PizRecipeWithDetails
+import de.janaja.piztime.feature_piz_recipes.domain.util.DeleteDialog
 import de.janaja.piztime.feature_piz_recipes.domain.util.EditDialog
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.components.*
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
 import de.janaja.piztime.feature_piz_recipes.presentation.util.Screen
 import kotlinx.coroutines.flow.collectLatest
 
+private fun navigateBack(navController: NavController){
+    // navigate to home screen to trigger launched effect to reload data, but without it being in the route two times
+    navController.navigate(Screen.PizRecipesScreen.route) {
+        popUpTo(Screen.PizRecipesScreen.route) { inclusive = true }
+    }
+}
 @Composable
 fun PizRecipeDetailScreen(
     navController: NavController,
@@ -41,24 +51,23 @@ fun PizRecipeDetailScreen(
 
     val amountState = viewModel.detailAmountState.value
     val recipeState = viewModel.pizRecipeState.value
+    val alertDialogState = viewModel.detailDeleteDialogState.value
     val dialogState = viewModel.detailEditDialogState.value
     val editState = viewModel.detailEditModeState.value
 
     val context = LocalContext.current
     BackHandler {
-        // navigate to home screen to trigger launched effect to reload data, but without it being in the route two times
-        navController.navigate( Screen.PizRecipesScreen.route) {
-            popUpTo(Screen.PizRecipesScreen.route) { inclusive = true }
-        }
+        navigateBack(navController)
     }
 
-    if(recipeState.pizRecipe != null) {
+    if (recipeState.pizRecipe != null) {
         PizRecipeDetailView(
             modifier = Modifier,//.offset(x = offset.dp),
             recipeState.pizRecipe,
             recipeState.imageBitmap,
             recipeState.firstLaunch,
             amountState.amount,
+            alertDialogState.deleteDialog,
             dialogState.editDialogState,
             editState.editMode,
             viewModel.hasUser.value,
@@ -76,11 +85,10 @@ fun PizRecipeDetailScreen(
                 is PizRecipeDetailViewModel.UiEvent.ShowToast -> {
                     Toast.makeText(context, event.massage, Toast.LENGTH_LONG).show()
                 }
+                PizRecipeDetailViewModel.UiEvent.NavigateBack -> { navigateBack(navController) }
             }
         }
     }
-
-
 }
 
 
@@ -92,7 +100,8 @@ fun PizRecipeDetailView(
     imageBitmap: ImageBitmap?,
     firstLaunch: Boolean,
     amount: Int,
-    dialogState: EditDialog,
+    deleteDialog: DeleteDialog,
+    editDialogState: EditDialog,
     editMode: Boolean,
     hasUser: Boolean,
     onEvent: (PizRecipeDetailEvent) -> Unit
@@ -104,9 +113,51 @@ fun PizRecipeDetailView(
 
     Box {
         // edit dialog
-        if (dialogState != EditDialog.None) {
+        if (deleteDialog != DeleteDialog.None) {
+            AlertDialog(
+                onDismissRequest = { onEvent(PizRecipeDetailEvent.DismissDeleteDialog) },
+                confirmButton = {
+                    FilledTonalButton(
+                        onClick = {
+                                  when(deleteDialog){
+                                      DeleteDialog.None -> {}
+                                      DeleteDialog.Recipe -> { onEvent(PizRecipeDetailEvent.ClickDeleteRecipe)}
+                                      DeleteDialog.Ingredient -> { onEvent(PizRecipeDetailEvent.ClickDeleteIngredient)}
+                                      DeleteDialog.Step -> { onEvent(PizRecipeDetailEvent.ClickDeleteStep)}
+                                  }
+
+                                  /*onEvent(PizRecipeDetailEvent.DeleteRecipe)*/ },
+//                        modifier = Modifier
+//                            .padding(16.dp)
+//                            .fillMaxWidth()
+//                            .wrapContentWidth(align = Alignment.End),
+                    ) {
+                        Icon(
+                            Icons.Rounded.Check,
+                            "confirm delete recipe",
+                        )
+                    }
+                },
+                dismissButton = {
+                    Button(
+                        onClick = { onEvent(PizRecipeDetailEvent.DismissDeleteDialog) },
+//                        modifier = Modifier
+//                            .padding(16.dp)
+//                            .fillMaxWidth()
+//                            .wrapContentWidth(align = Alignment.End),
+                    ) {
+                        Icon(
+                            Icons.Rounded.Close,
+                            "dismiss delete recipe",
+                        )
+                    }
+                },
+                title = {Text("Wirklich Löschen?")}
+            )
+        }
+        if (editDialogState != EditDialog.None) {
             Dialog(onDismissRequest = {
-                onEvent(PizRecipeDetailEvent.DismissDialog)
+                onEvent(PizRecipeDetailEvent.DismissEditDialog)
             }) {
                 Surface(
                     modifier = Modifier
@@ -114,7 +165,7 @@ fun PizRecipeDetailView(
                         .fillMaxHeight(.8f),
                     shape = RoundedCornerShape(size = 10.dp)
                 ) {
-                    when (dialogState) {
+                    when (editDialogState) {
                         EditDialog.Header -> {
                             EditHeaderView()
                         }
@@ -180,17 +231,35 @@ fun PizRecipeDetailView(
         }
 
         // edit button
-        if(hasUser) {
+        if (hasUser) {
             IconButton(
                 onClick = { onEvent(PizRecipeDetailEvent.ToggleEditMode) },
                 Modifier
-                    .size(36.dp)
-                    .align(Alignment.TopEnd)
                     .padding(end = 8.dp, top = 8.dp)
+                    .size(30.dp)
+                    .align(Alignment.TopEnd)
             ) {
                 Icon(
                     Icons.Default.Edit,
                     "edit recipe",
+                    Modifier.fillMaxHeight()
+                )
+
+            }
+        }
+        if (editMode) {
+            IconButton(
+                onClick = {
+                    onEvent(PizRecipeDetailEvent.ShowDeleteDialog(DeleteDialog.Recipe))
+                },
+                Modifier
+                    .padding(end = (8 + 36).dp, top = 8.dp)
+                    .size(30.dp)
+                    .align(Alignment.TopEnd)
+            ) {
+                Icon(
+                    Icons.Default.Delete,
+                    "delete recipe",
                     Modifier.fillMaxHeight()
                 )
 
@@ -212,7 +281,8 @@ fun PizRecipeDetailViewPreview() {
         ),
         true,
         amount = 4,
-        dialogState = EditDialog.None,
+        deleteDialog = DeleteDialog.None,
+        editDialogState = EditDialog.None,
         editMode = false,
         true
     ) { }

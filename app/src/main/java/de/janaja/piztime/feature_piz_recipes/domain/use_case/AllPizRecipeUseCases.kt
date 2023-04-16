@@ -15,6 +15,7 @@ data class AllPizRecipeUseCases(
     val getIngredientUseCase: GetIngredientUseCase,
     val getStepWithoutIngredientsUseCase: GetStepWithoutIngredientsUseCase,
 
+    val deleteRecipeUseCase: DeleteRecipeUseCase,
     val deleteIngredientUseCase: DeleteIngredientUseCase,
     val deleteStepUseCase: DeleteStepUseCase,
 

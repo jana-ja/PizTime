@@ -152,7 +152,6 @@ class RepositoryFirestore : Repository {
         }
     }
 
-
     override suspend fun getRecipeImage(imageName: String): ImageBitmap? {
 
         if (imageName == "")
@@ -229,6 +228,23 @@ class RepositoryFirestore : Repository {
         } else {
             null
         }
+    }
+
+    override suspend fun deletePizRecipeWithDetails(recipeId: String) {
+        val recipeRef = db.collection(recipesPath).document(recipeId)
+        // ingredients
+        deletePizIngredientsForRecipeId(recipeId)
+        // steps with step ingredients
+        val stepsCollection = recipeRef.collection(stepsPath)
+        val stepResult = stepsCollection.get().await()
+        for (stepDocument in stepResult) {
+            deletePizStepWithIngredients(stepDocument.id, recipeId)
+        }
+        // recipe
+        recipeRef
+            .delete()
+            .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully deleted!") }
+            .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
     }
 
     override suspend fun deletePizIngredientsForRecipeId(recipeId: String) {

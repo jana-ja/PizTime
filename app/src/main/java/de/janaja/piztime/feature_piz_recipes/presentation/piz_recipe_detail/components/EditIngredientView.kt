@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import de.janaja.piztime.feature_piz_recipes.domain.util.DeleteDialog
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.PizRecipeDetailEvent
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.PizRecipeDetailViewModel
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
@@ -43,7 +44,7 @@ private fun EditIngredientViewContent(
 
     Scaffold(
         topBar = {
-            SmallTopAppBar(
+            TopAppBar(
                 title = {
                     Text(
                         "Zutat bearbeiten",
@@ -52,7 +53,7 @@ private fun EditIngredientViewContent(
                 },
                 actions = {
                     IconButton(
-                        onClick = { onEvent(PizRecipeDetailEvent.ClickDeleteIngredient) },
+                        onClick = { onEvent(PizRecipeDetailEvent.ShowDeleteDialog(DeleteDialog.Ingredient)) },
                     ) {
                         Icon(
                             Icons.Default.Delete,

@@ -54,6 +54,7 @@ object AppModule {
             getRecipeImageUseCase = GetRecipeImageUseCase(repository),
             getIngredientUseCase = GetIngredientUseCase(repository),
             getStepWithoutIngredientsUseCase = GetStepWithoutIngredientsUseCase(repository),
+            deleteRecipeUseCase = DeleteRecipeUseCase(repository) ,
             deleteIngredientUseCase = DeleteIngredientUseCase(repository),
             deleteStepUseCase = DeleteStepUseCase(repository),
             updateIngredientUseCase = UpdateIngredientUseCase(repository),

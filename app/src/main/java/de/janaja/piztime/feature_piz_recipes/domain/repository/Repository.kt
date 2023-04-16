@@ -37,6 +37,7 @@ interface Repository {
     suspend fun getPizStepIngredient(id: String, recipeId: String, stepId: String): PizIngredient?
 
     // delete
+    suspend fun deletePizRecipeWithDetails(recipeId: String)
     suspend fun deletePizIngredientsForRecipeId(recipeId: String)
     suspend fun deletePizStepIngredientsForStepId(stepId: String, recipeId: String)
     suspend fun deletePizStepWithIngredients(id: String, recipeId: String)

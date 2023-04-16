@@ -45,6 +45,10 @@ class PizRecipeDetailViewModel @Inject constructor(
     private val _detailAmountState = mutableStateOf(DetailAmountState())
     val detailAmountState: State<DetailAmountState> = _detailAmountState
 
+    // alert dialog state
+    private val _detailDeleteDialogState = mutableStateOf(DetailDeleteDialogState())
+    val detailDeleteDialogState: State<DetailDeleteDialogState> = _detailDeleteDialogState
+
     // edit states
     private val _detailEditDialogState = mutableStateOf(DetailEditDialogState())
     val detailEditDialogState: State<DetailEditDialogState> = _detailEditDialogState
@@ -83,6 +87,7 @@ class PizRecipeDetailViewModel @Inject constructor(
 
     sealed class UiEvent {
         data class ShowToast(val massage: String) : UiEvent()
+        object NavigateBack: UiEvent()
     }
 
     // standard detail screen
@@ -220,7 +225,7 @@ class PizRecipeDetailViewModel @Inject constructor(
                     allPizRecipesUseCases.loadPizRecipeWithDetailsUseCase(it)
                 }
                 // dismiss dialog
-                onEvent(PizRecipeDetailEvent.DismissDialog)
+                onEvent(PizRecipeDetailEvent.DismissEditDialog)
 
             } catch (e: java.lang.NumberFormatException) {
                 viewModelScope.launch {
@@ -260,7 +265,7 @@ class PizRecipeDetailViewModel @Inject constructor(
             }
         }
         // dismiss dialog
-        onEvent(PizRecipeDetailEvent.DismissDialog)
+        onEvent(PizRecipeDetailEvent.DismissEditDialog)
 
     }
 
@@ -283,7 +288,7 @@ class PizRecipeDetailViewModel @Inject constructor(
                     allPizRecipesUseCases.loadPizRecipeWithDetailsUseCase(it)
                 }
                 // dismiss dialog
-                onEvent(PizRecipeDetailEvent.DismissDialog)
+                onEvent(PizRecipeDetailEvent.DismissEditDialog)
 
             } catch (e: java.lang.NumberFormatException) {
                 viewModelScope.launch {
@@ -314,7 +319,7 @@ class PizRecipeDetailViewModel @Inject constructor(
                 allPizRecipesUseCases.loadPizRecipeWithDetailsUseCase(it)
             }
             // dismiss dialog
-            onEvent(PizRecipeDetailEvent.DismissDialog)
+            onEvent(PizRecipeDetailEvent.DismissEditDialog)
 
         }
 
@@ -417,6 +422,20 @@ class PizRecipeDetailViewModel @Inject constructor(
 
     }
 
+    private fun editDeleteRecipe(){
+        currentRecipeId?.let {
+            // delete
+            viewModelScope.launch(Dispatchers.IO) {
+                allPizRecipesUseCases.deleteRecipeUseCase(it)
+                // navigate back // TODO async?
+                _eventFlow.emit(UiEvent.NavigateBack)
+            }
+        } ?: run {
+            viewModelScope.launch {
+                _eventFlow.emit(UiEvent.ShowToast("Unerwarteter Fehler. Bitte öffne das Rezept erneut."))
+            }
+        }
+    }
     private fun editDeleteIngredient() {
         currentRecipeId?.let {
             // delete
@@ -431,8 +450,9 @@ class PizRecipeDetailViewModel @Inject constructor(
                 // reload data
                 allPizRecipesUseCases.loadPizRecipeWithDetailsUseCase(it)
             }
-            // dismiss dialog
-            onEvent(PizRecipeDetailEvent.DismissDialog)
+            // dismiss dialogs
+            onEvent(PizRecipeDetailEvent.DismissEditDialog)
+            onEvent(PizRecipeDetailEvent.DismissDeleteDialog)
         } ?: run {
             viewModelScope.launch {
                 _eventFlow.emit(UiEvent.ShowToast("Unerwarteter Fehler. Bitte öffne das Rezept erneut."))
@@ -452,7 +472,8 @@ class PizRecipeDetailViewModel @Inject constructor(
                 allPizRecipesUseCases.loadPizRecipeWithDetailsUseCase(it)
             }
             // dismiss dialog
-            onEvent(PizRecipeDetailEvent.DismissDialog)
+            onEvent(PizRecipeDetailEvent.DismissEditDialog)
+            onEvent(PizRecipeDetailEvent.DismissDeleteDialog)
         } ?: run {
             viewModelScope.launch {
                 _eventFlow.emit(UiEvent.ShowToast("Unerwarteter Fehler. Bitte öffne das Rezept erneut."))
@@ -504,11 +525,18 @@ class PizRecipeDetailViewModel @Inject constructor(
             )
             PizRecipeDetailEvent.ClickAddStep -> editAddStep()
 
+            PizRecipeDetailEvent.ClickDeleteRecipe -> editDeleteRecipe()
             PizRecipeDetailEvent.ClickDeleteIngredient -> editDeleteIngredient()
             PizRecipeDetailEvent.ClickDeleteStep -> editDeleteStep()
 
-            PizRecipeDetailEvent.DismissDialog -> {
+            PizRecipeDetailEvent.DismissEditDialog -> {
                 _detailEditDialogState.value = _detailEditDialogState.value.copy(editDialogState = EditDialog.None)
+            }
+            is PizRecipeDetailEvent.ShowDeleteDialog -> {
+                _detailDeleteDialogState.value = _detailDeleteDialogState.value.copy(deleteDialog = event.deleteDialog)
+            }
+            PizRecipeDetailEvent.DismissDeleteDialog -> {
+                _detailDeleteDialogState.value = _detailDeleteDialogState.value.copy(deleteDialog = DeleteDialog.None)
             }
         }
     }

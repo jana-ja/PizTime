@@ -1,6 +1,7 @@
 package de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail
 
 import androidx.compose.ui.graphics.ImageBitmap
+import de.janaja.piztime.feature_piz_recipes.domain.util.DeleteDialog
 
 
 // all possible events triggered from the ui
@@ -39,10 +40,15 @@ sealed class PizRecipeDetailEvent{
     data class ClickAddIngredient(val isStepIngredient: Boolean = false, val stepId: String?): PizRecipeDetailEvent()
     object ClickAddStep: PizRecipeDetailEvent()
 
+    object ClickDeleteRecipe: PizRecipeDetailEvent()
     object ClickDeleteIngredient: PizRecipeDetailEvent()
     object ClickDeleteStep: PizRecipeDetailEvent()
 
-    object DismissDialog: PizRecipeDetailEvent()
+    object DismissEditDialog: PizRecipeDetailEvent()
+
+    // alert dialog
+    data class ShowDeleteDialog(val deleteDialog: DeleteDialog): PizRecipeDetailEvent()
+    object DismissDeleteDialog: PizRecipeDetailEvent()
 
 
 

@@ -39,6 +39,8 @@ fun PizCard(
     index: Int
 ) {
 
+    // TODO only roll pizza on first show
+
     // animation stuff
     val animDuration = 900
     val animDelay: Long = 400

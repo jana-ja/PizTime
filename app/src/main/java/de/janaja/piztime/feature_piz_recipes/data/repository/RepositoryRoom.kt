@@ -106,8 +106,8 @@ class RepositoryRoom(
     }
 
     override suspend fun getRecipeImage(imageName: String): ImageBitmap? {
-        Log.e("Repo","Get Image")
-        if(imageName == "")
+        Log.e("Repo", "Get Image")
+        if (imageName == "")
             return null
         try {
             val f = File(context.filesDir, "$imageName.png")
@@ -134,6 +134,20 @@ class RepositoryRoom(
     }
 
     // delete
+    override suspend fun deletePizRecipeWithDetails(recipeId: String) {
+        // ingredients
+        pizIngredientDao.deletePizIngredientsForRecipeId(recipeId)
+        // step ingredients
+        pizStepDao.findPizStepsByPizRecipeId(recipeId).also { steps ->
+            for (step in steps)
+                pizStepIngredientDao.deletePizStepIngredientsForStepId(step.id)
+        }
+        // steps
+        pizStepDao.deletePizStepsForRecipeId(recipeId)
+        // recipe
+        pizRecipeDao.deletePizRecipe(recipeId)
+    }
+
     override suspend fun deletePizStepWithIngredients(id: String, recipeId: String) {
         pizStepDao.deletePizStep(id)
         pizStepIngredientDao.deletePizStepIngredientsForStepId(id)
@@ -152,7 +166,7 @@ class RepositoryRoom(
     }
 
     override suspend fun deletePizStepIngredientsForStepId(stepId: String, recipeId: String) {
-        pizStepIngredientDao.deletePizStepIngredientsForRecipeId(stepId)
+        pizStepIngredientDao.deletePizStepIngredientsForStepId(stepId)
     }
 
 
@@ -162,7 +176,11 @@ class RepositoryRoom(
     }
 
     override suspend fun insertPizIngredients(pizIngredients: List<PizIngredient>, recipeId: String) {
-        pizIngredientDao.insertPizIngredients(pizIngredients.map { pizIngredient -> pizIngredient.toPizIngredientEntity(recipeId) })
+        pizIngredientDao.insertPizIngredients(pizIngredients.map { pizIngredient ->
+            pizIngredient.toPizIngredientEntity(
+                recipeId
+            )
+        })
     }
 
     override suspend fun insertPizIngredient(pizIngredient: PizIngredient, recipeId: String) {
@@ -174,7 +192,11 @@ class RepositoryRoom(
     }
 
     override suspend fun insertPizSteps(pizSteps: List<PizStepWithIngredients>, recipeId: String) {
-        pizStepDao.insertPizSteps(pizSteps.map { pizStepWithIngredients -> pizStepWithIngredients.toPizStepEntity(recipeId) })
+        pizStepDao.insertPizSteps(pizSteps.map { pizStepWithIngredients ->
+            pizStepWithIngredients.toPizStepEntity(
+                recipeId
+            )
+        })
     }
 
     override suspend fun insertPizStep(pizStep: PizStepWithIngredients, recipeId: String) {
@@ -186,13 +208,17 @@ class RepositoryRoom(
         recipeId: String,
         stepId: String
     ) {
-        pizStepIngredientDao.insertPizStepIngredients(pizStepIngredients.map { pizIngredient -> pizIngredient.toPizStepIngredientEntity(stepId) })
+        pizStepIngredientDao.insertPizStepIngredients(pizStepIngredients.map { pizIngredient ->
+            pizIngredient.toPizStepIngredientEntity(
+                stepId
+            )
+        })
     }
 
 
     // save
-    override suspend fun saveRecipeImage(imageName: String, bitmap: ImageBitmap){
-        Log.e("Repo","Save Image")
+    override suspend fun saveRecipeImage(imageName: String, bitmap: ImageBitmap) {
+        Log.e("Repo", "Save Image")
         val f = File(context.filesDir, "$imageName.png")
         withContext(Dispatchers.IO) {
             if (!f.exists()) {

@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import de.janaja.piztime.feature_piz_recipes.domain.util.DeleteDialog
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.PizRecipeDetailEvent
 import de.janaja.piztime.feature_piz_recipes.presentation.piz_recipe_detail.PizRecipeDetailViewModel
 import de.janaja.piztime.feature_piz_recipes.presentation.util.DummyData
@@ -40,7 +41,7 @@ private fun EditStepViewContent(
 
     Scaffold(
         topBar = {
-            SmallTopAppBar(
+            TopAppBar(
                 title = {
                     Text(
                         "Schritt bearbeiten",
@@ -49,7 +50,7 @@ private fun EditStepViewContent(
                 },
                 actions = {
                     IconButton(
-                        onClick = { onEvent(PizRecipeDetailEvent.ClickDeleteStep) },
+                        onClick = { onEvent(PizRecipeDetailEvent.ShowDeleteDialog(DeleteDialog.Step)) },
                     ) {
                         Icon(
                             Icons.Default.Delete,
